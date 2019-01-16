@@ -12,14 +12,18 @@ https.createServer(function(req, res) {
 	if (req.url === "/") {
 		//-----------HOME PAGE ---------------
 		// after file is read, then the callback fires and response is sent
-		fs.readFile("./index.html", "UTF-8", function(err, html) {
-
-			// this is reponse
-			res.writeHead(200, {
-				"Content-Type": "text/html"
-			})
-			res.end(html);
-		});
+		// fs.readFile("./index.html", "UTF-8", function(err, html) {
+        //
+		// 	// this is reponse
+		// 	res.writeHead(200, {
+		// 		"Content-Type": "text/html"
+		// 	})
+		// 	res.end(html);
+		// });
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html');
+        res.write('Hello')
+        res.end()
 
 	} else if (req.url === "/twitter") {
 		if (req.method === 'GET') {
@@ -58,7 +62,7 @@ https.createServer(function(req, res) {
 }).listen(5000); //server req
 
 
-console.log("File Server is running on port 3000")
+console.log("File Server is running on port 5000")
 
 
 

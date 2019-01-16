@@ -4,8 +4,11 @@
   "description": "Code challenge",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+      "start": "nodemon index.js"
   },
   "author": "chris del",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
 }
