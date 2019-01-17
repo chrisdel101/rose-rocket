@@ -8,6 +8,9 @@ const stops = require('./data/stops.json')
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // create a GET route
-app.get('/express_backend', (req, res) => {
-  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
+app.get('/stops', (req, res) => {
+  res.send({ stops: stops });
+});
+app.get('/legs', (req, res) => {
+  res.send({ legs: legs });
 });
