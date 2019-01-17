@@ -66,9 +66,11 @@ class Grid extends Component {
         render() {
 
         	return(
-                <div className="grid">
+                <div className="grid-container">
+                    <div className="grid">
+                    <Box num={40000} />
+                    </div>
 
-                    <Box num={100} />
                 </div>
             )
         }

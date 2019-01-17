@@ -13,6 +13,11 @@ code {
 		monospace;
 }
 
+#root {
+	margin-left: 40px;
+	margin-bottom: 40px
+}
+
 .box-container {
 	/* width: 50px; */
 	/* height: 50px; */
@@ -37,16 +42,20 @@ code {
 	border: 1px solid black;
 	grid-gap: 1px;
 	background-color: black;
-	grid-template-rows: repeat(10, 50px);
-	grid-template-columns: repeat(10, 50px);
+	grid-template-rows: repeat(200, 10px);
+	grid-template-columns: repeat(200, 10px);
 }
 
-.box-container:nth-of-type(91):before {
+.box-container:nth-of-type(39801):before {
 	content: '\25CF';
 	color: red;
+	font-size: 10px;
+	position: relative;
+	bottom: 9px;
 }
 
-.box-container:nth-of-type(91) {
+.box-container:nth-of-type(39801) {
+	/* padding-bottom: 10px; */
 	/* background-color: yellow; */
 	/* order: 1; */
 	/* grid    -column: 2 / 5; */
