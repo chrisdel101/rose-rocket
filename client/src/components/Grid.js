@@ -1,9 +1,8 @@
-import React, {
-	Component
-} from "react";
-import "./App.css";
+import React, {Component} from "react"
+import "../App.css";
+import Box from './Box'
 
-class App extends Component {
+class Grid extends Component {
 	constructor(props) {
 		super(props);
 		// Don't call this.setState() here!
@@ -11,15 +10,8 @@ class App extends Component {
             legs: [],
 			stops: [],
 		};
-		this.RenderMarkup = this.RenderMarkup.bind(this);
+		// this.RenderMarkup = this.RenderMarkup.bind(this);
 	}
-    Box{
-        return(
-            l
-            <div className=""
-        )
-
-    }
     componentDidMount() {
         // Call our fetch function below once the component mounts
       this.callStops()
@@ -52,8 +44,7 @@ class App extends Component {
         }
         return body
     }
-
-	RenderMarkup() {
+	RenderTextMarkup() {
 		// check data not null or rerender if null
 		if(this.state.legs[0]) {
         			return (
@@ -74,8 +65,12 @@ class App extends Component {
 
         render() {
 
-        	return (<this.RenderMarkup /> )
+        	return(
+                <div className="grid">
+                    <Box num={40000} />
+                </div>
+            )
         }
 }
 
-export default App;
+export default Grid
