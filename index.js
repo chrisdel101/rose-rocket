@@ -9,8 +9,12 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // create a GET route
 app.get('/stops', (req, res) => {
-  res.send({ stops: stops });
+	res.send({
+		stops: stops
+	})
 });
 app.get('/legs', (req, res) => {
-  res.send({ legs: legs });
+	res.send({
+		legs: legs
+	});
 });
