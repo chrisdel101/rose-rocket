@@ -8,46 +8,56 @@ class App extends Component {
 		super(props);
 		// Don't call this.setState() here!
 		this.state = {
+            legs: [],
 			stops: [],
-			routesToCall: ["/legs", "/stops"]
 		};
 		this.RenderMarkup = this.RenderMarkup.bind(this);
 	}
     componentDidMount() {
         // Call our fetch function below once the component mounts
-      this.callBackendAPI()
+      this.callStops()
         .then(res => {
-            console.log(res)
             this.setState({ stops: res.stops })
+        })
+        .catch(err => console.log(err));
+      this.callLegs()
+        .then(res => {
+            this.setState({ legs: res.legs })
         })
         .catch(err => console.log(err));
 
     }
-      // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
-    callBackendAPI = async () => {
-      const response = await fetch('/stops');
-      console.log(response)
-      const body = await response.json();
+    callLegs = async () => {
+        const response = await fetch('/legs');
+        const body = await response.json();
 
-
-      if (response.status !== 200) {
+        if (response.status !== 200) {
         throw Error(body.message)
-      }
-      return body;
-  }
+        }
+        return body
+    }
+    callStops = async () => {
+        const response = await fetch('/stops');
+        const body = await response.json();
+
+        if (response.status !== 200) {
+          throw Error(body.message)
+        }
+        return body
+    }
 
 	RenderMarkup() {
 		// check data not null or rerender if null
-		if(this.state.stops) {
+		if(this.state.legs[0]) {
         			return (
                         <div className="App">
                           {" "}
                           <header className="App-header">
                             {" "}
                             <h1 className="App-title"> Welcome to React </h1>
-                            {console.log(this.state)}
+                            {console.log(this.state.legs[0].name)}
                           </header>{" "}
-                          <p className="App-intro"> hello </p>{" "}
+                          <p className="App-intro"> {this.state.legs[0].name} </p>{" "}
                         </div>
                         )
     	} else {
