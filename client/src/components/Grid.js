@@ -9,6 +9,9 @@ class Grid extends Component {
 		this.state = {
             legs: [],
 			stops: [],
+            position: {x: 0, y: 0},
+            xInputVal: '',
+            yInputVal: ''
 		};
 		// this.RenderMarkup = this.RenderMarkup.bind(this);
 	}
@@ -44,6 +47,19 @@ class Grid extends Component {
         }
         return body
     }
+    // takes a integer string
+    move(x,y){
+        var start = document.querySelector('.box-container:nth-of-type(39801)')
+        start.style["grid-column-end"] = x
+        start.style["grid-row-end"] = y
+        this.setState({
+            position: {
+                x: x,
+                y: y
+            }
+        })
+
+    }
 	RenderTextMarkup() {
 		// check data not null or rerender if null
 		if(this.state.legs[0]) {
@@ -62,15 +78,33 @@ class Grid extends Component {
     		return null;
     	}
     }
-
+    updateXvalue(evt) {
+        this.setState({
+          xInputVal: evt.target.value
+        })
+    }
+    updateYvalue(evt) {
+        this.setState({
+          yInputVal: evt.target.value
+        })
+    }
         render() {
-
+            console.log(this.state.xInputVal)
+            console.log(this.state.yInputVal)
         	return(
-                <div className="grid-container">
+                <div>
+                    <div className="grid-container">
                     <div className="grid">
                     <Box num={40000} />
                     </div>
 
+                    </div>
+                    <form action="/">
+                         X-coords: <input className="x-coord" type="text" value={this.state.xInputVal} onChange={evt => this.updateXvalue(evt)} ></input>
+                         Y-coords: <input className="y-coord" type="text" value={this.state.yInputVal} onChange={evt => this.updateYvalue(evt)} ></input>
+                         <input type="submit" value="Submit"></input>
+
+                    </form>
                 </div>
             )
         }
