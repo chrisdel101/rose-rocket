@@ -5,7 +5,7 @@ function Box(props){
     let arr = Array.from({length: num}, (v, i) => i);
     return arr.map((i) => {
         return(
-            <div className="box-container">
+            <div className="box-container" key={i}>
                 <div className="box">
 
                 </div>
