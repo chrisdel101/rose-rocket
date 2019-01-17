@@ -68,7 +68,7 @@ class Grid extends Component {
         	return(
                 <div className="grid">
 
-                    <Box num={100} />
+                    <Box num={400} />
                 </div>
             )
         }
