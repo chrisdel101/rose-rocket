@@ -67,10 +67,12 @@ class Grid extends Component {
 
         	return(
                 <div className="grid">
-                    <Box num={10000} />
+
+                    <Box num={100} />
                 </div>
             )
         }
 }
 
+// <div className="cursor">&#11044;</div>
 export default Grid
