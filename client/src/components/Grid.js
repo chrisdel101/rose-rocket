@@ -10,8 +10,8 @@ class Grid extends Component {
             legs: [],
 			stops: [],
             position: {x: 0, y: 0},
-            xInputVal: '',
-            yInputVal: ''
+            tempX: '0',
+            tempY: '0'
 		};
 		// this.RenderMarkup = this.RenderMarkup.bind(this);
 	}
@@ -47,16 +47,32 @@ class Grid extends Component {
         }
         return body
     }
-    // takes a integer string?
-    move(x,y){
-        var start = document.querySelector('.box-container:nth-of-type(39801)')
-        start.style["grid-column-end"] = x
-        start.style["grid-row-end"] = this.adjustRowMovement(y)
-        this.setState({
-            position: {
-                x: x,
-                y: y
-            }
+    getState(){
+        console.log('temp x', this.state.tempX)
+        console.log('temp y', this.state.tempY)
+
+        console.log('real x', this.state.position.x)
+        console.log('real y', this.state.position.y)
+    }
+    move(xVal,yVal){
+        console.log('x', this.state.position.x)
+        console.log('y', this.state.position.y)
+        var startStop = document.querySelector('.box-container:nth-of-type(39801)')
+        startStop.style["grid-column-start"] = xVal
+        startStop.style["grid-column-end"] = xVal
+        startStop.style["grid-row-start"] = this.adjustRowMovement(yVal)
+        startStop.style["grid-row-end"] = this.adjustRowMovement(yVal)
+        // add input to state val
+
+        xVal = parseInt(this.state.position.x) + parseInt(xVal)
+        yVal= parseInt(this.state.position.y) + parseInt(yVal)
+            console.log('y', this.state.position.y)
+            console.log('x', this.state.position.x)
+            this.setState({
+                position: {
+                    x: xVal,
+                    y: yVal
+                }
         })
     }
     adjustRowMovement(y){
@@ -82,26 +98,33 @@ class Grid extends Component {
     		return null;
     	}
     }
+    // hold vals in input until next entered
     updateXvalue(evt) {
+        console.log(evt.target.value)
         this.setState({
-          xInputVal: evt.target.value
+          tempX: evt.target.value
         })
+        // console.log(`temp x: ${this.state.tempX}`)
+
     }
     updateYvalue(evt) {
+        console.log(evt.target.value)
         this.setState({
-          yInputVal: evt.target.value
+          tempY: evt.target.value
         })
+        console.log(`temp y: ${this.state.tempY}`)
+
     }
     handleSubmit(event) {
-        console.log(`x: ${this.state.xInputVal}`)
-        console.log(`y: ${this.state.yInputVal}`)
-        this.move(this.state.xInputVal, this.state.yInputVal)
+        // console.log(`temp x: ${this.state.tempX}`)
+        // console.log(`temp y: ${this.state.tempY}`)
+        this.move(this.state.tempX, this.state.tempY)
       // alert('A name was submitted: ' + this.state.value);
       event.preventDefault();
     }
         render() {
-            // console.log(this.state.xInputVal)
-            // console.log(this.state.yInputVal)
+            // console.log(this.state.tempX)
+            // console.log(this.state.tempY)
         	return(
                 <div>
                     <div className="grid-container">
@@ -111,10 +134,10 @@ class Grid extends Component {
 
                     </div>
                     <form onSubmit={this.handleSubmit.bind(this)}>
-                         X-coords: <input className="x-coord" type="text" value={this.state.xInputVal} onChange={evt => this.updateXvalue(evt)} >
+                         X-coords: <input className="x-coord" type="text" value={this.state.tempX} onChange={evt => this.updateXvalue(evt)} >
                          </input>
-                         Y-coords: <input className="y-coord" type="text" value={this.state.yInputVal} onChange={evt => this.updateYvalue(evt)}  ></input>
-                         <input type="submit" value="Submit"></input>
+                         Y-coords: <input className="y-coord" type="text" value={this.state.tempY} onChange={evt => this.updateYvalue(evt)}  ></input>
+                         <input type="submit" value="Submit" onMouseOver={this.getState.bind(this   )}></input>
 
                     </form>
                 </div>
