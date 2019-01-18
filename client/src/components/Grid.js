@@ -11,8 +11,10 @@ class Grid extends Component {
 			stops: [],
             position: {x: 0, y: 0},
             tempX: '0',
-            tempY: '0'
-		};
+            tempY: '0',
+            totalBoxes: 40000
+        }
+
 		// this.RenderMarkup = this.RenderMarkup.bind(this);
 	}
     componentDidMount() {
@@ -64,8 +66,10 @@ class Grid extends Component {
         startStop.style["grid-row-end"] = this.adjustRowMovement(yVal)
         // add input to state val
 
-        xVal = parseInt(this.state.position.x) + parseInt(xVal)
-        yVal= parseInt(this.state.position.y) + parseInt(yVal)
+        // xVal = parseInt(this.state.position.x) + parseInt(xVal)
+        xVal = 1 + parseInt(xVal)
+        // yVal= parseInt(this.state.position.y) + parseInt(yVal)
+        yVal= 1 + parseInt(yVal)
             console.log('y', this.state.position.y)
             console.log('x', this.state.position.x)
             this.setState({
@@ -122,27 +126,26 @@ class Grid extends Component {
       // alert('A name was submitted: ' + this.state.value);
       event.preventDefault();
     }
-        render() {
-            // console.log(this.state.tempX)
-            // console.log(this.state.tempY)
-        	return(
-                <div>
-                    <div className="grid-container">
-                    <div className="grid">
-                    <Box num={40000} />
+    render() {
+        // console.log(this.state.tempX)
+        // console.log(this.state.tempY)
+    	return(
+            <div>
+                <div className="grid-container">
+                <div className="grid">
+                    <Box num={this.state.totalBoxes} />
                     </div>
-
-                    </div>
-                    <form onSubmit={this.handleSubmit.bind(this)}>
-                         X-coords: <input className="x-coord" type="text" value={this.state.tempX} onChange={evt => this.updateXvalue(evt)} >
-                         </input>
-                         Y-coords: <input className="y-coord" type="text" value={this.state.tempY} onChange={evt => this.updateYvalue(evt)}  ></input>
-                         <input type="submit" value="Submit" onMouseOver={this.getState.bind(this   )}></input>
-
-                    </form>
                 </div>
-            )
-        }
+                <form onSubmit={this.handleSubmit.bind(this)}>
+                     X-coords: <input className="x-coord" type="text" value={this.state.tempX} onChange={evt => this.updateXvalue(evt)} >
+                     </input>
+                     Y-coords: <input className="y-coord" type="text" value={this.state.tempY} onChange={evt => this.updateYvalue(evt)}  ></input>
+                     <input type="submit" value="Submit" onMouseOver={this.getState.bind(this   )}></input>
+
+                </form>
+            </div>
+        )
+    }
 }
 
 // <div className="cursor">&#11044;</div>
