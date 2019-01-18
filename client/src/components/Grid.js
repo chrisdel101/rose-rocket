@@ -47,18 +47,22 @@ class Grid extends Component {
         }
         return body
     }
-    // takes a integer string
+    // takes a integer string?
     move(x,y){
         var start = document.querySelector('.box-container:nth-of-type(39801)')
         start.style["grid-column-end"] = x
-        start.style["grid-row-end"] = y
+        start.style["grid-row-end"] = this.adjustRowMovement(y)
         this.setState({
             position: {
                 x: x,
                 y: y
             }
         })
-
+    }
+    adjustRowMovement(y){
+        let total = 200
+        let adjust = total - y
+        return adjust
     }
 	RenderTextMarkup() {
 		// check data not null or rerender if null
@@ -88,9 +92,16 @@ class Grid extends Component {
           yInputVal: evt.target.value
         })
     }
+    handleSubmit(event) {
+        console.log(`x: ${this.state.xInputVal}`)
+        console.log(`y: ${this.state.yInputVal}`)
+        this.move(this.state.xInputVal, this.state.yInputVal)
+      // alert('A name was submitted: ' + this.state.value);
+      event.preventDefault();
+    }
         render() {
-            console.log(this.state.xInputVal)
-            console.log(this.state.yInputVal)
+            // console.log(this.state.xInputVal)
+            // console.log(this.state.yInputVal)
         	return(
                 <div>
                     <div className="grid-container">
@@ -99,9 +110,10 @@ class Grid extends Component {
                     </div>
 
                     </div>
-                    <form action="/">
-                         X-coords: <input className="x-coord" type="text" value={this.state.xInputVal} onChange={evt => this.updateXvalue(evt)} ></input>
-                         Y-coords: <input className="y-coord" type="text" value={this.state.yInputVal} onChange={evt => this.updateYvalue(evt)} ></input>
+                    <form onSubmit={this.handleSubmit.bind(this)}>
+                         X-coords: <input className="x-coord" type="text" value={this.state.xInputVal} onChange={evt => this.updateXvalue(evt)} >
+                         </input>
+                         Y-coords: <input className="y-coord" type="text" value={this.state.yInputVal} onChange={evt => this.updateYvalue(evt)}  ></input>
                          <input type="submit" value="Submit"></input>
 
                     </form>
