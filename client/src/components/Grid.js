@@ -14,12 +14,12 @@ class Grid extends Component {
             tempY: '0'
 		};
 		// this.RenderMarkup = this.RenderMarkup.bind(this);
-        this.moveStopMarker = this.moveStopMarker.bind(this);
+        this.setStopsPosition = this.setStopsPosition.bind(this);
 
 	}
     componentDidMount() {
         // call movemaker with stops on mount
-        this.moveStopMarker('10', '10')
+
 
         let startingCell = document.querySelector('.box-container:nth-of-type(39802)')
         this.setState({
@@ -115,23 +115,6 @@ class Grid extends Component {
         // console.log('a', adjust)
         return adjust
     }
-	RenderTextMarkup() {
-		// check data not null or rerender if null
-		if(this.state.legs[0]) {
-        			return (
-                        <div className="App">
-                          {" "}
-                          <header className="App-header">
-                            {" "}
-                            <h1 className="App-title"> Welcome to React </h1>
-                          </header>{" "}
-                          <p className="App-intro"> {this.state.legs[0].name} </p>{" "}
-                        </div>
-                        )
-    	} else {
-    		return null;
-    	}
-    }
     // hold vals in input until next entered
     updateXvalue(evt) {
         this.setState({
@@ -154,21 +137,14 @@ class Grid extends Component {
       // alert('A name was submitted: ' + this.state.value);
       event.preventDefault();
     }
-    stopMarkup(stop){
-        return(
-            <div className="stop"></div>
-        )
-    }
-    // get the width of a box/cell
-    boxWidth(){
-    }
-    moveStopMarker(x, y){
+    setStopsPosition(x, y){
         let that = this
-        // timer to wait for window
+        // get directions to mvmt - need to be set here for timing
         this.directionToMove(x, y)
+        // timer to wait for window
         setTimeout(function(){
-            let width = window.getComputedStyle(that.state.startingCell).height
-            let height = window.getComputedStyle(that.state.startingCell).width
+            let width = that.state.startingCell.offsetWidth
+            let height = that.state.startingCell.offsetHeight
             function getCoords(){
                 let xDir
                 let yDir
@@ -183,9 +159,10 @@ class Grid extends Component {
                 } else {
                     yDir = "bottom"
                 }
-
-                let moveX = parseInt(x) * parseInt(width)
-                let moveY = parseInt(y) * parseInt(height)
+                console.log(width)
+                console.log(height)
+                let moveX = parseInt(x) * width
+                let moveY = parseInt(y) * height
                 console.log(moveX)
                 console.log(moveY)
                 // let that = this
@@ -202,16 +179,10 @@ class Grid extends Component {
                 },500)
             }
             getCoords()
-
-            // create element
-            // add class to move it
-            //position it absolutley in the corner with class
-            //move it this width amount x times
-            // console.log(width, height)
         })
 
     }
-    ShowMarker(props){
+    AddStopMarker(props){
         console.log('props', props)
         if(!props){
             return
@@ -235,16 +206,22 @@ class Grid extends Component {
         }
         return(markup())
     }
+    setStops(state){
+        console.log('state', state)
+        return state.stops.map(coords => {
+            return(<this.AddStopMarker move={state} />)
+        })
+    }
     // move={this.state.mark(this.state.markerCoords.xDir, this.state.markerCoords.yDir)}/>
     render() {
 
 
         console.log(this.state)
+        // {this.state.stopCoords ? <this.ShowMarker move={this.state}/> : null}
     	return(
             <div>
                 <div className="grid-container">
                 <div className="grid">
-                {this.state.stopCoords ? <this.ShowMarker move={this.state}/> : null}
 
                 <Box num={40000} />
                 </div>
@@ -257,7 +234,7 @@ class Grid extends Component {
                      <input type="submit" value="Submit" onMouseOver={this.getState.bind(this)}></input>
 
                 </form>
-                <button onClick={() => {this.moveStopMarker('10', '10')}}>Add</button>
+                <button onClick={() => {this.setStops(this.state)}}>Plot</button>
             </div>
         )
     }
