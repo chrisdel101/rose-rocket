@@ -12,12 +12,15 @@ class Grid extends Component {
             position: {x: 0, y: 0},
             tempX: '0',
             tempY: '0',
-            totalBoxes: 40000
+            totalBoxes: 40000,
         }
+        // this.boxRefs = React.createRef();
 
 		// this.RenderMarkup = this.RenderMarkup.bind(this);
 	}
     componentDidMount() {
+        // this.setState:
+        // numsToSpread: Array.from({length: this.state.totalBoxes}, (v, i) => i)
         // Call our fetch function below once the component mounts
       this.callStops()
         .then(res => {
@@ -133,7 +136,7 @@ class Grid extends Component {
             <div>
                 <div className="grid-container">
                 <div className="grid">
-                    <Box num={this.state.totalBoxes} />
+                    <Box totalBoxes={this.state.totalBoxes} />
                     </div>
                 </div>
                 <form onSubmit={this.handleSubmit.bind(this)}>

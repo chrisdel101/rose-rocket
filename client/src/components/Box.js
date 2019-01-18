@@ -1,7 +1,8 @@
 import React from 'react'
-
+import giantArray from './GiantArray'
 class Box extends React.Component{
     constructor(props) {
+        console.log(props)
 		super(props)
 		// Don't call this.setState() here!
 		this.state = {
@@ -10,11 +11,10 @@ class Box extends React.Component{
         }
     }
         componentDidMount(){
+            console.log(giantArray(this.props.totalBoxes))
             this.setState({
-                totalBoxSread: Array.from({length: this.props.totalBoxes}, (v, i) => i)
+                giantArray: giantArray(this.props.totalBoxes)
             })
-            console.log(this.state)
-
         }
 
 		// this.RenderMarkup = this.RenderMarkup.bind(this);
@@ -22,19 +22,36 @@ class Box extends React.Component{
 
 // this.boxRefs = React.createRef();
     render(){
-        console.log(this.state.totalBoxSread)
-        return(
-            this.state.totalBoxSread === 40000 ?
-      this.state.totalBoxSread.map((i) => {
-            return(
-                <div className="box-container" key={i}>
-                <div className="box">
-                </div>
-                </div>
-            )
-        }) : null)
+        return (this.state.giantArray ?
+            this.state.giantArray.map((i) => {
+                return(
+                    <div className="box-container" key={i}>
+
+                    <div className="box">
+                    </div>
+                    </div>
+
+                )
+            })
+         : null)
 
     }
 }
 
 export default Box
+//
+// function Box(props){
+//     let num = props.num
+//     let arr = Array.from({length: num}, (v, i) => i);
+//     return arr.map((i) => {
+//         return(
+//             <div className="box-container" key={i}>
+//                 <div className="box">
+//
+//                 </div>
+//             </div>
+//         )
+//     })
+// }
+//
+// export default Box
