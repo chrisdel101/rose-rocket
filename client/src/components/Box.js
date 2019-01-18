@@ -2,20 +2,26 @@ import React from 'react'
 import giantArray from './GiantArray'
 class Box extends React.Component{
     constructor(props) {
-        console.log(props)
 		super(props)
-		// Don't call this.setState() here!
 		this.state = {
-            totalBoxSread: []
-
         }
+        this.makeRefs([1,2,3])
     }
-        componentDidMount(){
-            console.log(giantArray(this.props.totalBoxes))
-            this.setState({
-                giantArray: giantArray(this.props.totalBoxes)
-            })
-        }
+
+    makeRefs(arr){
+        let refs = arr.map(i => {
+            console.log(() => { this[`ref${i}`] = React.createRef() })
+            return () => { this[`ref${i}`] = React.createRef() }
+        })
+        console.log(refs)
+
+    }
+    componentDidMount(){
+        this.setState({
+            giantArray: giantArray(this.props.totalBoxes)
+        })
+
+    }
 
 		// this.RenderMarkup = this.RenderMarkup.bind(this);
 
@@ -26,9 +32,8 @@ class Box extends React.Component{
             this.state.giantArray.map((i) => {
                 return(
                     <div className="box-container" key={i}>
-
-                    <div className="box">
-                    </div>
+                        <div className="box">
+                        </div>
                     </div>
 
                 )
