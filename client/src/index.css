@@ -35,6 +35,7 @@ code {
 .grid-container {
 	display: flex;
 	flex-direction: unset;
+	position: relative;
 }
 
 .grid {
@@ -52,6 +53,18 @@ code {
 	font-size: 10px;
 	position: relative;
 	bottom: 9px;
+}
+
+.stop-marker:before {
+	content: '\25CF';
+	color: blue;
+	font-size: 10px;
+	bottom: 9px;
+}
+
+.stop-marker {
+	position: absolute;
+	bottom: 0;
 }
 
 .box-container:nth-of-type(39801) {
