@@ -88,9 +88,9 @@ class Grid extends Component {
             <div>
                 <div className="grid-container">
                     <div className="grid">
-
+                    <Stop coords={this.state.directionsArr}/>
                     <Box num={40000} />
-                        {(this.state.stopToggle ? <Stop data={this.state}/> : null)}
+                        {(this.state.stopToggle ? <Stop coords={this.state}/> : null)}
                     </div>
 
                 </div>

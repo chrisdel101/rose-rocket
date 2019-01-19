@@ -1,5 +1,6 @@
 import React from 'react'
 
+// takes the num of boxes/cells to be produced
 function Box(props){
     let num = props.num
     let arr = Array.from({length: num}, (v, i) => i);

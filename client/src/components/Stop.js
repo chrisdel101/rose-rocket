@@ -1,29 +1,20 @@
 import React from 'react'
 
+// takes and array of directions and pixes for x and y
 function Stop(props){
+    if(!props.coords) return null
     console.log('props', props)
-    // function pixelsToMove(props){
-    //     console.log('props', props)
-    //     if(!props){
-    //         return
-    //     }
-    // // call on each set
-
-    // old way of handling props
-        // let x = props.move.xDir
-        // let y = props.move.yDir
-        // let xCoord = props.move.stopCoords.xDir
-        // let yCoord = props.move.stopCoords.yDir
-        // let obj = {
-        //     [x]: xCoord,
-        //     [y]: yCoord
-        //     // props.move.yDir: props.move
-        // }
-        // return obj
-
-    return(
-        <div className="stop-marker" style={''}></div>
-    )
+    let coordsArr = props.coords
+    return coordsArr.map((coord, i) => {
+        let styles = {
+            [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
+            [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px'
+        }
+        console.log('styles', styles)
+        return(
+            <div className="stop-marker" style={{right: "10px", bottom: "10px"}} key={i}></div>
+        )
+    })
 }
 
 export default Stop
