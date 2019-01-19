@@ -15,8 +15,6 @@ class Grid extends Component {
             tempY: '0',
             stopToggle: false
 		};
-		// this.RenderMarkup = this.RenderMarkup.bind(this);
-        this.setStopsPosition = this.setStopsPosition.bind(this);
 
 	}
 
@@ -44,31 +42,6 @@ class Grid extends Component {
                 },
         })
     }
-
-            // call on each set
-            function getCoords(x,y){
-
-                this.directionToMove(x, y)
-                console.log(width)
-                console.log(height)
-                let moveX = parseInt(x) * width
-                let moveY = parseInt(y) * height
-                console.log(moveX)
-                console.log(moveY)
-                // let that = this
-                // console.log(this)
-
-                setTimeout(function(){
-                    that.setState({
-                        stopCoords:{
-                            [this.state.xDir]: moveX,
-                            [this.state.yDir]: moveY
-                        }
-                    })
-
-                },500)
-            }
-
 
     // // takes state as an input
     // AddStopMarker(props){
@@ -161,23 +134,100 @@ class Grid extends Component {
         event.preventDefault();
     }
     componentDidMount() {
-
+        let that = this
 
         function setCellSizes(){
-            if(this.state.startingCell){
-                // setTimeout(function(){
-                    this.setState({
-                        cellWidth: this.state.startingCell.offsetWidth,
-                        cellHeight: this.state.startingCell.offsetHeight
-                    })
-                    return
-                    // })
-                } else {
-                    setCellSizes()
-                }
-
+            setTimeout(function(){
+                if(that.state.startingCell){
+                    console.log(that.state)
+                    // setTimeout(function(){
+                        that.setState({
+                            cellWidth: that.state.startingCell.offsetWidth,
+                            cellHeight: that.state.startingCell.offsetHeight
+                        })
+                        return
+                        // })
+                    } else {
+                        setCellSizes()
+                    }
+            },1000)
         }
-        // call movemaker with stops on mount
+        setCellSizes()
+        // times x/y by height of each cell
+        function getPixels(x,y,width, height){
+            let moveX = parseInt(x) * width
+            let moveY = parseInt(y) * height
+            console.log(moveX)
+            console.log(moveY)
+
+            return {
+                moveX: moveX,
+                moveY: moveY
+            }
+
+            // setTimeout(function(){
+            //     that.setState({
+            //         stopCoords:{
+            //             [this.state.xDir]: moveX,
+            //             [this.state.yDir]: moveY
+            //         }
+            //     })
+            //
+            // },500)
+        }
+        // define direction if x/y is pos or neg
+        function directionToMove(x,y){
+            let xDir
+            let yDir
+            // check if up or down / + -
+            if(x < 0){
+                xDir = "left"
+            } else {
+                xDir = "right"
+            }
+            if(y < 0){
+                yDir = "top"
+            } else {
+                yDir = "bottom"
+            }
+            return {
+                xDir: xDir,
+                yDir: yDir
+            }
+            // this.setState({
+            //     xDir: xDir,
+            //     yDir: yDir
+            // })
+        }
+        function setCoords(){
+            let coordsArr = []
+            // console.log(this)
+            setTimeout(function(){
+                if(that.state.stops.length > 0){
+                    that.state.stops.forEach(obj => {
+                        let directions = directionToMove(obj.x, obj.y)
+                        let pixels = getPixels(obj.x, obj.y, that.state.cellWidth, that.state.cellHeight)
+                        let coords = {
+                            pixels: pixels,
+                            directions: directions
+                        }
+                        coordsArr.push(coords)
+                    })
+                    console.log(coordsArr)
+                    that.setState({
+                        directionsArr: coordsArr
+                    })
+
+                }
+            },1050)
+        }
+        setCoords()
+        // set the cell size to know how to move
+        // loop over stops
+        // pass in x, y and get direction
+        // pass in x,y and width and height - set css prop and pixesl to move
+        // save to obj and push to Array - set to get
+        // loop over array and feed into stops
 
 
         let startingCell = document.querySelector('.box-container:nth-of-type(39802)')
@@ -219,31 +269,32 @@ class Grid extends Component {
     // tester func only
     getState(){
         // console.log('cell', this.state.startingCell)
-        console.log('temp x', this.state.tempX)
-        console.log('temp y', this.state.tempY)
-
-        console.log('real x', this.state.position.x)
-        console.log('real y', this.state.position.y)
+        // console.log('temp x', this.state.tempX)
+        // console.log('temp y', this.state.tempY)
+        //
+        // console.log('real x', this.state.position.x)
+        // console.log('real y', this.state.position.y)
+        console.log('arr', this.state.directionsArr)
     }
-    directionToMove(x,y){
-        let xDir
-        let yDir
-        // check if up or down / + -
-        if(x < 0){
-            xDir = "left"
-        } else {
-            xDir = "right"
-        }
-        if(y < 0){
-            yDir = "top"
-        } else {
-            yDir = "bottom"
-        }
-        this.setState({
-            xDir: xDir,
-            yDir: yDir
-        })
-    }
+    // directionToMove(x,y){
+    //     let xDir
+    //     let yDir
+    //     // check if up or down / + -
+    //     if(x < 0){
+    //         xDir = "left"
+    //     } else {
+    //         xDir = "right"
+    //     }
+    //     if(y < 0){
+    //         yDir = "top"
+    //     } else {
+    //         yDir = "bottom"
+    //     }
+    //     this.setState({
+    //         xDir: xDir,
+    //         yDir: yDir
+    //     })
+    // }
 }
 // to start at bottom, and minus one
 
