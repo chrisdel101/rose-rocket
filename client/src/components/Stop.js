@@ -12,7 +12,7 @@ function Stop(props){
         }
         console.log('styles', styles)
         return(
-            <div className="stop-marker" style={{right: "5px", bottom: "0px"}} key={i}></div>
+            <div className="stop-marker" style={styles} key={i}></div>
         )
     })
 }

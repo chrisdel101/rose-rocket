@@ -153,14 +153,32 @@ class Grid extends Component {
                     }
             },1000)
         }
+
         setCellSizes()
         // times x/y by height of each cell
-        function getPixels(x,y,width, height){
-            let moveX = parseInt(x) * width
-            let moveY = parseInt(y) * height
-            // console.log(moveX)
-            // console.log(moveY)
+        function getPixels(x,y){
 
+            let totalX
+            let totalY
+            // first 10 cells = 100px
+            // after that everythig 11px
+            if(x > 10){
+                x = x - 10
+                totalX = 100 + (x * 11)
+            } else {
+                totalX = x * 10
+            }
+            if(y > 10){
+                y = y - 10
+                totalY = 100 + (y * 11)
+            } else {
+                totalY = y * 10
+            }
+
+            let moveX = parseInt(totalX)
+            let moveY = parseInt(totalY)
+            console.log('mx', moveX)
+            console.log('my', moveY)
             return {
                 moveX: moveX,
                 moveY: moveY
@@ -189,8 +207,8 @@ class Grid extends Component {
                     that.state.stops.forEach(stop => {
                         if(type === 'stop'){
                             // make vals negative
-                            stop.x = -1 * stop.x
-                            stop.y = -1 * stop.y
+                            // stop.x = -1 * stop.x
+                            // stop.y = -1 * stop.y
                             let pixels = getPixels(
                                 stop.x, stop.y, that.state.cellWidth, that.state.cellHeight
                             )
@@ -201,7 +219,7 @@ class Grid extends Component {
                                     yDir: "bottom"
                                 }
                             }
-                            console.log('coords', coords)
+                            // console.log('coords', coords)
                             coordsArr.push(coords)
                         }
                     })
