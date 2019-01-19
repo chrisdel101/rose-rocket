@@ -10,7 +10,8 @@ class Grid extends Component {
 		this.state = {
             legs: [],
 			stops: [],
-            position: {x: 0, y: 0},
+            truckPosition: {x: 0, y: 0},
+
             tempX: '0',
             tempY: '0',
             stopToggle: false
@@ -19,7 +20,7 @@ class Grid extends Component {
 	}
 
     move(xVal,yVal){
-        // console.log('x', this.state.position.x)
+        // console.log('x', this.state.truckPosition.x)
         // get corner box
         // var startStop = document.querySelector('.box-container:nth-of-type(39801)')
 
@@ -30,13 +31,13 @@ class Grid extends Component {
         startStop.style["grid-row-end"] = this.adjustRowMovement(yVal)
         // add input to state val
 
-        xVal = parseInt(this.state.position.x) + parseInt(xVal)
-        yVal= parseInt(this.state.position.y) + parseInt(yVal)
-            console.log('y', this.state.position.y)
-            console.log('x', this.state.position.x)
+        xVal = parseInt(this.state.truckPosition.x) + parseInt(xVal)
+        yVal= parseInt(this.state.truckPosition.y) + parseInt(yVal)
+            console.log('y', this.state.truckPosition.y)
+            console.log('x', this.state.truckPosition.x)
             // set x, y, and starting
             this.setState({
-                position: {
+                truckPosition: {
                     x: xVal,
                     y: yVal
                 },
@@ -157,8 +158,8 @@ class Grid extends Component {
         function getPixels(x,y,width, height){
             let moveX = parseInt(x) * width
             let moveY = parseInt(y) * height
-            console.log(moveX)
-            console.log(moveY)
+            // console.log(moveX)
+            // console.log(moveY)
 
             return {
                 moveX: moveX,
@@ -175,53 +176,46 @@ class Grid extends Component {
             //
             // },500)
         }
-        // define direction if x/y is pos or neg
-        function directionToMove(x,y){
-            let xDir
-            let yDir
-            // check if up or down / + -
-            if(x < 0){
-                xDir = "left"
-            } else {
-                xDir = "right"
-            }
-            if(y < 0){
-                yDir = "top"
-            } else {
-                yDir = "bottom"
-            }
-            return {
-                xDir: xDir,
-                yDir: yDir
-            }
-            // this.setState({
-            //     xDir: xDir,
-            //     yDir: yDir
-            // })
-        }
-        function setCoords(){
+        // no negative numbers
+        // - for driver need to calc against previous
+        // - stop all one way
+
+        // types are 'stop' and 'driver' - driver needs calcs
+        function setCoords(type){
             let coordsArr = []
-            // console.log(this)
             setTimeout(function(){
+                // filter out undefined
                 if(that.state.stops.length > 0){
-                    that.state.stops.forEach(obj => {
-                        let directions = directionToMove(obj.x, obj.y)
-                        let pixels = getPixels(obj.x, obj.y, that.state.cellWidth, that.state.cellHeight)
-                        let coords = {
-                            pixels: pixels,
-                            directions: directions
+                    that.state.stops.forEach(stop => {
+                        if(type === 'stop'){
+                            // make vals negative
+                            stop.x = -1 * stop.x
+                            stop.y = -1 * stop.y
+                            let pixels = getPixels(
+                                stop.x, stop.y, that.state.cellWidth, that.state.cellHeight
+                            )
+                            let coords = {
+                                pixels: pixels,
+                                directions: {
+                                    xDir: "left",
+                                    yDir: "bottom"
+                                }
+                            }
+                            console.log('coords', coords)
+                            coordsArr.push(coords)
                         }
-                        coordsArr.push(coords)
                     })
+
+                }
                     console.log(coordsArr)
                     that.setState({
                         directionsArr: coordsArr
                     })
 
-                }
+
             },1050)
         }
-        setCoords()
+        setCoords('stop')
         // set the cell size to know how to move
         // loop over stops
         // pass in x, y and get direction
@@ -272,8 +266,8 @@ class Grid extends Component {
         // console.log('temp x', this.state.tempX)
         // console.log('temp y', this.state.tempY)
         //
-        // console.log('real x', this.state.position.x)
-        // console.log('real y', this.state.position.y)
+        // console.log('real x', this.state.truckPosition.x)
+        // console.log('real y', this.state.truckPosition.y)
         console.log('arr', this.state.directionsArr)
     }
     // directionToMove(x,y){
