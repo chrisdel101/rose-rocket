@@ -99,40 +99,45 @@ class Grid extends Component {
             // console.log(cellsUpward)
             // let cellsOver = Math.floor(coords.moveX / 11)
             // console.log(cellsOver)
-            let cellsUpward = 19  //x
-            let cellsOver = 20 //y
+            let cellsUpward = 20  //y
+            let cellsOver =  40 //x
 
     // **DIVIDE y /x to get num to move y each row up
 
             function overPerRow(x,y){
-                let overPerRow
+                let movesPerRow
                 if(y === 0){
-                    return overPerRow = 0
+                    return movesPerRow = 0
                 } else if(x === 0) {
-                    return overPerRow = y
+                    return movesPerRow = y
                 }
                 let greater
                 let lesser
+                let greaterName
                 if(x > y){
                     greater = x
                     lesser = y
+                    greaterName = 'x'
                 } else {
                     greater = y
                     lesser = x
+                    greaterName = 'y'
                 }
                 console.log('g', greater)
                 console.log('l', lesser)
-                overPerRow = greater / lesser
+                movesPerRow = greater / lesser
                 // round down
-                overPerRow = Math.floor(overPerRow)
+                movesPerRow = Math.floor(movesPerRow)
                 // get remainder to add at end
                 let remainder = greater % lesser
 
-                console.log('over', overPerRow)
-                return [overPerRow, remainder]
+                console.log('over', movesPerRow)
+                console.log('rem', remainder)
+                return {movesPerRow, remainder, greaterName}
             }
+            let overToMove = overPerRow(cellsOver, cellsUpward).movesPerRow
+            // assign to var
             overPerRow = overPerRow(cellsOver, cellsUpward)
-
             let tempCellNum = this.state.startingCellNum
             // console.log('temp', tempCellNum)
             // loop over coords unti reached
@@ -158,7 +163,7 @@ class Grid extends Component {
                 // reassign
                 // for every multiple of 20 move two over each
                     // rounds up by default
-                    for (var j = 0; j < overPerRow; j++) {
+                    for (var j = 0; j < overToMove; j++) {
                         if(cellsOver){
                         // console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`))
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
@@ -166,6 +171,27 @@ class Grid extends Component {
                         cellsOver = cellsOver - 1
 
                         tempCellNum = tempCellNum + 1
+                    }
+                }
+            }
+            // use up remainder on remaining rows
+            if(overPerRow.remainder || cellsOver){
+                console.log(overPerRow.greaterName)
+                for (var k = 0; k < overPerRow.remainder; k++) {
+                    if(overPerRow.greaterName === 'x'){
+                        // if(k === 0 || k === 1 ){
+                            console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum}`))
+                            document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`).style.backgroundColor = 'purple'
+                            tempCellNum = tempCellNum - 200
+                        // } else {
+                        //     console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum}`))
+                        //
+                        //     tempCellNum = tempCellNum - 200
+                        //     document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`).style.backgroundColor = 'purple'
+                        // }
+                    } else {
+                        tempCellNum = tempCellNum + 1
+                        document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
                     }
                 }
             }
