@@ -99,7 +99,7 @@ class Grid extends Component {
             // console.log(cellsUpward)
             // let cellsOver = Math.floor(coords.moveX / 11)
             // console.log(cellsOver)
-            let cellsUpward = 20  //x
+            let cellsUpward = 19  //x
             let cellsOver = 20 //y
 
     // **DIVIDE y /x to get num to move y each row up
@@ -120,12 +120,18 @@ class Grid extends Component {
                     greater = y
                     lesser = x
                 }
+                console.log('g', greater)
+                console.log('l', lesser)
                 overPerRow = greater / lesser
+                // round down
+                overPerRow = Math.floor(overPerRow)
+                // get remainder to add at end
+                let remainder = greater % lesser
 
                 console.log('over', overPerRow)
-                return overPerRow
+                return [overPerRow, remainder]
             }
-            overPerRow = overPerRow(cellsUpward, cellsUpward)
+            overPerRow = overPerRow(cellsOver, cellsUpward)
 
             let tempCellNum = this.state.startingCellNum
             // console.log('temp', tempCellNum)
@@ -162,8 +168,8 @@ class Grid extends Component {
                         tempCellNum = tempCellNum + 1
                     }
                 }
-                console.log('over left', cellsOver)
             }
+            console.log('Y left at end?', cellsOver)
             // reassign starting cell
             this.setState({
                 startingCellNum:tempCellNum
