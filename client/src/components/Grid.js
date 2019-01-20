@@ -15,7 +15,8 @@ class Grid extends Component {
 
             tempX: '0',
             tempY: '0',
-            stopToggle: false
+            stopToggle: false,
+            startingCellNum:39814
 		};
 
 	}
@@ -82,52 +83,90 @@ class Grid extends Component {
         return coordsObj
     }
     colorGrid(cellCoords){
-        // cellCoords = {x:20, y: 10}
+        cellCoords = {x:20, y: 10}
         let startingCell = this.state.startingCell
-        console.log(startingCell)
         // x of coords is === -bottom
         //test -// {x: 20, y: 30}
-        // **UP**
-        let that = this
+    // **CONVERT TO PIXELS**
 
-            let startPosBottom = that.posInParent(startingCell, this.state.grid).bottom
-            console.log('s', startPosBottom)
+            // let startPosBottom = this.posInParent(startingCell, this.state.grid).bottom
+            // console.log('s', startPosBottom)
             // convert stop to pixels
-            let coords = this.convertToPixels(cellCoords.x, cellCoords.y)
-            console.log(coords)
+            // let coords = this.convertToPixels(cellCoords.x, cellCoords.y)
+            // console.log(coords)
             //divide by 11 - cells above starting to go
-            let cellsUpward = Math.floor(coords.moveY / 11  )
-            console.log(cellsUpward)
-            let cellsOver = Math.floor(coords.moveX / 11)
-            console.log(cellsOver)
+            // let cellsUpward = Math.ceil(coords.moveY / 11  )
+            // console.log(cellsUpward)
+            // let cellsOver = Math.floor(coords.moveX / 11)
+            // console.log(cellsOver)
+            let cellsUpward = 20  //x
+            let cellsOver = 20 //y
 
+    // **DIVIDE y /x to get num to move y each row up
 
+            function overPerRow(x,y){
+                let overPerRow
+                if(y === 0){
+                    return overPerRow = 0
+                } else if(x === 0) {
+                    return overPerRow = y
+                }
+                let greater
+                let lesser
+                if(x > y){
+                    greater = x
+                    lesser = y
+                } else {
+                    greater = y
+                    lesser = x
+                }
+                overPerRow = greater / lesser
 
-            let tempCellNum = 39814
+                console.log('over', overPerRow)
+                return overPerRow
+            }
+            overPerRow = overPerRow(cellsUpward, cellsUpward)
+
+            let tempCellNum = this.state.startingCellNum
+            // console.log('temp', tempCellNum)
             // loop over coords unti reached
-            for (var i = 0; i < cellsUpward; i++) {
+            for (var i = 0; i < (cellsUpward - 1); i++) {
 
-                startingCell = document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`)
+                // console.log('temp', tempCellNum)
+                // use temp as is on first call
+                if(i === 0){
+                    document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                    .style.backgroundColor = 'purple'
 
-                if(i === 0) x.style.backgroundColor = 'yellow'
+                    tempCellNum = tempCellNum - 200
+
+                } else {
+                    // else add 200 first
+                    tempCellNum = tempCellNum - 200
+                    document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                    .style.backgroundColor = 'purple'
+
+
+                }
+
                 // reassign
-                tempCellNum = tempCellNum - 200
                 // for every multiple of 20 move two over each
-
-                if(cellsOver){
-                    for (var j = 0; j < 2; j++) {
+                    // rounds up by default
+                    for (var j = 0; j < overPerRow; j++) {
+                        if(cellsOver){
+                        // console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`))
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
                         // reassign
-                        cellsOver = cellsOver - 2
+                        cellsOver = cellsOver - 1
 
                         tempCellNum = tempCellNum + 1
                     }
                 }
-
+                console.log('over left', cellsOver)
             }
             // reassign starting cell
             this.setState({
-                startingCell:
+                startingCellNum:tempCellNum
             })
     }
     // get position of cell inside parent
@@ -244,9 +283,8 @@ class Grid extends Component {
         // pass in x,y and width and height - set css prop and pixesl to move
         // save to obj and push to Array - set to get
         // loop over array and feed into stops
-
         let grid = document.querySelector('.grid')
-        let startingCell = document.querySelector('.box-container:nth-of-type(39814)')
+        let startingCell = document.querySelector(`.box-container:nth-of-type(${this.state.startingCellNum})`)
 
         this.setState({
             grid: grid,
