@@ -10,7 +10,7 @@ function Stop(props){
             [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
             [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px'
         }
-        console.log('styles', styles)
+        // console.log('styles', styles)
         return(
             <div className="stop-marker" style={styles} key={i}></div>
         )

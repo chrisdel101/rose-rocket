@@ -47,19 +47,22 @@ code {
 	grid-template-columns: repeat(200, 10px);
 }
 
-.box-container:nth-of-type(39802):before {
+.truck::before {
 	content: '\25CF';
 	color: red;
 	font-size: 10px;
 	position: relative;
-	bottom: 9px;
+}
+
+.truck {
+	position: absolute;
+	bottom: 0;
 }
 
 .stop-marker:before {
 	content: '\25CF';
 	color: blue;
 	font-size: 10px;
-	bottom: 9px;
 }
 
 .stop-marker {

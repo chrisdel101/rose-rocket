@@ -2,6 +2,7 @@ import React, {Component} from "react"
 import "../App.css";
 import Box from './Box'
 import Stop from './Stop'
+import Truck from './Truck'
 
 class Grid extends Component {
 	constructor(props) {
@@ -18,7 +19,7 @@ class Grid extends Component {
 		};
 
 	}
-
+    // move truck using grid
     move(xVal,yVal){
         // console.log('x', this.state.truckPosition.x)
         // get corner box
@@ -43,53 +44,113 @@ class Grid extends Component {
                 },
         })
     }
-
-    // // takes state as an input
-    // AddStopMarker(props){
-    //     console.log('props', props)
-    //     if(!props){
-    //         return
-    //     }
-    //     let x = props.move.xDir
-    //     let y = props.move.yDir
-    //     let xCoord = props.move.stopCoords.xDir
-    //     let yCoord = props.move.stopCoords.yDir
-    //     let obj = {
-    //         [x]: xCoord,
-    //         [y]: yCoord
-    //         // props.move.yDir: props.move
-    //     }
-    //     function markup(){
-    //         if(props){
-    //             console.log(obj)
-    //             return(<div className="stop-marker" style={obj}></div>)
-    //         } else {
-    //             return null
-    //         }
-    //     }
-    //     return(markup())
-    // }
-    // setStops(state){
-    //     console.log('state', state)
-    //     return state.stops.map(coords => {
-    //         return(<this.AddStopMarker move={state} />)
-    //     })
-    // }
-    // move={this.state.mark(this.state.markerCoords.xDir, this.state.markerCoords.yDir)}/>
+    // to make button work
     clickStops(){
         this.setState({
             stopToggle: !this.stopToggle
         })
     }
+    // takes and x/y and returns px to move
+    convertToPixels(x,y){
+        let totalX
+        let totalY
+        // first 10 cells = 100px
+        // after that everythig 11px
+        // - minus cells add 100px
+        // - rest * 11 then sum
+        if(x > 10){
+            x = x - 10
+            totalX = 100 + (x * 11)
+        } else {
+            totalX = x * 10
+        }
+        if(y > 10){
+            y = y - 10
+            totalY = 100 + (y * 11)
+        } else {
+            totalY = y * 10
+        }
+        let moveX = parseInt(totalX)
+        let moveY = parseInt(totalY)
+        // console.log('mx', moveX)
+        // console.log('my', moveY)
+        let coordsObj = {
+            moveX: moveX,
+            moveY: moveY
+        }
+        // this.setState({})
+        return coordsObj
+    }
+    colorGrid(cellCoords){
+        // cellCoords = {x:20, y: 10}
+        let startingCell = this.state.startingCell
+        console.log(startingCell)
+        // x of coords is === -bottom
+        //test -// {x: 20, y: 30}
+        // **UP**
+        let that = this
+
+            let startPosBottom = that.posInParent(startingCell, this.state.grid).bottom
+            console.log('s', startPosBottom)
+            // convert stop to pixels
+            let coords = this.convertToPixels(cellCoords.x, cellCoords.y)
+            console.log(coords)
+            //divide by 11 - cells above starting to go
+            let cellsUpward = Math.floor(coords.moveY / 11  )
+            console.log(cellsUpward)
+            let cellsOver = Math.floor(coords.moveX / 11)
+            console.log(cellsOver)
+
+
+
+            let tempCellNum = 39814
+            // loop over coords unti reached
+            for (var i = 0; i < cellsUpward; i++) {
+
+                startingCell = document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`)
+
+                if(i === 0) x.style.backgroundColor = 'yellow'
+                // reassign
+                tempCellNum = tempCellNum - 200
+                // for every multiple of 20 move two over each
+
+                if(cellsOver){
+                    for (var j = 0; j < 2; j++) {
+                        document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+                        // reassign
+                        cellsOver = cellsOver - 2
+
+                        tempCellNum = tempCellNum + 1
+                    }
+                }
+
+            }
+            // reassign starting cell
+            this.setState({
+                startingCell:
+            })
+    }
+    // get position of cell inside parent
+    posInParent(child, parent){
+        let childrenPos = parent.getBoundingClientRect()
+        let parentPos = parent.getBoundingClientRect()
+    	let relativePos = {}
+
+        relativePos['top'] = childrenPos.top - parentPos.top
+        relativePos['right'] = childrenPos.right - parentPos.right
+        relativePos['bottom'] = childrenPos.bottom - parentPos.bottom
+        relativePos['left'] = childrenPos.left - parentPos.left
+
+        return relativePos
+    }
     render() {
-
-
         // {this.state.stopCoords ? <this.ShowMarker move={this.state}/> : null}
     	return(
             <div>
                 <div className="grid-container">
                     <div className="grid">
-                    <Stop coords={this.state.directionsArr}/>
+                    <Truck />
+                    <Stop coords={this.state.stopsDirsArr}/>
                     <Box num={40000} />
                         {(this.state.stopToggle ? <Stop coords={this.state}/> : null)}
                     </div>
@@ -102,10 +163,11 @@ class Grid extends Component {
                      <input type="submit" value="Submit" onMouseOver={this.getState.bind(this)}></input>
 
                 </form>
-                <button onClick={this.clickStops.bind(this)}>Plot</button>
+                <button onClick={this.colorGrid.bind(this)}>Plot</button>
             </div>
         )
     }
+    // to adjust to move from bottom up
     adjustRowMovement(y){
         let total = 200
         let adjust = (total - y) + 1
@@ -135,82 +197,22 @@ class Grid extends Component {
         event.preventDefault();
     }
     componentDidMount() {
+
         let that = this
 
-        function setCellSizes(){
-            setTimeout(function(){
-                if(that.state.startingCell){
-                    console.log(that.state)
-                    // setTimeout(function(){
-                        that.setState({
-                            cellWidth: that.state.startingCell.offsetWidth,
-                            cellHeight: that.state.startingCell.offsetHeight
-                        })
-                        return
-                        // })
-                    } else {
-                        setCellSizes()
-                    }
-            },1000)
-        }
-
-        setCellSizes()
-        // times x/y by height of each cell
-        function getPixels(x,y){
-
-            let totalX
-            let totalY
-            // first 10 cells = 100px
-            // after that everythig 11px
-            if(x > 10){
-                x = x - 10
-                totalX = 100 + (x * 11)
-            } else {
-                totalX = x * 10
-            }
-            if(y > 10){
-                y = y - 10
-                totalY = 100 + (y * 11)
-            } else {
-                totalY = y * 10
-            }
-
-            let moveX = parseInt(totalX)
-            let moveY = parseInt(totalY)
-            console.log('mx', moveX)
-            console.log('my', moveY)
-            return {
-                moveX: moveX,
-                moveY: moveY
-            }
-
-            // setTimeout(function(){
-            //     that.setState({
-            //         stopCoords:{
-            //             [this.state.xDir]: moveX,
-            //             [this.state.yDir]: moveY
-            //         }
-            //     })
-            //
-            // },500)
-        }
-        // no negative numbers
-        // - for driver need to calc against previous
-        // - stop all one way
-
         // types are 'stop' and 'driver' - driver needs calcs
-        function setCoords(type){
+        function setStopCoords(type){
             let coordsArr = []
             setTimeout(function(){
                 // filter out undefined
-                if(that.state.stops.length > 0){
-                    that.state.stops.forEach(stop => {
-                        if(type === 'stop'){
+                if(type === 'stop'){
+                    if(that.state.stops.length > 0){
+                        that.state.stops.forEach(stop => {
                             // make vals negative
                             // stop.x = -1 * stop.x
                             // stop.y = -1 * stop.y
-                            let pixels = getPixels(
-                                stop.x, stop.y, that.state.cellWidth, that.state.cellHeight
+                            let pixels = that.convertToPixels(
+                                stop.x, stop.y
                             )
                             let coords = {
                                 pixels: pixels,
@@ -221,19 +223,21 @@ class Grid extends Component {
                             }
                             // console.log('coords', coords)
                             coordsArr.push(coords)
-                        }
-                    })
+                        })
+                    }
+                } else if(type === 'truck'){
+                    // to calc
 
                 }
                     console.log(coordsArr)
                     that.setState({
-                        directionsArr: coordsArr
+                        stopsDirsArr: coordsArr
                     })
 
 
             },1050)
         }
-        setCoords('stop')
+        setStopCoords('stop')
         // set the cell size to know how to move
         // loop over stops
         // pass in x, y and get direction
@@ -241,10 +245,11 @@ class Grid extends Component {
         // save to obj and push to Array - set to get
         // loop over array and feed into stops
 
-
-        let startingCell = document.querySelector('.box-container:nth-of-type(39802)')
+        let grid = document.querySelector('.grid')
+        let startingCell = document.querySelector('.box-container:nth-of-type(39814)')
 
         this.setState({
+            grid: grid,
             startingCell: startingCell,
         })
         // Call our fetch function below once the component mounts
@@ -286,7 +291,7 @@ class Grid extends Component {
         //
         // console.log('real x', this.state.truckPosition.x)
         // console.log('real y', this.state.truckPosition.y)
-        console.log('arr', this.state.directionsArr)
+        console.log('arr', this.state.stopsDirsArr)
     }
     // directionToMove(x,y){
     //     let xDir
