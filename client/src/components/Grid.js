@@ -82,8 +82,9 @@ class Grid extends Component {
         // this.setState({})
         return coordsObj
     }
-    colorGrid(cellCoords){
-        cellCoords = {x:20, y: 10}
+    colorGrid(x,y){
+        let yCells = y
+        let xCells = x
         let startingCell = this.state.startingCell
         // x of coords is === -bottom
         //test -// {x: 20, y: 30}
@@ -95,12 +96,12 @@ class Grid extends Component {
             // let coords = this.convertToPixels(cellCoords.x, cellCoords.y)
             // console.log(coords)
             //divide by 11 - cells above starting to go
-            // let cellsUpward = Math.ceil(coords.moveY / 11  )
-            // console.log(cellsUpward)
-            // let cellsOver = Math.floor(coords.moveX / 11)
-            // console.log(cellsOver)
-            let cellsUpward = 20  //y
-            let cellsOver =  40 //x
+            // let xCells = Math.ceil(coords.moveY / 11  )
+            // console.log(xCells)
+            // let xCells = Math.floor(coords.moveX / 11)
+            // console.log(xCells)
+            // let xCells = 10  //y
+            // let yCells =  40 //x
 
     // **DIVIDE y /x to get num to move y each row up
 
@@ -135,13 +136,13 @@ class Grid extends Component {
                 console.log('rem', remainder)
                 return {movesPerRow, remainder, greaterName}
             }
-            let overToMove = overPerRow(cellsOver, cellsUpward).movesPerRow
+            let overToMove = overPerRow(yCells, xCells).movesPerRow
             // assign to var
-            overPerRow = overPerRow(cellsOver, cellsUpward)
+            overPerRow = overPerRow(yCells, xCells)
             let tempCellNum = this.state.startingCellNum
             // console.log('temp', tempCellNum)
             // loop over coords unti reached
-            for (var i = 0; i < (cellsUpward - 1); i++) {
+            for (var i = 0; i < (xCells - 1); i++) {
 
                 // console.log('temp', tempCellNum)
                 // use temp as is on first call
@@ -164,18 +165,18 @@ class Grid extends Component {
                 // for every multiple of 20 move two over each
                     // rounds up by default
                     for (var j = 0; j < overToMove; j++) {
-                        if(cellsOver){
+                        if(yCells){
                         // console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`))
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
                         // reassign
-                        cellsOver = cellsOver - 1
+                        yCells = yCells - 1
 
                         tempCellNum = tempCellNum + 1
                     }
                 }
             }
             // use up remainder on remaining rows
-            if(overPerRow.remainder || cellsOver){
+            if(overPerRow.remainder){
                 console.log(overPerRow.greaterName)
                 for (var k = 0; k < overPerRow.remainder; k++) {
                     if(overPerRow.greaterName === 'x'){
@@ -183,20 +184,22 @@ class Grid extends Component {
                             console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum}`))
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`).style.backgroundColor = 'purple'
                             tempCellNum = tempCellNum - 200
-                        // } else {
-                        //     console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum}`))
-                        //
-                        //     tempCellNum = tempCellNum - 200
-                        //     document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`).style.backgroundColor = 'purple'
-                        // }
                     } else {
                         tempCellNum = tempCellNum + 1
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
                     }
                 }
             }
-            console.log('Y left at end?', cellsOver)
+            if(yCells <= 2){
+                // add one cell
+                // for (var i = 0; i < xCells; i++) {
+                    document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+                    tempCellNum = tempCellNum + 1
+                // }
+            }
+            console.log('Y left at end?', xCells)
             // reassign starting cell
+            console.log(tempCellNum)
             this.setState({
                 startingCellNum:tempCellNum
             })
@@ -213,6 +216,15 @@ class Grid extends Component {
         relativePos['left'] = childrenPos.left - parentPos.left
 
         return relativePos
+    }
+    testColor(){
+        // let that = this
+        // setTimeout(function(){
+            this.state.stops.map(stop => {
+                this.colorGrid(stop.x, stop.y)
+            })
+        // },5000)
+
     }
     render() {
         // {this.state.stopCoords ? <this.ShowMarker move={this.state}/> : null}
@@ -234,7 +246,7 @@ class Grid extends Component {
                      <input type="submit" value="Submit" onMouseOver={this.getState.bind(this)}></input>
 
                 </form>
-                <button onClick={this.colorGrid.bind(this)}>Plot</button>
+                <button onClick={this.testColor.bind(this)}>Plot</button>
             </div>
         )
     }
@@ -270,6 +282,7 @@ class Grid extends Component {
     componentDidMount() {
 
         let that = this
+
 
         // types are 'stop' and 'driver' - driver needs calcs
         function setStopCoords(type){
