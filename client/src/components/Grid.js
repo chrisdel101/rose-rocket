@@ -83,11 +83,15 @@ class Grid extends Component {
         return coordsObj
     }
     colorGrid(x,y){
-        x = 25
-        y = 30
+        x = 0
+        y = 10
         // let yCells = y
         // let xCells = x
-        let startingCell = this.state.startingCell
+
+
+        // let startingCell = this.state.startingCell
+        let startingCell = document.querySelector('.box-container:nth-of-type(38033')
+
         // x of coords is === -bottom
         //test -// {x: 20, y: 30}
     // **CONVERT TO PIXELS**
@@ -106,7 +110,7 @@ class Grid extends Component {
             // let xCells = 10  //y
             // let yCells =  40 //x
 
-            let tempCellNum = this.state.startingCellNum
+            let tempCellNum = 38033
     // **DIVIDE y /x to get num to move y each row up
 
             let greater
@@ -156,7 +160,7 @@ class Grid extends Component {
                         tempCellNum = tempCellNum + 1
                     }
                 }
-
+                console.log(tempCellNum)
 
 
                     // else add 200 first
