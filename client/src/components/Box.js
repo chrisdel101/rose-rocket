@@ -14,6 +14,7 @@ class Box extends React.Component{
         return this.arr.map((i) => {
             return(
                 <div className="box-container" key={i} ref={this._items.ref(i)}>
+                {(this.props.cellNums ? console.log(this.props) : null)}
                 <div className="box">
 
                 </div>

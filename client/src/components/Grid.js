@@ -240,22 +240,24 @@ class Grid extends Component {
                 },100*(index))
             })
     }
+    returnCellState(){
+        if(this.state.cellNumsArr){
+            return this.state.cellNumsArr
+        } else {
+            return null
+        }
+    }
     render() {
-        // if(this.state.cellNumsArr){
-        //     console.log(this.state.cellNumsArr)
-        // } else {
-        //     return null
-        // }
     	return(
             <div>
-            {(this.state.cellNumsArr ? console.log(this.state.cellNumsArr) : null)}
                 <div className="grid-container">
+                {/*{(this.state.cellNumsArr ? console.log(this.state.cellNumsArr) : null)}*/}
                     <div className="grid">
 
                     <Truck />
                     <Stop coords={this.state.stopsDirsArr}/>
-                    <Box num={40000} />
-                        {(this.state.stopToggle ? <Stop coords={this.state}/> : null)}
+                    <Box num={40000} cellNums={(this.state.cellNumsArr ? this.state.cellNumsArr : null)}/>
+                        {/*{(this.state.stopToggle ? <Stop coords={this.state}/> : null)} */}
                     </div>
 
                 </div>
