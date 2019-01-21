@@ -83,39 +83,36 @@ class Grid extends Component {
         return coordsObj
     }
     colorGrid(x,y){
-        let yCells = y
-        let xCells = x
+        x = 20
+        y = 20
+        // let yCells = y
+        // let xCells = x
         let startingCell = this.state.startingCell
         // x of coords is === -bottom
         //test -// {x: 20, y: 30}
     // **CONVERT TO PIXELS**
 
-            // let startPosBottom = this.posInParent(startingCell, this.state.grid).bottom
-            // console.log('s', startPosBottom)
+            let startPosBottom = this.posInParent(startingCell, this.state.grid).bottom
+            console.log('s', startPosBottom)
             // convert stop to pixels
-            // let coords = this.convertToPixels(cellCoords.x, cellCoords.y)
-            // console.log(coords)
-            //divide by 11 - cells above starting to go
-            // let xCells = Math.ceil(coords.moveY / 11  )
-            // console.log(xCells)
-            // let xCells = Math.floor(coords.moveX / 11)
-            // console.log(xCells)
+
+            let coords = this.convertToPixels(x, y)
+            console.log(coords)
+            // divide by 11 - cells above starting to go
+            let yCells = Math.ceil(coords.moveY / 11  )
+            let xCells = Math.ceil(coords.moveX / 11)
+            console.log('y', yCells)
+            console.log('x', xCells)
             // let xCells = 10  //y
             // let yCells =  40 //x
 
     // **DIVIDE y /x to get num to move y each row up
 
-            function overPerRow(x,y){
-                let movesPerRow
-                if(y === 0){
-                    return movesPerRow = 0
-                } else if(x === 0) {
-                    return movesPerRow = y
-                }
+            function fillInMoves(x,y){
                 let greater
                 let lesser
                 let greaterName
-                if(x > y){
+                if(x => y){
                     greater = x
                     lesser = y
                     greaterName = 'x'
@@ -124,28 +121,32 @@ class Grid extends Component {
                     lesser = x
                     greaterName = 'y'
                 }
-                console.log('g', greater)
-                console.log('l', lesser)
-                movesPerRow = greater / lesser
+                let movesInBetween
+                if(y === 0 || x === 0){
+                    //to do
+                    return
+                }
+                console.log(`greater:${greaterName}`, greater)
+                console.log('lesser', lesser)
+                movesInBetween = greater / lesser
                 // round down
-                movesPerRow = Math.floor(movesPerRow)
+                movesInBetween = Math.floor(movesInBetween)
                 // get remainder to add at end
                 let remainder = greater % lesser
 
-                console.log('over', movesPerRow)
+                console.log('moves in bwt', movesInBetween)
                 console.log('rem', remainder)
-                return {movesPerRow, remainder, greaterName}
+                    return {movesInBetween, remainder, greaterName}
             }
-            let overToMove = overPerRow(yCells, xCells).movesPerRow
+            // moves in between the dominant direction
+            let overToMove = fillInMoves(xCells, yCells)
             // assign to var
-            overPerRow = overPerRow(yCells, xCells)
+            // fillInMoves = fillInMoves(xCells, yCells)
+
             let tempCellNum = this.state.startingCellNum
             // console.log('temp', tempCellNum)
-            // loop over coords unti reached
-            for (var i = 0; i < (xCells - 1); i++) {
 
-                // console.log('temp', tempCellNum)
-                // use temp as is on first call
+            function handleXmvmt(i){
                 if(i === 0){
                     document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                     .style.backgroundColor = 'purple'
@@ -160,46 +161,86 @@ class Grid extends Component {
 
 
                 }
-
-                // reassign
-                // for every multiple of 20 move two over each
-                    // rounds up by default
-                    for (var j = 0; j < overToMove; j++) {
-                        if(yCells){
-                        // console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`))
-                        document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
-                        // reassign
-                        yCells = yCells - 1
-
-                        tempCellNum = tempCellNum + 1
-                    }
-                }
             }
-            // use up remainder on remaining rows
-            if(overPerRow.remainder){
-                console.log(overPerRow.greaterName)
-                for (var k = 0; k < overPerRow.remainder; k++) {
-                    if(overPerRow.greaterName === 'x'){
-                        // if(k === 0 || k === 1 ){
-                            console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum}`))
-                            document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`).style.backgroundColor = 'purple'
-                            tempCellNum = tempCellNum - 200
-                    } else {
-                        tempCellNum = tempCellNum + 1
-                        document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
-                    }
-                }
-            }
-            if(yCells <= 2){
-                // add one cell
-                // for (var i = 0; i < xCells; i++) {
-                    document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+            function handleYmvmt(input){
+                // if(input === 0){
+                    document.querySelector(`.box-container:nth-of-type(${tempCellNum}`).style.backgroundColor = 'yellow'
                     tempCellNum = tempCellNum + 1
+
+                // }
+                // } else {
+                // document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+                // tempCellNum = tempCellNum + 1
+                    // tempCellNum = tempCellNum + 1
+                    // document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
                 // }
             }
-            console.log('Y left at end?', xCells)
-            // reassign starting cell
-            console.log(tempCellNum)
+
+            if(overToMove.greaterName === 'x'){
+                // maybe -1
+                let xAdjustment = 1
+                if(xCells % 2 === 0) xAdjustment = 2
+                for (var i = 0; i < (xCells - xAdjustment); i++) {
+                    // reassign
+                    handleXmvmt(i)
+                    // after last x call, break
+                    console.log('i',i)
+                    if(i >= ((xCells - xAdjustment) - 1)){
+                        console.log('break')
+                        break
+                    }
+                        // rounds up by default
+                        for (var j = 0; j < overToMove.movesInBetween; j++) {
+                            if(yCells){
+                                // console.log('j', j)
+                                handleYmvmt(j)
+                                yCells = yCells - 1
+                                console.log('y cells', yCells)
+                        }
+                    }
+                }
+            } else {
+                console.log('bottom',overToMove.movesInBetween)
+                for (var i = 0; i < yCells; i++) {
+                    // console.log('temp', tempCellNum)
+                    // reassign
+                    handleYmvmt(i)
+                    // for every multiple of 20 move two over each
+                        // rounds up by default
+                        for (var j = 0; j < overToMove.movesInBetween; j++) {
+                            if(xCells){
+                                handleXmvmt(j)
+                                xCells = xCells - 1
+                        }
+                    }
+                }
+            }
+
+            // use up remainder on remaining rows
+            // if(overPerRow.remainder){
+            //     console.log(overPerRow.greaterName)
+            //     for (var k = 0; k < overPerRow.remainder; k++) {
+            //         if(overPerRow.greaterName === 'x'){
+            //             // if(k === 0 || k === 1 ){
+            //                 console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum}`))
+            //                 document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`).style.backgroundColor = 'purple'
+            //                 tempCellNum = tempCellNum - 200
+            //         } else {
+            //             tempCellNum = tempCellNum + 1
+            //             document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+            //         }
+            //     }
+            // }
+            // if(yCells <= 2){
+            //     // add one cell
+            //     // for (var i = 0; i < xCells; i++) {
+            //         document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+            //         tempCellNum = tempCellNum + 1
+            //     // }
+            // }
+            // console.log('Y left at end?', xCells)
+            // // reassign starting cell
+            // console.log(tempCellNum)
             this.setState({
                 startingCellNum:tempCellNum
             })
@@ -246,7 +287,7 @@ class Grid extends Component {
                      <input type="submit" value="Submit" onMouseOver={this.getState.bind(this)}></input>
 
                 </form>
-                <button onClick={this.testColor.bind(this)}>Plot</button>
+                <button onClick={this.colorGrid.bind(this)}>Plot</button>
             </div>
         )
     }
