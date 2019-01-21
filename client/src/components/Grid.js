@@ -83,8 +83,8 @@ class Grid extends Component {
         return coordsObj
     }
     colorGrid(x,y){
-        x = 20
-        y = 20
+        x = 25
+        y = 30
         // let yCells = y
         // let xCells = x
         let startingCell = this.state.startingCell
@@ -106,144 +106,73 @@ class Grid extends Component {
             // let xCells = 10  //y
             // let yCells =  40 //x
 
+            let tempCellNum = this.state.startingCellNum
     // **DIVIDE y /x to get num to move y each row up
 
-            function fillInMoves(x,y){
-                let greater
-                let lesser
-                let greaterName
-                if(x => y){
-                    greater = x
-                    lesser = y
-                    greaterName = 'x'
-                } else {
-                    greater = y
-                    lesser = x
-                    greaterName = 'y'
-                }
-                let movesInBetween
-                if(y === 0 || x === 0){
-                    //to do
-                    return
-                }
-                console.log(`greater:${greaterName}`, greater)
-                console.log('lesser', lesser)
-                movesInBetween = greater / lesser
-                // round down
-                movesInBetween = Math.floor(movesInBetween)
-                // get remainder to add at end
-                let remainder = greater % lesser
+            let greater
+            (x >= y ? greater = x : greater = y)
 
-                console.log('moves in bwt', movesInBetween)
-                console.log('rem', remainder)
-                    return {movesInBetween, remainder, greaterName}
-            }
-            // moves in between the dominant direction
-            let overToMove = fillInMoves(xCells, yCells)
-            // assign to var
-            // fillInMoves = fillInMoves(xCells, yCells)
+            let tempX = xCells
+            let tempY = yCells
 
-            let tempCellNum = this.state.startingCellNum
-            // console.log('temp', tempCellNum)
+            // for (var i = 0; i < greater; i++) {
+                // xCells = xCells - 1
+                // yCells = yCells - 1
+                // console.log('x', xCells)
+                // console.log('y', yCells)
+                // run through both axis
+                // while both exist, diagonal
+                // when only one, straing that way
+                document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                .style.backgroundColor = 'purple'
+                tempX = tempX - 1
+                tempY = tempY - 1
 
-            function handleXmvmt(i){
-                if(i === 0){
+                while(tempX && tempY){
+                    tempCellNum = tempCellNum - 200
+                    console.log('temp', tempCellNum)
                     document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                     .style.backgroundColor = 'purple'
-
-                    tempCellNum = tempCellNum - 200
-
-                } else {
-                    // else add 200 first
-                    tempCellNum = tempCellNum - 200
-                    document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                    .style.backgroundColor = 'purple'
+                    console.log('x', tempX)
 
 
-                }
-            }
-            function handleYmvmt(input){
-                // if(input === 0){
-                    document.querySelector(`.box-container:nth-of-type(${tempCellNum}`).style.backgroundColor = 'yellow'
+                    document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`)
+                    .style.backgroundColor = 'yellow'
+
                     tempCellNum = tempCellNum + 1
-
-                // }
-                // } else {
-                // document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
-                // tempCellNum = tempCellNum + 1
-                    // tempCellNum = tempCellNum + 1
-                    // document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
-                // }
-            }
-
-            if(overToMove.greaterName === 'x'){
-                // maybe -1
-                let xAdjustment = 1
-                if(xCells % 2 === 0) xAdjustment = 2
-                for (var i = 0; i < (xCells - xAdjustment); i++) {
-                    // reassign
-                    handleXmvmt(i)
-                    // after last x call, break
-                    console.log('i',i)
-                    if(i >= ((xCells - xAdjustment) - 1)){
-                        console.log('break')
-                        break
+                    console.log('y', tempY)
+                    tempX = tempX - 1
+                    tempY = tempY - 1
+                }
+                if(tempY){
+                    for (var i = 0; i < tempY; i++) {
+                        tempCellNum = tempCellNum - 200
+                        document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                        .style.backgroundColor = 'purple'
                     }
-                        // rounds up by default
-                        for (var j = 0; j < overToMove.movesInBetween; j++) {
-                            if(yCells){
-                                // console.log('j', j)
-                                handleYmvmt(j)
-                                yCells = yCells - 1
-                                console.log('y cells', yCells)
-                        }
+                } else if(tempX){
+                    for (var i = 0; i < tempX; i++) {
+                        document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+                        tempCellNum = tempCellNum + 1
                     }
                 }
-            } else {
-                console.log('bottom',overToMove.movesInBetween)
-                for (var i = 0; i < yCells; i++) {
-                    // console.log('temp', tempCellNum)
-                    // reassign
-                    handleYmvmt(i)
-                    // for every multiple of 20 move two over each
-                        // rounds up by default
-                        for (var j = 0; j < overToMove.movesInBetween; j++) {
-                            if(xCells){
-                                handleXmvmt(j)
-                                xCells = xCells - 1
-                        }
-                    }
-                }
-            }
 
-            // use up remainder on remaining rows
-            // if(overPerRow.remainder){
-            //     console.log(overPerRow.greaterName)
-            //     for (var k = 0; k < overPerRow.remainder; k++) {
-            //         if(overPerRow.greaterName === 'x'){
-            //             // if(k === 0 || k === 1 ){
-            //                 console.log(document.querySelector(`.box-container:nth-of-type(${tempCellNum}`))
-            //                 document.querySelector(`.box-container:nth-of-type(${tempCellNum - 200}`).style.backgroundColor = 'purple'
-            //                 tempCellNum = tempCellNum - 200
-            //         } else {
-            //             tempCellNum = tempCellNum + 1
-            //             document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
-            //         }
-            //     }
-            // }
-            // if(yCells <= 2){
-            //     // add one cell
-            //     // for (var i = 0; i < xCells; i++) {
-            //         document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+
+
+                    // else add 200 first
+                    // tempCellNum = tempCellNum - 200
+                    // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                    // .style.backgroundColor = 'purple'
+
+
+            // function handleYmvmt(input){
+            //     // if(input === 0){
+            //         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`).style.backgroundColor = 'yellow'
             //         tempCellNum = tempCellNum + 1
-            //     // }
-            // }
-            // console.log('Y left at end?', xCells)
-            // // reassign starting cell
-            // console.log(tempCellNum)
-            this.setState({
-                startingCellNum:tempCellNum
-            })
+            //
+            // // moves in between the dominant direction
+
+        // }
     }
     // get position of cell inside parent
     posInParent(child, parent){
