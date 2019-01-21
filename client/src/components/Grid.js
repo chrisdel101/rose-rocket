@@ -16,7 +16,9 @@ class Grid extends Component {
             tempX: '0',
             tempY: '0',
             stopToggle: false,
-            startingCellNum:39814
+            startingCellNum:39814,
+            previousX: 0,
+            previousY: 0
 		};
 
 	}
@@ -82,13 +84,14 @@ class Grid extends Component {
         // this.setState({})
         return coordsObj
     }
-    colorGrid(x,y){
-        x = 0
-        y = 10
-        // let yCells = y
-        // let xCells = x
+    colorGrid(x, y){
+        // x = 0
+        // y = 10
+        console.log(`{x:${x}, y:${y}}`)
+        let tempX = x
+        let tempY = y
 
-
+        // gets set on mount
         // let startingCell = this.state.startingCell
         let startingCell = document.querySelector('.box-container:nth-of-type(38033')
 
@@ -96,72 +99,108 @@ class Grid extends Component {
         //test -// {x: 20, y: 30}
     // **CONVERT TO PIXELS**
 
-            let startPosBottom = this.posInParent(startingCell, this.state.grid).bottom
-            console.log('s', startPosBottom)
-            // convert stop to pixels
-
-            let coords = this.convertToPixels(x, y)
-            console.log(coords)
-            // divide by 11 - cells above starting to go
-            let yCells = Math.ceil(coords.moveY / 11  )
-            let xCells = Math.ceil(coords.moveX / 11)
-            console.log('y', yCells)
-            console.log('x', xCells)
+            // let startPosBottom = this.posInParent(startingCell, this.state.grid).bottom
+            // console.log('s', startPosBottom)
+            // // convert stop to pixels
+            //
+            // let coords = this.convertToPixels(x, y)
+            // console.log(coords)
+            // // divide by 11 - cells above starting to go
+            // let yCells = Math.ceil(coords.moveY / 11  )
+            // let xCells = Math.ceil(coords.moveX / 11)
+            // console.log('y', yCells)
+            // console.log('x', xCells)
             // let xCells = 10  //y
             // let yCells =  40 //x
 
-            let tempCellNum = 38033
+            let tempCellNum = 39814
     // **DIVIDE y /x to get num to move y each row up
 
-            let greater
-            (x >= y ? greater = x : greater = y)
+            // let greater
+            // (x >= y ? greater = x : greater = y)
 
-            let tempX = xCells
-            let tempY = yCells
 
-            // for (var i = 0; i < greater; i++) {
-                // xCells = xCells - 1
-                // yCells = yCells - 1
-                // console.log('x', xCells)
-                // console.log('y', yCells)
-                // run through both axis
-                // while both exist, diagonal
-                // when only one, straing that way
-                document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                .style.backgroundColor = 'purple'
-                tempX = tempX - 1
-                tempY = tempY - 1
-
-                while(tempX && tempY){
-                    tempCellNum = tempCellNum - 200
-                    console.log('temp', tempCellNum)
+            // get num to move for 2nd move and up
+            function numToMove(){
+                let moveX = Math.abs(this.state.previousX - x)
+                let moveY = Math.abs(this.state.previousY - y)
+                return {
+                    moveX: moveX,
+                    moveY: moveY
+                }
+            }
+                // color current cell - on first one
+                if(this.state.previousX === 0 && this.state.previousY  === 0){
                     document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                     .style.backgroundColor = 'purple'
-                    console.log('x', tempX)
-
-
-                    document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`)
-                    .style.backgroundColor = 'yellow'
-
-                    tempCellNum = tempCellNum + 1
-                    console.log('y', tempY)
                     tempX = tempX - 1
                     tempY = tempY - 1
                 }
-                if(tempY){
-                    for (var i = 0; i < tempY; i++) {
+                console.log('start tx',tempX)
+                console.log('start ty',tempY)
+                console.log('startX', x)
+                console.log('prevX', this.state.previousX)
+
+                console.log('startY', y)
+                console.log('prevY', this.state.previousY)
+                while(tempX && tempY){
+                    console.log('tx',tempX)
+                    console.log('ty',tempY)
+                    // if last was les than current- do this
+                    if(this.state.previousY < y){
                         tempCellNum = tempCellNum - 200
+                        // console.log('temp', tempCellNum)
+                        document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                        .style.backgroundColor = 'purple'
+                        // if last was greater than current- do this
+
+                    } else if(this.state.previousY > y){
+                        tempCellNum = tempCellNum + 200
+                        // console.log('temp', tempCellNum)
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                         .style.backgroundColor = 'purple'
                     }
-                } else if(tempX){
-                    for (var i = 0; i < tempX; i++) {
-                        document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
-                        tempCellNum = tempCellNum + 1
-                    }
-                }
-                console.log(tempCellNum)
 
+                    if(this.state.previousX < x){
+                        tempCellNum = tempCellNum + 1
+                        // console.log('temp', tempCellNum)
+                        document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                        .style.backgroundColor = 'yellow'
+                        // if last was greater than current- do this
+                    } else if(this.state.previousX > x){
+                        tempCellNum = tempCellNum - 1
+                        // console.log('temp', tempCellNum)
+                        document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                        .style.backgroundColor = 'yellow'
+                    }
+
+
+
+                    // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                    // .style.backgroundColor = 'yellow'
+                    //
+                    // tempCellNum = tempCellNum + 1
+                    // console.log('y', tempY)
+                    tempX = tempX - 1
+                    tempY = tempY - 1
+                }
+                // if(tempY){
+                //     for (var i = 0; i < tempY; i++) {
+                //         tempCellNum = tempCellNum - 200
+                //         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
+                //         .style.backgroundColor = 'purple'
+                //     }
+                // } else if(tempX){
+                //     for (var i = 0; i < tempX; i++) {
+                //         document.querySelector(`.box-container:nth-of-type(${tempCellNum + 1}`).style.backgroundColor = 'yellow'
+                //         tempCellNum = tempCellNum + 1
+                //     }
+                // }
+                console.log(tempCellNum)
+                this.setState({
+                    previousX: x,
+                    previousY: y
+                })
 
                     // else add 200 first
                     // tempCellNum = tempCellNum - 200
@@ -194,8 +233,12 @@ class Grid extends Component {
     testColor(){
         // let that = this
         // setTimeout(function(){
-            this.state.stops.map(stop => {
-                this.colorGrid(stop.x, stop.y)
+        let stops = [
+            {x: 5, y: 5},
+            //{x:0, y:25}
+        ]
+            stops.map(stop => {
+                return this.colorGrid(stop.x, stop.y)
             })
         // },5000)
 
@@ -220,7 +263,7 @@ class Grid extends Component {
                      <input type="submit" value="Submit" onMouseOver={this.getState.bind(this)}></input>
 
                 </form>
-                <button onClick={this.colorGrid.bind(this)}>Plot</button>
+                <button onClick={this.testColor.bind(this)}>Plot</button>
             </div>
         )
     }
