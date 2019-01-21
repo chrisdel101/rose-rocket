@@ -214,21 +214,24 @@ class Grid extends Component {
         return relativePos
     }
     testColor(){
-
+        let arr = [1,2,3,4,5]
         // let stops = [
         //     {x:20, y:10},
         //     {x: 20, y: 20},
         //     {x: 25, y: 30},
         //     {x: 25, y: 80}
         // ]
-            this.state.stops.map((stop, index) => {
-                let that = this
-                setTimeout(function(){
-                    return that.colorGrid(stop.x, stop.y)
-
-                },100*(index))
+            // this.state.stops.map((stop, index) => {
+            //     let that = this
+            //     setTimeout(function(){
+            //         return that.colorGrid(stop.x, stop.y)
+            //
+            //     },100*(index))
+            // })
+            return arr.map(item => {
+                console.log(<Truck />)
+                return(<Truck style={{display: 'none'}}/>)
             })
-
     }
     render() {
 
@@ -236,9 +239,10 @@ class Grid extends Component {
             <div>
                 <div className="grid-container">
                     <div className="grid">
+
                     <Truck />
                     <Stop coords={this.state.stopsDirsArr}/>
-                    <Box num={40000} />
+                    <Box num={100} />
                         {(this.state.stopToggle ? <Stop coords={this.state}/> : null)}
                     </div>
 
