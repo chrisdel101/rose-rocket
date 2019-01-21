@@ -11,7 +11,6 @@ class Box extends React.Component{
         this.arr = Array.from({length: this.props.num}, (v, i) => i);
 	}
     render(){
-        console.log(this._items)
         return this.arr.map((i) => {
             return(
                 <div className="box-container" key={i} ref={this._items.ref(i)}>

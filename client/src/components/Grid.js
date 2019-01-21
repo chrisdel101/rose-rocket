@@ -94,6 +94,7 @@ class Grid extends Component {
                 moveY: moveY
             }
         }
+        let cellNumsArr = []
 
         console.log(`{x:${x}, y:${y}}`)
         console.log('startingCell',this.state.startingCellNum)
@@ -130,12 +131,15 @@ class Grid extends Component {
                     .style.backgroundColor = 'purple'
                     tempX = tempX - 1
                     tempY = tempY - 1
+                    cellNumsArr.push(tempCellNum)
+
                 }
                 // move in tandem while both vals exist
                 while(tempX && tempY){
                     // if last was les than current- do this
                     if(this.state.previousY < y){
                         tempCellNum = tempCellNum - 200
+                        cellNumsArr.push(tempCellNum)
                         // console.log('temp', tempCellNum)
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                         .style.backgroundColor = 'purple'
@@ -143,18 +147,21 @@ class Grid extends Component {
 
                     } else if(this.state.previousY > y){
                         tempCellNum = tempCellNum + 200
+                        cellNumsArr.push(tempCellNum)
                         // console.log('temp', tempCellNum)
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                         .style.backgroundColor = 'purple'
                     }
                     if(this.state.previousX < x){
                         tempCellNum = tempCellNum + 1
+                        cellNumsArr.push(tempCellNum)
                         // console.log('temp', tempCellNum)
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                         .style.backgroundColor = 'yellow'
                         // if last was greater than current- do this
                     } else if(this.state.previousX > x){
                         tempCellNum = tempCellNum - 1
+                        cellNumsArr.push(tempCellNum)
                         // console.log('temp', tempCellNum)
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                         .style.backgroundColor = 'yellow'
@@ -169,23 +176,26 @@ class Grid extends Component {
                 for (var i = 0; i < loopAxis; i++) {
                     if(tempY){
                         if(this.state.previousY < y){
-                            console.log('up',tempCellNum)
                             tempCellNum = tempCellNum - 200
+                            cellNumsArr.push(tempCellNum)
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                             .style.backgroundColor = 'purple'
                         } else if(this.state.previousY > y){
                             tempCellNum = tempCellNum + 200
+                            cellNumsArr.push(tempCellNum)
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                             .style.backgroundColor = 'purple'
                         }
                     } else if(tempX){
                         if(this.state.previousX < x){
                             tempCellNum = tempCellNum + 1
+                            cellNumsArr.push(tempCellNum)
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                             .style.backgroundColor = 'yellow'
 
                         } else if(this.state.previousX > x){
                             tempCellNum = tempCellNum - 1
+                            cellNumsArr.push(tempCellNum)
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                             .style.backgroundColor = 'yellow'
                         }
@@ -195,7 +205,8 @@ class Grid extends Component {
                 this.setState({
                     previousX: x,
                     previousY: y,
-                    startingCellNum: tempCellNum
+                    startingCellNum: tempCellNum,
+                    cellNumsArr: cellNumsArr
                 })
 
 
@@ -215,34 +226,35 @@ class Grid extends Component {
     }
     testColor(){
         let arr = [1,2,3,4,5]
-        // let stops = [
-        //     {x:20, y:10},
-        //     {x: 20, y: 20},
-        //     {x: 25, y: 30},
-        //     {x: 25, y: 80}
-        // ]
-            // this.state.stops.map((stop, index) => {
-            //     let that = this
-            //     setTimeout(function(){
-            //         return that.colorGrid(stop.x, stop.y)
-            //
-            //     },100*(index))
-            // })
-            return arr.map(item => {
-                console.log(<Truck />)
-                return(<Truck style={{display: 'none'}}/>)
+        let stops = [
+            {x:20, y:10},
+            // {x: 20, y: 20},
+            // {x: 25, y: 30},
+            // {x: 25, y: 80}
+        ]
+        stops.map((stop, index) => {
+                let that = this
+                setTimeout(function(){
+                    return that.colorGrid(stop.x, stop.y)
+
+                },100*(index))
             })
     }
     render() {
-
+        // if(this.state.cellNumsArr){
+        //     console.log(this.state.cellNumsArr)
+        // } else {
+        //     return null
+        // }
     	return(
             <div>
+            {(this.state.cellNumsArr ? console.log(this.state.cellNumsArr) : null)}
                 <div className="grid-container">
                     <div className="grid">
 
                     <Truck />
                     <Stop coords={this.state.stopsDirsArr}/>
-                    <Box num={100} />
+                    <Box num={40000} />
                         {(this.state.stopToggle ? <Stop coords={this.state}/> : null)}
                     </div>
 
