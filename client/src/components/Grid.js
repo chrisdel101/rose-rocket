@@ -87,12 +87,19 @@ class Grid extends Component {
         // x = 0
         // y = 10
         console.log(`{x:${x}, y:${y}}`)
+        console.log('startingCell',this.state.startingCellNum)
         let tempX = x
         let tempY = y
+        // *****VARS*****
+        // -- previousX - coords of last X
+        // -- previousY - coords of last Y
+        // -- tempCellNum - cell num as it jumps around
+        // -- startingCell - where the last line ended, or 0 0
+        // -- x - the x coords input
+        // -- y - the y cooords input
+        // -- tempY - the number to move Y
+        // -- tempX - numver to move X
 
-        // gets set on mount
-        // let startingCell = this.state.startingCell
-        let startingCell = document.querySelector('.box-container:nth-of-type(38033')
 
         // x of coords is === -bottom
         //test -// {x: 20, y: 30}
@@ -113,23 +120,22 @@ class Grid extends Component {
             // let yCells =  40 //x
 
             let tempCellNum = this.state.startingCellNum
-            console.log('startingCell', this.tempCellNum)
-    // **DIVIDE y /x to get num to move y each row up
-
-            // let greater
-            // (x >= y ? greater = x : greater = y)
-
+            console.log('temp cell start', tempCellNum)
 
             // get num to move for 2nd move and up
+            let that = this
             function numToMove(){
-                let moveX = Math.abs(this.state.previousX - x)
-                let moveY = Math.abs(this.state.previousY - y)
+                let moveX = Math.abs(that.state.previousX - x)
+                let moveY = Math.abs(that.state.previousY - y)
                 return {
                     moveX: moveX,
                     moveY: moveY
                 }
             }
-                // color current cell - on first one
+            console.log('toMove', numToMove())
+            tempX = numToMove().moveX
+            tempY = numToMove().moveY
+        // color current cell - on first move on grid
                 if(this.state.previousX === 0 && this.state.previousY  === 0){
                     document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                     .style.backgroundColor = 'purple'
@@ -222,7 +228,7 @@ class Grid extends Component {
                 this.setState({
                     previousX: x,
                     previousY: y,
-                    startingCell: tempCellNum
+                    startingCellNum: tempCellNum
                 })
 
                     // else add 200 first
@@ -258,6 +264,8 @@ class Grid extends Component {
         let stops = [
             {x:20, y:10},
             {x: 20, y: 20},
+            {x: 25, y: 30},
+            {x: 25, y: 80}
         ]
             stops.map((stop, index) => {
                 let that = this
