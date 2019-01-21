@@ -46,12 +46,6 @@ class Grid extends Component {
                 },
         })
     }
-    // to make button work
-    clickStops(){
-        this.setState({
-            stopToggle: !this.stopToggle
-        })
-    }
     // takes and x/y and returns px to move
     convertToPixels(x,y){
         let totalX
@@ -80,16 +74,9 @@ class Grid extends Component {
             moveX: moveX,
             moveY: moveY
         }
-        // this.setState({})
         return coordsObj
     }
     colorGrid(x, y){
-        // x = 0
-        // y = 10
-        console.log(`{x:${x}, y:${y}}`)
-        console.log('startingCell',this.state.startingCellNum)
-        let tempX = x
-        let tempY = y
         // *****VARS*****
         // -- previousX - coords of last X
         // -- previousY - coords of last Y
@@ -99,10 +86,20 @@ class Grid extends Component {
         // -- y - the y cooords input
         // -- tempY - the number to move Y
         // -- tempX - numver to move X
+        function _numToMove(){
+            let moveX = Math.abs(that.state.previousX - x)
+            let moveY = Math.abs(that.state.previousY - y)
+            return {
+                moveX: moveX,
+                moveY: moveY
+            }
+        }
 
+        console.log(`{x:${x}, y:${y}}`)
+        console.log('startingCell',this.state.startingCellNum)
+        let tempX = x
+        let tempY = y
 
-        // x of coords is === -bottom
-        //test -// {x: 20, y: 30}
     // **CONVERT TO PIXELS**
 
             // let startPosBottom = this.posInParent(startingCell, this.state.grid).bottom
@@ -124,17 +121,9 @@ class Grid extends Component {
 
             // get num to move for 2nd move and up
             let that = this
-            function numToMove(){
-                let moveX = Math.abs(that.state.previousX - x)
-                let moveY = Math.abs(that.state.previousY - y)
-                return {
-                    moveX: moveX,
-                    moveY: moveY
-                }
-            }
-            console.log('toMove', numToMove())
-            tempX = numToMove().moveX
-            tempY = numToMove().moveY
+            console.log('toMove', _numToMove())
+            tempX = _numToMove().moveX
+            tempY = _numToMove().moveY
         // color current cell - on first move on grid
                 if(this.state.previousX === 0 && this.state.previousY  === 0){
                     document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
@@ -142,16 +131,8 @@ class Grid extends Component {
                     tempX = tempX - 1
                     tempY = tempY - 1
                 }
-                // console.log('start tx',tempX)
-                // console.log('start ty',tempY)
-                // console.log('startX', x)
-                // console.log('prevX', this.state.previousX)
-                //
-                // console.log('startY', y)
-                // console.log('prevY', this.state.previousY)
+                // move in tandem while both vals exist
                 while(tempX && tempY){
-                    // console.log('tx',tempX)
-                    // console.log('ty',tempY)
                     // if last was les than current- do this
                     if(this.state.previousY < y){
                         tempCellNum = tempCellNum - 200
@@ -166,7 +147,6 @@ class Grid extends Component {
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                         .style.backgroundColor = 'purple'
                     }
-
                     if(this.state.previousX < x){
                         tempCellNum = tempCellNum + 1
                         // console.log('temp', tempCellNum)
@@ -179,46 +159,33 @@ class Grid extends Component {
                         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                         .style.backgroundColor = 'yellow'
                     }
-
-
-
-                    // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                    // .style.backgroundColor = 'yellow'
-                    //
-                    // tempCellNum = tempCellNum + 1
-                    // console.log('y', tempY)
                     tempX = tempX - 1
                     tempY = tempY - 1
                 }
-                // console.log('cell', tempCellNum)
+                 // axis - loop over the only one left
                 let loopAxis
                 (tempY ? loopAxis = tempY : loopAxis = tempX)
-                console.log('loopAxis', loopAxis)
+                // if only on val left, move on its own
                 for (var i = 0; i < loopAxis; i++) {
                     if(tempY){
                         if(this.state.previousY < y){
                             console.log('up',tempCellNum)
                             tempCellNum = tempCellNum - 200
-                            // console.log('temp', tempCellNum)
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                             .style.backgroundColor = 'purple'
                         } else if(this.state.previousY > y){
                             tempCellNum = tempCellNum + 200
-                            // console.log('temp', tempCellNum)
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                             .style.backgroundColor = 'purple'
                         }
                     } else if(tempX){
-                        // console.log('tempx',tempX)
                         if(this.state.previousX < x){
                             tempCellNum = tempCellNum + 1
-                            // console.log('temp', tempCellNum)
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                             .style.backgroundColor = 'yellow'
-                            // if last was greater than current- do this
+
                         } else if(this.state.previousX > x){
                             tempCellNum = tempCellNum - 1
-                            // console.log('temp', tempCellNum)
                             document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
                             .style.backgroundColor = 'yellow'
                         }
@@ -231,20 +198,7 @@ class Grid extends Component {
                     startingCellNum: tempCellNum
                 })
 
-                    // else add 200 first
-                    // tempCellNum = tempCellNum - 200
-                    // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                    // .style.backgroundColor = 'purple'
 
-
-            // function handleYmvmt(input){
-            //     // if(input === 0){
-            //         document.querySelector(`.box-container:nth-of-type(${tempCellNum}`).style.backgroundColor = 'yellow'
-            //         tempCellNum = tempCellNum + 1
-            //
-            // // moves in between the dominant direction
-
-        // }
     }
     // get position of cell inside parent
     posInParent(child, parent){
@@ -260,26 +214,24 @@ class Grid extends Component {
         return relativePos
     }
     testColor(){
-        // setTimeout(function(){
-        let stops = [
-            {x:20, y:10},
-            {x: 20, y: 20},
-            {x: 25, y: 30},
-            {x: 25, y: 80}
-        ]
-            stops.map((stop, index) => {
+
+        // let stops = [
+        //     {x:20, y:10},
+        //     {x: 20, y: 20},
+        //     {x: 25, y: 30},
+        //     {x: 25, y: 80}
+        // ]
+            this.state.stops.map((stop, index) => {
                 let that = this
-                console.log(that)
                 setTimeout(function(){
                     return that.colorGrid(stop.x, stop.y)
 
                 },100*(index))
             })
-        // },5000)
 
     }
     render() {
-        // {this.state.stopCoords ? <this.ShowMarker move={this.state}/> : null}
+
     	return(
             <div>
                 <div className="grid-container">
