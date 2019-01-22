@@ -15,16 +15,17 @@ code {
 
 #root {
 	margin-left: 40px;
-	margin-bottom: 40px
+	margin-bottom: 40px;
+	margin-top: 40px
 }
 
 .box-container {
 	/* width: 50px; */
 	/* height: 50px; */
-	/* grid-gap: 1px;
+	grid-gap: 1px;
 	border: 1px solid black;
 	background-color: white;
-	padding: 1px; */
+	/* padding: 1px; */
 }
 
 .box {
@@ -42,7 +43,7 @@ code {
 	display: grid;
 	border: 1px solid black;
 	grid-gap: 1px;
-	/* background-color: black; */
+	background-color: black;
 	grid-template-rows: repeat(200, 10px);
 	grid-template-columns: repeat(200, 10px);
 }
@@ -70,7 +71,7 @@ code {
 	bottom: 0;
 }
 
-.box-container:nth-of-type(39801) {
+.box-container:nth-of-type(20) {
 	/* padding-bottom: 10px; */
 	/* background-color: yellow; */
 	/* order: 1; */

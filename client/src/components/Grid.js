@@ -77,6 +77,7 @@ class Grid extends Component {
         return coordsObj
     }
     colorGrid(x, y){
+        console.log('RUNNGIN')
         // *****VARS*****
         // -- previousX - coords of last X
         // -- previousY - coords of last Y
@@ -249,17 +250,15 @@ class Grid extends Component {
     }
     render() {
     	return(
-            <div>
-                <div className="grid-container">
+
+            <div className="grid-container">
                 {/*{(this.state.cellNumsArr ? console.log(this.state.cellNumsArr) : null)}*/}
-                    <div className="grid">
+                <div className="grid">
 
-                    <Truck />
-                    <Stop coords={this.state.stopsDirsArr}/>
-                    <Box num={40000} cellNums={(this.state.cellNumsArr ? this.state.cellNumsArr : null)}/>
-                        {/*{(this.state.stopToggle ? <Stop coords={this.state}/> : null)} */}
-                    </div>
-
+                <Truck />
+                <Stop coords={this.state.stopsDirsArr}/>
+                <Box num={40000} cellNums={(this.state.cellNumsArr ? this.state.cellNumsArr : null)}/>
+                    {/*{(this.state.stopToggle ? <Stop coords={this.state}/> : null)} */}
                 </div>
                 <form onSubmit={this.handleSubmit.bind(this)}>
                      X-coords: <input className="x-coord" type="text" value={this.state.tempX} onChange={evt => this.updateXvalue(evt)} >
