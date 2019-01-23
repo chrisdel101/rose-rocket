@@ -18,10 +18,9 @@ class Grid extends Component {
             startingCellNum:39814,
             previousX: 0,
             previousY: 0,
-            numOfBoxes: 40000,
-            boxesLooper: []
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            cellNums:[]
 		};
-
 	}
     // move truck using grid
     move(xVal,yVal){
@@ -79,7 +78,7 @@ class Grid extends Component {
         return coordsObj
     }
     colorGrid(x, y){
-        console.log('RUNNGIN')
+        console.log('RUN COLOR GRID')
         // *****VARS*****
         // -- previousX - coords of last X
         // -- previousY - coords of last Y
@@ -204,7 +203,7 @@ class Grid extends Component {
                         }
                     }
                 }
-                console.log(tempCellNum)
+                // console.log(cellNumsArr)
                 this.setState({
                     previousX: x,
                     previousY: y,
@@ -251,7 +250,7 @@ class Grid extends Component {
         }
     }
     render() {
-        console.log()
+        console.log(this.state)
     	return(
             <main className="page-container">
                 <div className="grid-container">
@@ -259,15 +258,8 @@ class Grid extends Component {
                 <div className="grid">
 
                 <Truck />
-                {this.state.stopsDirsArr ?
                 <Stop coords={this.state.stopsDirsArr}/>
-                : null}
-
-                {this.state.boxesLooper.length ?
-                    this.state.boxesLooper.map(box => {
-                        return <Box cellNums={(this.state.cellNumsArr ? this.state.cellNumsArr : null)}/>
-                    })
-                : null}
+                <Box toRender={this.state.boxesToRender} toAdd={(this.state.cellNumsArr ? this.state.cellNumsArr : null)}/>
 
                 </div>
                 </div>
@@ -318,10 +310,9 @@ class Grid extends Component {
         event.preventDefault();
     }
     componentDidMount() {
-        this.setState({
-            boxesLooper: Array.from({length: 40000}, (v, i) => i)
-        })
+
         let that = this
+
 
         // types are 'stop' and 'driver' - driver needs calcs
         function setStopCoords(type){
@@ -372,7 +363,7 @@ class Grid extends Component {
 
         this.setState({
             grid: grid,
-            startingCell: startingCell
+            startingCell: startingCell,
         })
         // Call our fetch function below once the component mounts
         this.callStops()

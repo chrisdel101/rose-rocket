@@ -28,6 +28,10 @@ code {
 	/* padding: 1px; */
 }
 
+.backgroundColor {
+	background-color: black;
+}
+
 .box {
 	width: 100%;
 	height: 100%;

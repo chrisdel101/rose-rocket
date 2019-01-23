@@ -7,52 +7,41 @@ class Box extends React.Component{
     constructor(props) {
 		super(props)
         this.state = {
-            backgroundColor: true
         }
         this._items = new MultiRef();
 	}
 
-    test(i){
-
-    }
-    render(){
+    renderBoxes(i) {
         console.log(this.props)
-
-
-            return(
-                <React.Fragment>
-                <div className="box-container"></div>
-                </React.Fragment>
-            )
-        
-
-
-
-
-
+      if (this.props.toRender) {
+        let { toRender, toAdd } = this.props;
+        return toRender.map((obj, i) => {
+          let hasColor = (() => {
+            if (!toAdd || !toAdd.length || !toAdd.includes(i)) return false;
+            return true;
+          })();
+          return (
+              <React.Fragment>
+              {hasColor ? console.log(<div
+              className={`box-container ${hasColor ? " backgroundColor" : ""}`}
+              key={i}
+              />) : false}
+              <div
+              className={`box-container ${hasColor ? " backgroundColor" : ""}`}
+              key={i}
+              />
+              </React.Fragment>
+          );
+        });
+      }
+    }
+    render() {
+      if (this.props.toRender && this.props.toRender.length) {
+        return <React.Fragment>{this.renderBoxes()}</React.Fragment>;
+      } else {
+        return <div>No Boxes yet!</div>;
+      }
     }
 }
-// return this.arr.map((i) => {
-//     return(
-//         <div className="box-container" key={i} ref={this._items.ref(i)}>
-//         <div className="box">
-//
-//         </div>
-//         </div>
-//     )
-// })
+
 export default Box
-//
-// { that.props.cellNUms ? that.props.cellNums.map(num => {
-//     <div className="box-container" key={i} ref={that._items.ref(i)}>
-//     {(that.props.cellNums ? console.log('hello') : null)}
-//     <div className="box">
-//     </div>
-//     </div>
-// }) :
-// <div className="box-container" key={i} ref={that._items.ref(i)}>
-// {(that.props.cellNums ? console.log('hello') : null)}
-// <div className="box">
-//
-// </div>
-// </div> }
