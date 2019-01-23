@@ -264,7 +264,9 @@ class Grid extends Component {
                 : null}
 
                 {this.state.boxesLooper.length ?
-                    <Box cellNums={(this.state.cellNumsArr ? this.state.cellNumsArr : null)}/>
+                    this.state.boxesLooper.map(box => {
+                        return <Box cellNums={(this.state.cellNumsArr ? this.state.cellNumsArr : null)}/>
+                    })
                 : null}
 
                 </div>
