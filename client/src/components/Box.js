@@ -9,59 +9,22 @@ class Box extends React.Component{
         this.state = {
             backgroundColor: true
         }
-        let num = this.props.num
         this._items = new MultiRef();
-        this.arr = Array.from({length: this.props.num}, (v, i) => i);
 	}
-    componentDidMount(){
-        // let compArr = []
-        // this.arr.map((i) => {
-        //     compArr.push(
-        //         <div className={`box-container ${(this.props.cellNums.includes(i) ? 'backgroundColor' : null)}`} key={i} ref={this._items.ref(i)}>
-        //             <div className="box">
-        //             </div>
-        //         </div>
-        //     )
-        // })
-        // this.setState({
-        //     compArr: compArr
-        // })
-    }
-    test(i){
-        // if(this.props.cellNums){
-            let testArr  = [1,2,3]
-                return(
-                    <div className={`box-container ${ testArr.includes(i) ? 'backgroundColor' : 'null'}`} key={i} ref={this._items.ref(i)}>
-                    <div className="box">
-                    </div>
-                    </div>
-                )
 
-        // } else {
-        //         return(
-        //             <div className="box-container" key={i} ref={this._items.ref(i)}>
-        //            <div className="box">
-        //            </div>
-        //            </div>)
-        // }
+    test(i){
+
     }
     render(){
         console.log(this.props)
-        // this.arr.map(i => {
-        //     if cellNums[i] indexes.includes(i)
-        //
-        //     return(<div className="box-container" key={i} ref={this._items.ref(i)}>
-        //     <div className="box">
-        //     </div>
-        //     </div>)
-        // })
-        return this.arr.map(i => {
+
+
             return(
                 <React.Fragment>
-                {this.test(i)}
+                <div className="box-container"></div>
                 </React.Fragment>
             )
-        })
+        
 
 
 
