@@ -27,25 +27,23 @@ class Box extends React.Component{
         //     compArr: compArr
         // })
     }
-    test(){
-        if(this.props.cellNums){
-            console.log('run 2')
-                this.arr.map((_, i) => {
-                    return(<div className={`box-container ${(this.props.cellNums.includes(i) ? 'backgroundColor' : null)}`} key={i} ref={this._items.ref(i)}>
+    test(i){
+        // if(this.props.cellNums){
+            let testArr  = [1,2,3]
+                return(
+                    <div className={`box-container ${ testArr.includes(i) ? 'backgroundColor' : 'null'}`} key={i} ref={this._items.ref(i)}>
                     <div className="box">
                     </div>
-                    </div>)
-                })
-            } else {
-                console.log('run 1')
-                this.arr.map(i => {
-                    return(
-                        <div className="box-container" key={i} ref={this._items.ref(i)}>
-                       <div className="box">
-                       </div>
-                       </div>)
-                })
-            }
+                    </div>
+                )
+
+        // } else {
+        //         return(
+        //             <div className="box-container" key={i} ref={this._items.ref(i)}>
+        //            <div className="box">
+        //            </div>
+        //            </div>)
+        // }
     }
     render(){
         console.log(this.props)
@@ -59,11 +57,10 @@ class Box extends React.Component{
         // })
         return this.arr.map(i => {
             return(
-                <div className="box-container"  ref={this._items.ref(i)}>
-                <div className="box">
-                </div>
-                </div>)
-
+                <React.Fragment>
+                {this.test(i)}
+                </React.Fragment>
+            )
         })
 
 
