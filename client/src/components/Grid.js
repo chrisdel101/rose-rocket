@@ -15,7 +15,7 @@ class Grid extends Component {
             tempX: '0',
             tempY: '0',
             stopToggle: false,
-            startingCellNum:39814,
+            startingCellNum:39800,
             previousX: 0,
             previousY: 0,
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
@@ -230,7 +230,7 @@ class Grid extends Component {
         let arr = [1,2,3,4,5]
         let stops = [
             {x:20, y:10},
-            // {x: 20, y: 20},
+            {x: 20, y: 20}
             // {x: 25, y: 30},
             // {x: 25, y: 80}
         ]
