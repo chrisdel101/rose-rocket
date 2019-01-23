@@ -21,17 +21,10 @@ class Box extends React.Component{
             return true;
           })();
           return (
-              <React.Fragment>
-              {hasColor ? console.log(<div
-              className={`box-container ${hasColor ? " backgroundColor" : ""}`}
-              key={i}
-              />) : false}
               <div
               className={`box-container ${hasColor ? " backgroundColor" : ""}`}
               key={i}
-              />
-              </React.Fragment>
-          );
+              />)
         });
       }
     }

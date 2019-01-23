@@ -19,7 +19,8 @@ class Grid extends Component {
             previousX: 0,
             previousY: 0,
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
-            cellNums:[]
+            holdingAllIndexes: [],
+            pushToChildArr:[]
 		};
 	}
     // move truck using grid
@@ -78,16 +79,7 @@ class Grid extends Component {
         return coordsObj
     }
     colorGrid(x, y){
-        console.log('RUN COLOR GRID')
-        // *****VARS*****
-        // -- previousX - coords of last X
-        // -- previousY - coords of last Y
-        // -- tempCellNum - cell num as it jumps around
-        // -- startingCell - where the last line ended, or 0 0
-        // -- x - the x coords input
-        // -- y - the y cooords input
-        // -- tempY - the number to move Y
-        // -- tempX - numver to move X
+        let that = this
         function _numToMove(){
             let moveX = Math.abs(that.state.previousX - x)
             let moveY = Math.abs(that.state.previousY - y)
@@ -96,122 +88,85 @@ class Grid extends Component {
                 moveY: moveY
             }
         }
-        let cellNumsArr = []
+        let tempCellNumsArr = []
 
         console.log(`{x:${x}, y:${y}}`)
         console.log('startingCell',this.state.startingCellNum)
         let tempX = x
         let tempY = y
 
-    // **CONVERT TO PIXELS**
 
-            // let startPosBottom = this.posInParent(startingCell, this.state.grid).bottom
-            // console.log('s', startPosBottom)
-            // // convert stop to pixels
-            //
-            // let coords = this.convertToPixels(x, y)
-            // console.log(coords)
-            // // divide by 11 - cells above starting to go
-            // let yCells = Math.ceil(coords.moveY / 11  )
-            // let xCells = Math.ceil(coords.moveX / 11)
-            // console.log('y', yCells)
-            // console.log('x', xCells)
-            // let xCells = 10  //y
-            // let yCells =  40 //x
+        let tempCellNum = this.state.startingCellNum
+        console.log('temp cell start', tempCellNum)
 
-            let tempCellNum = this.state.startingCellNum
-            console.log('temp cell start', tempCellNum)
+        // convert based on next move
+        tempX = _numToMove().moveX
+        tempY = _numToMove().moveY
 
-            // get num to move for 2nd move and up
-            let that = this
-            console.log('toMove', _numToMove())
-            tempX = _numToMove().moveX
-            tempY = _numToMove().moveY
-        // color current cell - on first move on grid
-                if(this.state.previousX === 0 && this.state.previousY  === 0){
-                    // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                    // .style.backgroundColor = 'purple'
-                    tempX = tempX - 1
-                    tempY = tempY - 1
-                    cellNumsArr.push(tempCellNum)
+        // color current cell - on first move on grid only
+        if(this.state.previousX === 0 && this.state.previousY  === 0){
+            tempX = tempX - 1
+            tempY = tempY - 1
+            tempCellNumsArr.push(tempCellNum)
+        }
+        // move in tandem while both vals exist
+        while(tempX && tempY){
+            // if last was les than current- do this
+            if(this.state.previousY < y){
+                tempCellNum = tempCellNum - 200
+                tempCellNumsArr.push(tempCellNum)
+
+            } else if(this.state.previousY > y){
+                tempCellNum = tempCellNum + 200
+                tempCellNumsArr.push(tempCellNum)
+
+            }
+            if(this.state.previousX < x){
+                tempCellNum = tempCellNum + 1
+                tempCellNumsArr.push(tempCellNum)
+
+            } else if(this.state.previousX > x){
+                tempCellNum = tempCellNum - 1
+                tempCellNumsArr.push(tempCellNum)
+
+            }
+            tempX = tempX - 1
+            tempY = tempY - 1
+        }
+         // axis - loop over the only one left
+        let loopAxis
+        (tempY ? loopAxis = tempY : loopAxis = tempX)
+        // if only on val left, move on its own
+        for (var i = 0; i < loopAxis; i++) {
+            if(tempY){
+                if(this.state.previousY < y){
+                    tempCellNum = tempCellNum - 200
+                    tempCellNumsArr.push(tempCellNum)
+
+                } else if(this.state.previousY > y){
+                    tempCellNum = tempCellNum + 200
+                    tempCellNumsArr.push(tempCellNum)
 
                 }
-                // move in tandem while both vals exist
-                while(tempX && tempY){
-                    // if last was les than current- do this
-                    if(this.state.previousY < y){
-                        tempCellNum = tempCellNum - 200
-                        cellNumsArr.push(tempCellNum)
-                        // console.log('temp', tempCellNum)
-                        // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                        // .style.backgroundColor = 'purple'
-                        // if last was greater than current- do this
+            } else if(tempX){
+                if(this.state.previousX < x){
+                    tempCellNum = tempCellNum + 1
+                    tempCellNumsArr.push(tempCellNum)
 
-                    } else if(this.state.previousY > y){
-                        tempCellNum = tempCellNum + 200
-                        cellNumsArr.push(tempCellNum)
-                        // console.log('temp', tempCellNum)
-                        // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                        // .style.backgroundColor = 'purple'
-                    }
-                    if(this.state.previousX < x){
-                        tempCellNum = tempCellNum + 1
-                        cellNumsArr.push(tempCellNum)
-                        // console.log('temp', tempCellNum)
-                        // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                        // .style.backgroundColor = 'yellow'
-                        // if last was greater than current- do this
-                    } else if(this.state.previousX > x){
-                        tempCellNum = tempCellNum - 1
-                        cellNumsArr.push(tempCellNum)
-                        // console.log('temp', tempCellNum)
-                        // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                        // .style.backgroundColor = 'yellow'
-                    }
-                    tempX = tempX - 1
-                    tempY = tempY - 1
+
+                } else if(this.state.previousX > x){
+                    tempCellNum = tempCellNum - 1
+                    tempCellNumsArr.push(tempCellNum)
+
                 }
-                 // axis - loop over the only one left
-                let loopAxis
-                (tempY ? loopAxis = tempY : loopAxis = tempX)
-                // if only on val left, move on its own
-                for (var i = 0; i < loopAxis; i++) {
-                    if(tempY){
-                        if(this.state.previousY < y){
-                            tempCellNum = tempCellNum - 200
-                            cellNumsArr.push(tempCellNum)
-                            // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                            // .style.backgroundColor = 'purple'
-                        } else if(this.state.previousY > y){
-                            tempCellNum = tempCellNum + 200
-                            cellNumsArr.push(tempCellNum)
-                            // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                            // .style.backgroundColor = 'purple'
-                        }
-                    } else if(tempX){
-                        if(this.state.previousX < x){
-                            tempCellNum = tempCellNum + 1
-                            cellNumsArr.push(tempCellNum)
-                            // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                            // .style.backgroundColor = 'yellow'
-
-                        } else if(this.state.previousX > x){
-                            tempCellNum = tempCellNum - 1
-                            cellNumsArr.push(tempCellNum)
-                            // document.querySelector(`.box-container:nth-of-type(${tempCellNum}`)
-                            // .style.backgroundColor = 'yellow'
-                        }
-                    }
-                }
-                // console.log(cellNumsArr)
-                this.setState({
-                    previousX: x,
-                    previousY: y,
-                    startingCellNum: tempCellNum,
-                    cellNumsArr: cellNumsArr
-                })
-
-
+            }
+        }
+        this.setState({
+            previousX: x,
+            previousY: y,
+            startingCellNum: tempCellNum,
+            holdingAllIndexes: [...this.state.holdingAllIndexes, ...tempCellNumsArr]
+        })
     }
     // get position of cell inside parent
     posInParent(child, parent){
@@ -234,11 +189,18 @@ class Grid extends Component {
             // {x: 25, y: 30},
             // {x: 25, y: 80}
         ]
-        stops.map((stop, index) => {
+        this.state.stops.map((stop, index) => {
                 let that = this
                 setTimeout(function(){
-                    return that.colorGrid(stop.x, stop.y)
-
+                    that.colorGrid(stop.x, stop.y)
+            // console.log(index + 1)
+            // console.log(stops.length)
+                if((index + 1) === that.state.stops.length){
+                    console.log('push')
+                     	that.setState({
+                       	pushToChildArr:that.state.holdingAllIndexes
+                       })
+                 }
                 },100*(index))
             })
     }
@@ -250,7 +212,7 @@ class Grid extends Component {
         }
     }
     render() {
-        console.log(this.state)
+        console.log(this.state.pushToChildArr)
     	return(
             <main className="page-container">
                 <div className="grid-container">
@@ -259,7 +221,7 @@ class Grid extends Component {
 
                 <Truck />
                 <Stop coords={this.state.stopsDirsArr}/>
-                <Box toRender={this.state.boxesToRender} toAdd={(this.state.cellNumsArr ? this.state.cellNumsArr : null)}/>
+                <Box toRender={this.state.boxesToRender} toAdd={(this.state.pushToChildArr.length ? this.state.pushToChildArr  : null)}/>
 
                 </div>
                 </div>
@@ -343,7 +305,7 @@ class Grid extends Component {
                     // to calc
 
                 }
-                    console.log(coordsArr)
+                    // console.log(coordsArr)
                     that.setState({
                         stopsDirsArr: coordsArr
                     })
