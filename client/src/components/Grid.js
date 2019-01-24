@@ -7,14 +7,11 @@ import Truck from './Truck'
 class Grid extends Component {
 	constructor(props) {
 		super(props);
-		// Don't call this.setState() here!
 		this.state = {
             legs: [],
 			stops: [],
-            truckPosition: {x: 0, y: 0},
-            tempX: '0',
-            tempY: '0',
-            stopToggle: false,
+            truckingStartCoords: {x: 19, y: 20},
+            truckMoveCoords: '',
             startingCellNum:39800,
             previousX: 0,
             previousY: 0,
@@ -219,7 +216,7 @@ class Grid extends Component {
 
                 <div className="grid">
 
-                <Truck />
+                <Truck coords={this.state.truckMoveCoords}/>
                 <Stop coords={this.state.stopsDirsArr}/>
                 <Box toRender={this.state.boxesToRender} toAdd={(this.state.pushToChildArr.length ? this.state.pushToChildArr  : null)}/>
 
@@ -231,7 +228,7 @@ class Grid extends Component {
                 X-coords: <input className="x-coord" type="text" value={this.state.tempX} onChange={evt => this.updateXvalue(evt)} >
                 </input>
                 Y-coords: <input className="y-coord" type="text" value={this.state.tempY} onChange={evt => this.updateYvalue(evt)}  ></input>
-                <input type="submit" value="Submit" onMouseOver={this.getState.bind(this)}></input>
+                <input type="submit" value="Submit" onMouseOver={''}></input>
 
                 </form>
                 <button onClick={this.testColor.bind(this)}>Plot</button>
@@ -271,62 +268,60 @@ class Grid extends Component {
         // alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
     }
+    // set coords in pxs of plots
+    setStopCoords(type){
+
+        let that = this
+        let coordsArr = []
+
+        setTimeout(function(){
+            // filter out undefined
+            if(type === 'stop'){
+                if(that.state.stops.length > 0){
+                    that.state.stops.forEach(stop => {
+                        console.log(stop.x, stop.y)
+                        let pixels = that.convertToPixels(
+                            stop.x, stop.y
+                        )
+                        let coords = {
+                            pixels: pixels,
+                            directions: {
+                                xDir: "left",
+                                yDir: "bottom"
+                            }
+                        }
+
+                        coordsArr.push(coords)
+                    })
+                }
+                that.setState({
+                    stopsDirsArr: coordsArr
+                })
+            } else if(type === 'truck'){
+                let pixels = that.convertToPixels(that.state.truckingStartCoords.x, that.state.truckingStartCoords.y)
+                let coords = {
+                    pixels: pixels,
+                    directions: {
+                        xDir: "left",
+                        yDir: "bottom"
+                    }
+                }
+                console.log(coords)
+                that.setState({
+                    truckMoveCoords: coords
+                })
+
+            }
+
+
+        },1050)
+    }
     componentDidMount() {
 
         let that = this
 
-
-        // types are 'stop' and 'driver' - driver needs calcs
-        function setStopCoords(type){
-            let coordsArr = []
-            setTimeout(function(){
-                // filter out undefined
-                if(type === 'stop'){
-                    if(that.state.stops.length > 0){
-                        that.state.stops.forEach(stop => {
-                            // make vals negative
-                            // stop.x = -1 * stop.x
-                            // stop.y = -1 * stop.y
-                            let pixels = that.convertToPixels(
-                                stop.x, stop.y
-                            )
-                            let coords = {
-                                pixels: pixels,
-                                directions: {
-                                    xDir: "left",
-                                    yDir: "bottom"
-                                }
-                            }
-                            // console.log('coords', coords)
-                            coordsArr.push(coords)
-                        })
-                    }
-                } else if(type === 'truck'){
-                    // to calc
-
-                }
-                    // console.log(coordsArr)
-                    that.setState({
-                        stopsDirsArr: coordsArr
-                    })
-
-
-            },1050)
-        }
-        setStopCoords('stop')
-        // set the cell size to know how to move
-        // loop over stops
-        // pass in x, y and get direction
-        // pass in x,y and width and height - set css prop and pixesl to move
-        // save to obj and push to Array - set to get
-        // loop over array and feed into stops
-        let grid = document.querySelector('.grid')
-        let startingCell = document.querySelector(`.box-container:nth-of-type(${this.state.startingCellNum})`)
-
-        this.setState({
-            grid: grid,
-            startingCell: startingCell,
-        })
+        this.setStopCoords('stop')
+        this.setStopCoords('truck')
         // Call our fetch function below once the component mounts
         this.callStops()
         .then(res => {
@@ -358,37 +353,6 @@ class Grid extends Component {
         }
         return body
     }
-    // tester func only
-    getState(){
-        // console.log('cell', this.state.startingCell)
-        // console.log('temp x', this.state.tempX)
-        // console.log('temp y', this.state.tempY)
-        //
-        // console.log('real x', this.state.truckPosition.x)
-        // console.log('real y', this.state.truckPosition.y)
-        console.log('arr', this.state.stopsDirsArr)
-    }
-    // directionToMove(x,y){
-    //     let xDir
-    //     let yDir
-    //     // check if up or down / + -
-    //     if(x < 0){
-    //         xDir = "left"
-    //     } else {
-    //         xDir = "right"
-    //     }
-    //     if(y < 0){
-    //         yDir = "top"
-    //     } else {
-    //         yDir = "bottom"
-    //     }
-    //     this.setState({
-    //         xDir: xDir,
-    //         yDir: yDir
-    //     })
-    // }
 }
-// to start at bottom, and minus one
 
-// <div className="cursor">&#11044;</div>
 export default Grid
