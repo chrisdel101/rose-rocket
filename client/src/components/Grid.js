@@ -12,7 +12,7 @@ class Grid extends Component {
 			stops: [],
             truckingStartCoords: {x: 19, y: 20},
             truckMoveCoords: '',
-            startingCellNum:39800,
+            startingCellNum: 39800,
             previousX: 0,
             previousY: 0,
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
@@ -20,31 +20,6 @@ class Grid extends Component {
             pushToChildArr:[]
 		};
 	}
-    // move truck using grid
-    move(xVal,yVal){
-        // console.log('x', this.state.truckPosition.x)
-        // get corner box
-        // var startStop = document.querySelector('.box-container:nth-of-type(39801)')
-
-        let startStop = this.state.startingCell
-        startStop.style["grid-column-start"] = xVal
-        startStop.style["grid-column-end"] = xVal
-        startStop.style["grid-row-start"] = this.adjustRowMovement(yVal)
-        startStop.style["grid-row-end"] = this.adjustRowMovement(yVal)
-        // add input to state val
-
-        xVal = parseInt(this.state.truckPosition.x) + parseInt(xVal)
-        yVal= parseInt(this.state.truckPosition.y) + parseInt(yVal)
-            console.log('y', this.state.truckPosition.y)
-            console.log('x', this.state.truckPosition.x)
-            // set x, y, and starting
-            this.setState({
-                truckPosition: {
-                    x: xVal,
-                    y: yVal
-                },
-        })
-    }
     // takes and x/y and returns px to move
     convertToPixels(x,y){
         let totalX
@@ -77,6 +52,8 @@ class Grid extends Component {
     }
     colorGrid(x, y){
         let that = this
+
+        // calc num of units to move based on prev position
         function _numToMove(){
             let moveX = Math.abs(that.state.previousX - x)
             let moveY = Math.abs(that.state.previousY - y)
@@ -87,20 +64,15 @@ class Grid extends Component {
         }
         let tempCellNumsArr = []
 
-        console.log(`{x:${x}, y:${y}}`)
-        console.log('startingCell',this.state.startingCellNum)
+
         let tempX = x
         let tempY = y
-
-
         let tempCellNum = this.state.startingCellNum
-        console.log('temp cell start', tempCellNum)
-
-        // convert based on next move
+        // convert based on next move using above function
         tempX = _numToMove().moveX
         tempY = _numToMove().moveY
 
-        // color current cell - on first move on grid only
+        // on first move on grid only - for bottom corner
         if(this.state.previousX === 0 && this.state.previousY  === 0){
             tempX = tempX - 1
             tempY = tempY - 1
@@ -112,11 +84,9 @@ class Grid extends Component {
             if(this.state.previousY < y){
                 tempCellNum = tempCellNum - 200
                 tempCellNumsArr.push(tempCellNum)
-
             } else if(this.state.previousY > y){
                 tempCellNum = tempCellNum + 200
                 tempCellNumsArr.push(tempCellNum)
-
             }
             if(this.state.previousX < x){
                 tempCellNum = tempCellNum + 1
@@ -125,12 +95,11 @@ class Grid extends Component {
             } else if(this.state.previousX > x){
                 tempCellNum = tempCellNum - 1
                 tempCellNumsArr.push(tempCellNum)
-
             }
             tempX = tempX - 1
             tempY = tempY - 1
         }
-         // axis - loop over the only one left
+         // axis - loop over the only one left X or Y
         let loopAxis
         (tempY ? loopAxis = tempY : loopAxis = tempX)
         // if only on val left, move on its own
@@ -143,18 +112,14 @@ class Grid extends Component {
                 } else if(this.state.previousY > y){
                     tempCellNum = tempCellNum + 200
                     tempCellNumsArr.push(tempCellNum)
-
                 }
             } else if(tempX){
                 if(this.state.previousX < x){
                     tempCellNum = tempCellNum + 1
                     tempCellNumsArr.push(tempCellNum)
-
-
                 } else if(this.state.previousX > x){
                     tempCellNum = tempCellNum - 1
                     tempCellNumsArr.push(tempCellNum)
-
                 }
             }
         }
@@ -165,20 +130,8 @@ class Grid extends Component {
             holdingAllIndexes: [...this.state.holdingAllIndexes, ...tempCellNumsArr]
         })
     }
-    // get position of cell inside parent
-    posInParent(child, parent){
-        let childrenPos = parent.getBoundingClientRect()
-        let parentPos = parent.getBoundingClientRect()
-    	let relativePos = {}
 
-        relativePos['top'] = childrenPos.top - parentPos.top
-        relativePos['right'] = childrenPos.right - parentPos.right
-        relativePos['bottom'] = childrenPos.bottom - parentPos.bottom
-        relativePos['left'] = childrenPos.left - parentPos.left
-
-        return relativePos
-    }
-    testColor(){
+    colorAllStops(){
         let arr = [1,2,3,4,5]
         let stops = [
             {x:20, y:10},
@@ -186,6 +139,7 @@ class Grid extends Component {
             // {x: 25, y: 30},
             // {x: 25, y: 80}
         ]
+
         this.state.stops.map((stop, index) => {
                 let that = this
                 setTimeout(function(){
@@ -200,13 +154,6 @@ class Grid extends Component {
                  }
                 },100*(index))
             })
-    }
-    returnCellState(){
-        if(this.state.cellNumsArr){
-            return this.state.cellNumsArr
-        } else {
-            return null
-        }
     }
     render() {
         console.log(this.state.pushToChildArr)
@@ -231,36 +178,13 @@ class Grid extends Component {
                 <input type="submit" value="Submit" onMouseOver={''}></input>
 
                 </form>
-                <button onClick={this.testColor.bind(this)}>Plot</button>
+                <button onClick={this.colorAllStops.bind(this)}>ColorAllStops</button>
                 </div>
 
             </main>
-
-
         )
     }
-    // to adjust to move from bottom up
-    adjustRowMovement(y){
-        let total = 200
-        let adjust = (total - y) + 1
-        // console.log('a', adjust)
-        return adjust
-    }
-    // hold vals in input until next entered
-    updateXvalue(evt) {
-        this.setState({
-            tempX: evt.target.value
-        })
-        // console.log(`temp x: ${this.state.tempX}`)
 
-    }
-    updateYvalue(evt) {
-        this.setState({
-            tempY: evt.target.value
-        })
-        console.log(`temp y: ${this.state.tempY}`)
-
-    }
     handleSubmit(event) {
         // console.log(`temp x: ${this.state.tempX}`)
         // console.log(`temp y: ${this.state.tempY}`)
@@ -270,7 +194,6 @@ class Grid extends Component {
     }
     // set coords in pxs of plots
     setStopCoords(type){
-
         let that = this
         let coordsArr = []
 
