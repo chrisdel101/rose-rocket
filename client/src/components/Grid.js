@@ -12,12 +12,14 @@ class Grid extends Component {
 			stops: [],
             truckingStartCoords: {x: 19, y: 20},
             truckMoveCoords: '',
-            startingCellNum: 39800,
+            bottomCornerCell: 39800,
+            startingCellNum:'',
             previousX: 0,
             previousY: 0,
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
-            holdingAllIndexes: [],
-            pushToChildArr:[]
+            holdAllColorGridIndexes: [],
+            pushToColorGridArr:[],
+            legCoords: []
 		};
 	}
     // takes and x/y and returns px to move
@@ -50,28 +52,39 @@ class Grid extends Component {
         }
         return coordsObj
     }
+    markLegs(x,y){
+        // loop through stops
+        let that = this
+        setTimeout(function(){
+            that.state.stops.map(stop => {
+                console.log(stop)
+            },500)
+
+        })
+
+    }
+    _numToMove(x,y){
+        let moveX = Math.abs(this.state.previousX - x)
+        let moveY = Math.abs(this.state.previousY - y)
+        return {
+            moveX: moveX,
+            moveY: moveY
+        }
+    }
     colorGrid(x, y){
         let that = this
         console.log(this.state.previousX)
         console.log(this.state.previousY)
         // calc num of units to move based on prev position
-        function _numToMove(){
-            let moveX = Math.abs(that.state.previousX - x)
-            let moveY = Math.abs(that.state.previousY - y)
-            return {
-                moveX: moveX,
-                moveY: moveY
-            }
-        }
         let tempCellNumsArr = []
 
 
         let tempX = x
         let tempY = y
-        let tempCellNum = this.state.startingCellNum
+        let tempCellNum = this.state.bottomCornerCell
         // convert based on next move using above function
-        tempX = _numToMove().moveX
-        tempY = _numToMove().moveY
+        tempX = this._numToMove(tempX, tempY).moveX
+        tempY = this._numToMove(tempX, tempY).moveY
 
         // on first move on grid only - for bottom corner
         if(this.state.previousX === 0 && this.state.previousY  === 0){
@@ -127,8 +140,8 @@ class Grid extends Component {
         this.setState({
             previousX: x,
             previousY: y,
-            startingCellNum: tempCellNum,
-            holdingAllIndexes: [...this.state.holdingAllIndexes, ...tempCellNumsArr]
+            bottomCornerCell: tempCellNum,
+            holdAllColorGridIndexes: [...this.state.holdAllColorGridIndexes, ...tempCellNumsArr]
         })
     }
 
@@ -136,7 +149,7 @@ class Grid extends Component {
         let arr = [1,2,3,4,5]
         let stops = [
             {x:20, y:10},
-            {x: 20, y: 20}
+            // {x: 20, y: 20}
             // {x: 25, y: 30},
             // {x: 25, y: 80}
         ]
@@ -151,7 +164,7 @@ class Grid extends Component {
                 if((index + 1) === stops.length){
                     console.log('push')
                      	that.setState({
-                       	pushToChildArr:that.state.holdingAllIndexes
+                       	pushToColorGridArr:that.state.holdAllColorGridIndexes
                        })
                  }
                 },100*(index))
@@ -166,7 +179,7 @@ class Grid extends Component {
 
                 <Truck coords={this.state.truckMoveCoords}/>
                 <Stop coords={this.state.stopsDirsArr}/>
-                <Box toRender={this.state.boxesToRender} toAdd={(this.state.pushToChildArr.length ? this.state.pushToChildArr  : null)}/>
+                <Box toRender={this.state.boxesToRender} toAdd={(this.state.pushToColorGridArr.length ? this.state.pushToColorGridArr  : null)}/>
 
                 </div>
                 </div>
@@ -241,8 +254,8 @@ class Grid extends Component {
         },1050)
     }
     componentDidMount() {
-
         let that = this
+        this.markLegs()
 
         this.setStopCoords('stop')
         this.setStopCoords('truck')
