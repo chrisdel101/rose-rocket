@@ -12,7 +12,6 @@ class Box extends React.Component{
 	}
 
     renderBoxes(i) {
-        console.log(this.props)
       if (this.props.toRender) {
         let { toRender, toAdd } = this.props;
         return toRender.map((obj, i) => {

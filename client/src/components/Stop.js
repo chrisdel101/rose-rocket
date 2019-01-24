@@ -3,7 +3,7 @@ import React from 'react'
 // takes and array of directions and pixes for x and y
 function Stop(props){
     if(!props.coords) return null
-    console.log('props', props)
+    // console.log('props', props)
     let coordsArr = props.coords
     return coordsArr.map((coord, i) => {
         let styles = {

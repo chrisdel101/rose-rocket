@@ -12,14 +12,16 @@ class Grid extends Component {
 			stops: [],
             truckingStartCoords: {x: 19, y: 20},
             truckMoveCoords: '',
-            bottomCornerCell: 39800,
-            startingCellNum:'',
-            previousX: 0,
-            previousY: 0,
+            startingCellNum: 39800,
+            previousLegEndCell:0,
+            previousStopX: 0,
+            previousStopY: 0,
+            previousLegX: 0,
+            previousLegY:0,
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllColorGridIndexes: [],
             pushToColorGridArr:[],
-            legCoords: []
+            legCoords: [],
 		};
 	}
     // takes and x/y and returns px to move
@@ -52,42 +54,44 @@ class Grid extends Component {
         }
         return coordsObj
     }
-    markLegs(x,y){
-        // loop through stops
-        let that = this
-        setTimeout(function(){
-            that.state.stops.map(stop => {
-                console.log(stop)
-            },500)
 
-        })
-
-    }
-    _numToMove(x,y){
-        let moveX = Math.abs(this.state.previousX - x)
-        let moveY = Math.abs(this.state.previousY - y)
-        return {
-            moveX: moveX,
-            moveY: moveY
+    _numToMove(x,y, type){
+        if(type === 'stop'){
+            let moveX = Math.abs(this.state.previousStopX - x)
+            let moveY = Math.abs(this.state.previousStopY - y)
+            return {
+                moveX: moveX,
+                moveY: moveY
+            }
+        } else if(type === 'leg'){
+            let moveX = Math.abs(this.state.previousLegX - x)
+            let moveY = Math.abs(this.state.previousLegY - y)
+            return {
+                moveX: moveX,
+                moveY: moveY
+            }
+        } else {
+            console.error("error in the num to move function")
         }
+
     }
     colorGrid(x, y){
         let that = this
-        console.log(this.state.previousX)
-        console.log(this.state.previousY)
+        console.log(this.state.previousStopX)
+        console.log(this.state.previousStopY)
         // calc num of units to move based on prev position
         let tempCellNumsArr = []
 
 
         let tempX = x
         let tempY = y
-        let tempCellNum = this.state.bottomCornerCell
+        let tempCellNum = this.state.startingCellNum
         // convert based on next move using above function
-        tempX = this._numToMove(tempX, tempY).moveX
-        tempY = this._numToMove(tempX, tempY).moveY
+        tempX = this._numToMove(tempX, tempY, 'stop').moveX
+        tempY = this._numToMove(tempX, tempY, 'stop').moveY
 
         // on first move on grid only - for bottom corner
-        if(this.state.previousX === 0 && this.state.previousY  === 0){
+        if(this.state.previousStopX === 0 && this.state.previousStopY  === 0){
             tempX = tempX - 1
             tempY = tempY - 1
             tempCellNumsArr.push(tempCellNum)
@@ -95,18 +99,18 @@ class Grid extends Component {
         // move in tandem while both vals exist
         while(tempX && tempY){
             // if last was les than current- do this
-            if(this.state.previousY < y){
+            if(this.state.previousStopY < y){
                 tempCellNum = tempCellNum - 200
                 tempCellNumsArr.push(tempCellNum)
-            } else if(this.state.previousY > y){
+            } else if(this.state.previousStopY > y){
                 tempCellNum = tempCellNum + 200
                 tempCellNumsArr.push(tempCellNum)
             }
-            if(this.state.previousX < x){
+            if(this.state.previousStopX < x){
                 tempCellNum = tempCellNum + 1
                 tempCellNumsArr.push(tempCellNum)
 
-            } else if(this.state.previousX > x){
+            } else if(this.state.previousStopX > x){
                 tempCellNum = tempCellNum - 1
                 tempCellNumsArr.push(tempCellNum)
             }
@@ -119,53 +123,158 @@ class Grid extends Component {
         // if only on val left, move on its own
         for (var i = 0; i < loopAxis; i++) {
             if(tempY){
-                if(this.state.previousY < y){
+                if(this.state.previousStopY < y){
                     tempCellNum = tempCellNum - 200
                     tempCellNumsArr.push(tempCellNum)
 
-                } else if(this.state.previousY > y){
+                } else if(this.state.previousStopY > y){
                     tempCellNum = tempCellNum + 200
                     tempCellNumsArr.push(tempCellNum)
                 }
             } else if(tempX){
-                if(this.state.previousX < x){
+                if(this.state.previousStopX < x){
                     tempCellNum = tempCellNum + 1
                     tempCellNumsArr.push(tempCellNum)
-                } else if(this.state.previousX > x){
+                } else if(this.state.previousStopX > x){
                     tempCellNum = tempCellNum - 1
                     tempCellNumsArr.push(tempCellNum)
                 }
             }
         }
         this.setState({
-            previousX: x,
-            previousY: y,
-            bottomCornerCell: tempCellNum,
+            previousStopX: x,
+            previousStopY: y,
+            startingCellNum: tempCellNum,
             holdAllColorGridIndexes: [...this.state.holdAllColorGridIndexes, ...tempCellNumsArr]
         })
+    }
+    legStartEnd(x, y, startingCell){
+
+        console.log('previous X',this.state.previousLegX)
+        console.log('previous Y', this.state.previousLegY)
+        // calc num of units to move based on prev position
+        let tempCellNumsArr = []
+
+
+        let tempX = x
+        let tempY = y
+        // start remains the same
+        let tempStartNum
+        // cell num changes with calcs
+        let tempCellNum
+        // on first move only
+        if(this.state.previousLegEndCell === 0){
+            tempStartNum = this.state.startingCellNum
+            tempCellNum = this.state.startingCellNum
+            // tempStartNum = this.state.startingCellNum
+        } else {
+            tempStartNum = this.state.previousLegEndCell
+            tempCellNum = this.state.previousLegEndCell
+        }
+        console.log('start temp', tempCellNum)
+        console.log('staring cell', tempStartNum)
+        // convert based on next move using above function
+        tempX = this._numToMove(tempX, tempY, 'leg').moveX
+        tempY = this._numToMove(tempX, tempY, 'leg').moveY
+        console.log('x to move',tempX)
+        console.log('y to move', tempY)
+        // on first move on grid only - for bottom corner
+        if(this.state.previousLegX === 0 && this.state.previousLegY  === 0){
+            tempX = tempX - 1
+            tempY = tempY - 1
+            // tempCellNumsArr.push(tempCellNum)
+        }
+        // move in tandem while both vals exist
+        while(tempX && tempY){
+            // if last was les than current- do this
+            if(this.state.previousLegY < y){
+                tempCellNum = tempCellNum - 200
+                // tempCellNumsArr.push(tempCellNum)
+            } else if(this.state.previousLegY > y){
+                tempCellNum = tempCellNum + 200
+                // tempCellNumsArr.push(tempCellNum)
+            }
+            if(this.state.previousLegX < x){
+                tempCellNum = tempCellNum + 1
+                // tempCellNumsArr.push(tempCellNum)
+
+            } else if(this.state.previousLegX > x){
+                tempCellNum = tempCellNum - 1
+                // tempCellNumsArr.push(tempCellNum)
+            }
+            tempX = tempX - 1
+            tempY = tempY - 1
+        }
+         // axis - loop over the only one left X or Y
+        let loopAxis
+        (tempY ? loopAxis = tempY : loopAxis = tempX)
+        // if only on val left, move on its own
+        for (var i = 0; i < loopAxis; i++) {
+            if(tempY){
+                if(this.state.previousLegY < y){
+                    tempCellNum = tempCellNum - 200
+
+                    // tempCellNumsArr.push(tempCellNum)
+
+                } else if(this.state.previousLegY > y){
+                    tempCellNum = tempCellNum + 200
+                    // tempCellNumsArr.push(tempCellNum)
+                }
+            } else if(tempX){
+
+                if(this.state.previousLegX < x){
+                    tempCellNum = tempCellNum + 1
+                    // tempCellNumsArr.push(tempCellNum)
+                } else if(this.state.previousLegX > x){
+                    tempCellNum = tempCellNum - 1
+                    // tempCellNumsArr.push(tempCellNum)
+                }
+            }
+        }
+        console.log('last', tempCellNum)
+        let legCellNums = {
+            start: tempStartNum,
+            end: tempCellNum
+        }
+        console.log('coords', legCellNums)
+        // - make this previousLast
+        this.setState({
+            previousLegEndCell: tempCellNum,
+            previousLegX: x,
+            previousLegY: y,
+            legCoords:[...this.state.legCoords,legCellNums]
+
+        })
+        // this.setState({
+        //     previousLegX: x,
+        //     previousLegY: y,
+        //     startingCellNum: tempCellNum,
+        //     holdAllColorGridIndexes: [...this.state.holdAllColorGridIndexes, ...tempCellNumsArr]
+        // })
     }
 
     colorAllStops(){
         let arr = [1,2,3,4,5]
         let stops = [
             {x:20, y:10},
-            // {x: 20, y: 20}
+            {x: 20, y: 20}
             // {x: 25, y: 30},
             // {x: 25, y: 80}
         ]
 
-        stops.map((stop, index) => {
+        this.state.stops.map((stop, index) => {
                 let that = this
                 setTimeout(function(){
-                    that.colorGrid(stop.x, stop.y)
+                    // that.colorGrid(stop.x, stop.y)
             // console.log(index + 1)
             // console.log(stops.length)
-
-                if((index + 1) === stops.length){
-                    console.log('push')
-                     	that.setState({
-                       	pushToColorGridArr:that.state.holdAllColorGridIndexes
-                       })
+            that.legStartEnd(stop.x, stop.y)
+                if((index + 1) === that.state.stops.length){
+                    console.log(that.state.legCoords)
+                    // console.log('push')
+                    //  	that.setState({
+                    //    	pushToColorGridArr:that.state.holdAllColorGridIndexes
+                    //    })
                  }
                 },100*(index))
             })
@@ -243,7 +352,7 @@ class Grid extends Component {
                         yDir: "bottom"
                     }
                 }
-                console.log(coords)
+                // console.log(coords)
                 that.setState({
                     truckMoveCoords: coords
                 })
@@ -255,7 +364,7 @@ class Grid extends Component {
     }
     componentDidMount() {
         let that = this
-        this.markLegs()
+
 
         this.setStopCoords('stop')
         this.setStopCoords('truck')
