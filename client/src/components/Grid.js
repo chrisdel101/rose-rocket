@@ -52,7 +52,8 @@ class Grid extends Component {
     }
     colorGrid(x, y){
         let that = this
-
+        console.log(this.state.previousX)
+        console.log(this.state.previousY)
         // calc num of units to move based on prev position
         function _numToMove(){
             let moveX = Math.abs(that.state.previousX - x)
@@ -140,13 +141,14 @@ class Grid extends Component {
             // {x: 25, y: 80}
         ]
 
-        this.state.stops.map((stop, index) => {
+        stops.map((stop, index) => {
                 let that = this
                 setTimeout(function(){
                     that.colorGrid(stop.x, stop.y)
             // console.log(index + 1)
             // console.log(stops.length)
-                if((index + 1) === that.state.stops.length){
+
+                if((index + 1) === stops.length){
                     console.log('push')
                      	that.setState({
                        	pushToChildArr:that.state.holdingAllIndexes
@@ -156,7 +158,6 @@ class Grid extends Component {
             })
     }
     render() {
-        console.log(this.state.pushToChildArr)
     	return(
             <main className="page-container">
                 <div className="grid-container">
@@ -202,7 +203,7 @@ class Grid extends Component {
             if(type === 'stop'){
                 if(that.state.stops.length > 0){
                     that.state.stops.forEach(stop => {
-                        console.log(stop.x, stop.y)
+                        // console.log(stop.x, stop.y)
                         let pixels = that.convertToPixels(
                             stop.x, stop.y
                         )

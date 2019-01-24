@@ -22,7 +22,7 @@ class Box extends React.Component{
           })();
           return (
               <div
-              className={`box ${hasColor ? " backgroundColor" : ""}`}
+              className={`box ${hasColor ? " background-color" : ""}`}
               key={i}
               />)
         });
