@@ -19,7 +19,8 @@ class Grid extends Component {
             previousLegX: 0,
             previousLegY:0,
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
-            holdAllColorGridIndexes: [],
+            holdAllStopColorIndexes: [],
+            holdAllLegColorIndexes: [],
             pushToColorGridArr:[],
             legCoords: [],
 		};
@@ -141,11 +142,15 @@ class Grid extends Component {
                 }
             }
         }
+        // console.log(tempCellNumsArr)
+        // holdAllStopColorIndexes - cells for color or entire plots - spread out
+        // holdAllStopColorIndexes - each stops nums kept in its own arr
         this.setState({
             previousStopX: x,
             previousStopY: y,
             startingCellNum: tempCellNum,
-            holdAllColorGridIndexes: [...this.state.holdAllColorGridIndexes, ...tempCellNumsArr]
+            holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr],
+            holdAllLegColorIndexes: [...this.state.holdAllLegColorIndexes, tempCellNumsArr]
         })
     }
     legStartEnd(x, y, startingCell){
@@ -249,7 +254,7 @@ class Grid extends Component {
         //     previousLegX: x,
         //     previousLegY: y,
         //     startingCellNum: tempCellNum,
-        //     holdAllColorGridIndexes: [...this.state.holdAllColorGridIndexes, ...tempCellNumsArr]
+        //     holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr]
         // })
     }
 
@@ -262,19 +267,19 @@ class Grid extends Component {
             // {x: 25, y: 80}
         ]
 
-        this.state.stops.map((stop, index) => {
+        stops.map((stop, index) => {
                 let that = this
                 setTimeout(function(){
                     // that.colorGrid(stop.x, stop.y)
             // console.log(index + 1)
             // console.log(stops.length)
-            that.legStartEnd(stop.x, stop.y)
-                if((index + 1) === that.state.stops.length){
-                    console.log(that.state.legCoords)
+            that.colorGrid(stop.x, stop.y)
+                if((index + 1) === stops.length){
+                console.log(that.state.holdAllLegColorIndexes)
                     // console.log('push')
-                    //  	that.setState({
-                    //    	pushToColorGridArr:that.state.holdAllColorGridIndexes
-                    //    })
+                     	that.setState({
+                       	pushToColorGridArr:that.state.holdAllStopColorIndexes
+                       })
                  }
                 },100*(index))
             })
