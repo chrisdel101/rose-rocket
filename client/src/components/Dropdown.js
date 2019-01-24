@@ -1,22 +1,51 @@
 import React from 'react'
 
-function Dropdown(props){
-    if(!props.legs) return null
-    console.log(props)
-    let legs = props.legs
-        return(
-            <div className="legs-container">
-            <h6>Select a Leg</h6>
-            <select>
-            {
-                legs.map(leg => {
-                    return <option value={leg.legID}>{leg.legID}</option>
-                })
+class Dropdown extends React.Component{
+    constructor(props) {
+		super(props)
+        this.state = {
+            value:''
             }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSelectSubmit = this.handleSelectSubmit.bind(this);
 
-            </select>
-            </div>
-        )
+	}
+    handleChange(event) {
+        console.log(event)
+        this.setState({value: event.target.value});
+    }
+    handleSelectSubmit(event) {
+        alert('Your favorite flavor is: ' + this.state.value);
+        event.preventDefault();
+    }
+
+    render(){
+        // console.log(this.props)
+        if(this.props.legs){
+            return(
+                <div className="legs-container">
+
+                <form onSubmit={this.handleSelectSubmit}>
+                    <label>
+                    Select a Leg
+                    <select value={this.state.value} onChange={this.handleChange}>
+                    {
+                        this.props.legs.map((leg, i) => {
+                            return <option key={i}>{leg.legID}</option>
+                        })
+                    }
+                    </select>
+                    </label>
+                    <input type="submit" value="Submit" />
+                </form>
+
+                </div>
+            )
+        } else {
+            return null
+        }
+
+    }
 
 }
 

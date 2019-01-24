@@ -312,7 +312,7 @@ class Grid extends Component {
     handleSubmit(event) {
         // console.log(`temp x: ${this.state.tempX}`)
         // console.log(`temp y: ${this.state.tempY}`)
-        this.move(this.state.tempX, this.state.tempY)
+        // this.move(this.state.tempX, this.state.tempY)
         // alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
     }
