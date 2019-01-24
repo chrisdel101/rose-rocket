@@ -317,10 +317,11 @@ class Grid extends Component {
     }
     handleSelectSubmit(event) {
         event.preventDefault()
-            alert('Your favorite flavor is: ' + this.state.value)
+            console.log(this.colorLeg(this.state.value))
 
     }
     colorLeg(input){
+        console.log(input)
         // - get val from Dropdown
         let index
         switch(input){
@@ -348,16 +349,20 @@ class Grid extends Component {
             case 'HI':
                 index = 7
                 break
-            case 'IK':
+            case 'IJ':
                 index = 8
                 break
-            case 'KL':
+            case 'JK':
                 index = 9
+                break
+            case 'KL':
+                index = 10
                 break
             default:
                 console.error('Nothing in switch')
                 break
         }
+        return index
     }
 
     // set coords in pxs of plots
