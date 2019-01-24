@@ -1,4 +1,6 @@
 import React from 'react'
+import { Manager, Reference, Popper } from 'react-popper';
+
 
 // takes and array of directions and pixes for x and y
 function Stop(props){
@@ -12,7 +14,21 @@ function Stop(props){
         }
         // console.log('styles', styles)
         return(
-            <div className="stop-marker" style={styles} key={i}></div>
+            <Manager>
+            <Reference>
+            {({ ref }) => (
+                <div className="stop-marker" style={styles} key={i}></div>
+            )}
+            </Reference>
+            <Popper placement="right">
+            {({ ref, style, placement, arrowProps }) => (
+                <div ref={ref} style={style} data-placement={placement}>
+                Popper element
+                <div ref={arrowProps.ref} style={arrowProps.style} />
+                </div>
+            )}
+            </Popper>
+            </Manager>
         )
     })
 }
