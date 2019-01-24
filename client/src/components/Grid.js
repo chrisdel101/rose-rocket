@@ -3,6 +3,7 @@ import "../App.css";
 import Box from './Box'
 import Stop from './Stop'
 import Truck from './Truck'
+import Dropdown from './Dropdown'
 
 class Grid extends Component {
 	constructor(props) {
@@ -250,12 +251,6 @@ class Grid extends Component {
             legCoords:[...this.state.legCoords,legCellNums]
 
         })
-        // this.setState({
-        //     previousLegX: x,
-        //     previousLegY: y,
-        //     startingCellNum: tempCellNum,
-        //     holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr]
-        // })
     }
 
     colorAllStops(){
@@ -304,6 +299,7 @@ class Grid extends Component {
                 </input>
                 Y-coords: <input className="y-coord" type="text" value={this.state.tempY} onChange={evt => this.updateYvalue(evt)}  ></input>
                 <input type="submit" value="Submit" onMouseOver={''}></input>
+                <Dropdown legs={this.state.legs.length ? this.state.legs : null}/>
 
                 </form>
                 <button onClick={this.colorAllStops.bind(this)}>ColorAllStops</button>
@@ -381,6 +377,7 @@ class Grid extends Component {
         .catch(err => console.log(err));
         this.callLegs()
         .then(res => {
+            console.log('res', res)
             this.setState({ legs: res.legs })
         })
         .catch(err => console.log(err));
