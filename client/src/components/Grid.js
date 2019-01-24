@@ -21,10 +21,14 @@ class Grid extends Component {
             previousLegY:0,
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
-            holdAllLegColorIndexes: [],
+            holdAllLegColorArrs: [],
             pushToColorGridArr:[],
             legCoords: [],
 		};
+        this.handleSelectSubmit = this.handleSelectSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+
+
 	}
     // takes and x/y and returns px to move
     convertToPixels(x,y){
@@ -151,7 +155,7 @@ class Grid extends Component {
             previousStopY: y,
             startingCellNum: tempCellNum,
             holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr],
-            holdAllLegColorIndexes: [...this.state.holdAllLegColorIndexes, tempCellNumsArr]
+            holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
         })
     }
     legStartEnd(x, y, startingCell){
@@ -270,7 +274,7 @@ class Grid extends Component {
             // console.log(stops.length)
             that.colorGrid(stop.x, stop.y)
                 if((index + 1) === stops.length){
-                console.log(that.state.holdAllLegColorIndexes)
+                console.log(that.state.holdAllLegColorArrs)
                     // console.log('push')
                      	that.setState({
                        	pushToColorGridArr:that.state.holdAllStopColorIndexes
@@ -294,28 +298,68 @@ class Grid extends Component {
                 </div>
                 <div className="utils-container">
 
-                <form onSubmit={this.handleSubmit.bind(this)}>
+                <form onSubmit={''}>
                 X-coords: <input className="x-coord" type="text" value={this.state.tempX} onChange={evt => this.updateXvalue(evt)} >
                 </input>
                 Y-coords: <input className="y-coord" type="text" value={this.state.tempY} onChange={evt => this.updateYvalue(evt)}  ></input>
                 <input type="submit" value="Submit" onMouseOver={''}></input>
-                <Dropdown legs={this.state.legs.length ? this.state.legs : null}/>
 
                 </form>
                 <button onClick={this.colorAllStops.bind(this)}>ColorAllStops</button>
+                <Dropdown legs={this.state.legs.length ? this.state.legs : null} onChange={this.handleChange} onSubmit={this.handleSelectSubmit}/>
                 </div>
 
             </main>
         )
     }
-
-    handleSubmit(event) {
-        // console.log(`temp x: ${this.state.tempX}`)
-        // console.log(`temp y: ${this.state.tempY}`)
-        // this.move(this.state.tempX, this.state.tempY)
-        // alert('A name was submitted: ' + this.state.value);
-        event.preventDefault();
+    handleChange(value) {
+        this.setState({value: value});
     }
+    handleSelectSubmit(event) {
+        event.preventDefault()
+            alert('Your favorite flavor is: ' + this.state.value)
+
+    }
+    colorLeg(input){
+        // - get val from Dropdown
+        let index
+        switch(input){
+            case 'AB':
+                index = 0
+                break
+            case 'BC':
+                index = 1
+                break
+            case 'CD':
+                index = 2
+                break
+            case 'DE':
+                index = 3
+                break
+            case 'EF':
+                index = 4
+                break
+            case 'FG':
+                index = 5
+                break
+            case 'GH':
+                index = 6
+                break
+            case 'HI':
+                index = 7
+                break
+            case 'IK':
+                index = 8
+                break
+            case 'KL':
+                index = 9
+                break
+            default:
+                console.error('Nothing in switch')
+                break
+        }
+    }
+
     // set coords in pxs of plots
     setStopCoords(type){
         let that = this

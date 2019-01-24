@@ -4,34 +4,33 @@ class Dropdown extends React.Component{
     constructor(props) {
 		super(props)
         this.state = {
-            value:''
             }
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSelectSubmit = this.handleSelectSubmit.bind(this);
+        // this.handleChange = this.handleChange.bind(this);
 
 	}
-    handleChange(event) {
-        console.log(event)
-        this.setState({value: event.target.value});
-    }
-    handleSelectSubmit(event) {
-        alert('Your favorite flavor is: ' + this.state.value);
-        event.preventDefault();
-    }
+    // handleChange(event) {
+    //     console.log(event)
+    //     this.setState({value: event.target.value});
+    // }
+    // handleSelectSubmit(event) {
+    //     alert('Your favorite flavor is: ' + this.state.value);
+    //     event.preventDefault();
+    // }
 
     render(){
-        // console.log(this.props)
+        console.log(this.state)
         if(this.props.legs){
             return(
                 <div className="legs-container">
 
-                <form onSubmit={this.handleSelectSubmit}>
+                <form onSubmit={(ev) => this.props.onSubmit(ev)}>
                     <label>
                     Select a Leg
-                    <select value={this.state.value} onChange={this.handleChange}>
+                    <select value={this.state.value} onChange={(ev) => this.props.onChange(ev.target.value)}>
+                        <option></option>
                     {
                         this.props.legs.map((leg, i) => {
-                            return <option key={i}>{leg.legID}</option>
+                            return <option key={i} value={this.state.value}>{leg.legID}</option>
                         })
                     }
                     </select>
