@@ -161,8 +161,8 @@ class Grid extends Component {
     }
     // takes x y and determine start and end cells
     legStartEnd(x, y){
-        console.log('previous X',this.state.previousLegX)
-        console.log('previous Y', this.state.previousLegY)
+        // console.log('previous X',this.state.previousLegX)
+        // console.log('previous Y', this.state.previousLegY)
         // push all cellnums to arr like colors
         let tempCellNumsArr = []
 
@@ -182,13 +182,13 @@ class Grid extends Component {
             tempStartNum = this.state.previousLegEndCell
             tempCellNum = this.state.previousLegEndCell
         }
-        console.log('start temp', tempCellNum)
-        console.log('staring cell', tempStartNum)
+        // console.log('start temp', tempCellNum)
+        // console.log('staring cell', tempStartNum)
         // convert based on next move using above function
         tempX = this._numToMove(tempX, tempY, 'leg').moveX
         tempY = this._numToMove(tempX, tempY, 'leg').moveY
-        console.log('x to move',tempX)
-        console.log('y to move', tempY)
+        // console.log('x to move',tempX)
+        // console.log('y to move', tempY)
         // on first move on grid only - for bottom corner
         if(this.state.previousLegX === 0 && this.state.previousLegY  === 0){
             tempX = tempX - 1
@@ -242,15 +242,14 @@ class Grid extends Component {
                 }
             }
         }
-        console.log('last', tempCellNum)
+        // console.log('last', tempCellNum)
         let legCellNums = {
             start: tempStartNum,
             end: tempCellNum
         }
-        console.log('coords', legCellNums)
-        console.log('x', x)
-        console.log('y', y)
-        console.log()
+        // console.log('coords', legCellNums)
+        // console.log('x', x)
+        // console.log('y', y)
         // - make this previousLast
         this.setState({
             previousLegEndCell: tempCellNum,
