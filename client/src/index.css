@@ -64,6 +64,7 @@ code {
 .truck {
 	position: absolute;
 	bottom: 0;
+	z-index: 2;
 }
 
 .stop-marker:before {

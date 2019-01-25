@@ -14,8 +14,8 @@ class Grid extends Component {
             legs: [],
 			stops: [],
             driver: "",
-            truckingStartCoords: {x: 19, y: 20},
-            truckMoveCoords: '',
+            driverLegStart: "",
+            driverMoveCoords: '',
             startingCellNum: 39800,
             previousLegEndCell:0,
             previousStopX: 0,
@@ -27,7 +27,7 @@ class Grid extends Component {
             holdAllLegColorArrs: [],
             finalStopColorArr:[],
             finalLegColorArr: [],
-            finalDriverColorArr: [],
+            finalDriverMoveObj: "",
             legStartEndCoords: [],
 		};
         this.handleSelectSubmit = this.handleSelectSubmit.bind(this);
@@ -86,14 +86,29 @@ class Grid extends Component {
         }
 
     }
-    placeDriver(){
+    setDriver(){
+        // get from api
         let positionData = this.state.driver
-        positionData = positionData.activeLegID
-        let index = this._legIndex(positionData)
+        // leg name
+        let legName = positionData.activeLegID
+        // console.log('leg name', positionData)
+        // letter to match stop
+        let firstLetter = legName[0]
+        // get stop coords
+        let firstStopOfLeg = this.state.stops.filter(stop => {
+            return stop.name === firstLetter
+        })
+        // coords
+        let {x, y} = firstStopOfLeg[0]
+        let coords = {x,y}
+
+        let index = this._legIndex(legName)
         let leg = this.state.holdAllLegColorArrs[index]
             // console.log('leg', leg)
+
+            //finalDriverMoveObj - cell nums of drivers leg
         this.setState({
-            finalDriverColorArr: leg
+            driverLegStart: coords
         })
 
     }
@@ -295,7 +310,7 @@ class Grid extends Component {
 
                 <div className="grid">
 
-                <Truck legColor={this.state.finalDriverColorArr.length ? this.state.finalDriverColorArr : null}/>
+                <Truck coords={this.state.finalDriverMoveObj ? this.state.finalDriverMoveObj : null}/>
                 <Stop coords={this.state.stopsDirsArr}/>
                 <Box
                     toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
@@ -417,7 +432,8 @@ class Grid extends Component {
                     stopsDirsArr: coordsArr
                 })
             } else if(type === 'truck'){
-                let pixels = that._convertToPixels(that.state.truckingStartCoords.x, that.state.truckingStartCoords.y)
+
+                let pixels = that._convertToPixels(that.state.driverLegStart.x, that.state.driverLegStart.y)
                 let coords = {
                     pixels: pixels,
                     directions: {
@@ -425,9 +441,10 @@ class Grid extends Component {
                         yDir: "bottom"
                     }
                 }
-                // console.log(coords)
+                console.log(coords)
+                // set coords to change child state
                 that.setState({
-                    truckMoveCoords: coords
+                    finalDriverMoveObj: coords
                 })
 
             }
@@ -444,7 +461,8 @@ class Grid extends Component {
                 that.colorGrid(stop.x, stop.y)
 
             })
-            that.placeDriver()
+            that.setDriver()
+            console.log('state',that.state)
         },100)
         setTimeout(function(){
                 console.log(that.state)
@@ -467,7 +485,6 @@ class Grid extends Component {
         .catch(err => console.log(err));
         this._callLegs()
         .then(res => {
-            console.log('res', res)
             this.setState({ legs: res.legs })
         })
         .catch(err => console.log(err));
