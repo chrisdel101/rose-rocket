@@ -13,6 +13,7 @@ class Grid extends Component {
 		this.state = {
             legs: [],
 			stops: [],
+            driver: "",
             truckingStartCoords: {x: 19, y: 20},
             truckMoveCoords: '',
             startingCellNum: 39800,
@@ -26,6 +27,7 @@ class Grid extends Component {
             holdAllLegColorArrs: [],
             finalStopColorArr:[],
             finalLegColorArr: [],
+            finalDriverColorArr: [],
             legStartEndCoords: [],
 		};
         this.handleSelectSubmit = this.handleSelectSubmit.bind(this);
@@ -34,7 +36,7 @@ class Grid extends Component {
 
 	}
     // takes and x/y and returns px to move
-    convertToPixels(x,y){
+    _convertToPixels(x,y){
         let totalX
         let totalY
         // first 10 cells = 100px
@@ -84,10 +86,21 @@ class Grid extends Component {
         }
 
     }
+    placeDriver(){
+        let positionData = this.state.driver
+        positionData = positionData.activeLegID
+        let index = this._legIndex(positionData)
+        let leg = this.state.holdAllLegColorArrs[index]
+            // console.log('leg', leg)
+        this.setState({
+            finalDriverColorArr: leg
+        })
+
+    }
     colorGrid(x, y){
         let that = this
-        console.log(this.state.previousStopX)
-        console.log(this.state.previousStopY)
+        // console.log(this.state.previousStopX)
+        // console.log(this.state.previousStopY)
         // calc num of units to move based on prev position
         let tempCellNumsArr = []
 
@@ -152,7 +165,6 @@ class Grid extends Component {
         }
         // console.log(tempCellNumsArr)
         // holdAllStopColorIndexes - cells for color or entire plots - spread out
-        // holdAllStopColorIndexes - each stops nums kept in its own arr
 
         this.setState({
             previousStopX: x,
@@ -264,37 +276,17 @@ class Grid extends Component {
     }
 
     colorAllStops(){
-        let arr = [1,2,3,4,5]
-        let stops = [
-            {x:20, y:10},
-            {x: 20, y: 20}
-            // {x: 25, y: 30},
-            // {x: 25, y: 80}
-        ]
-
-        stops.map((stop, index) => {
-                let that = this
-                setTimeout(function(){
-                    // that.colorGrid(stop.x, stop.y)
-            // console.log(index + 1)
-            // console.log(stops.length)
-            that.colorGrid(stop.x, stop.y)
-                if((index + 1) === stops.length){
-                console.log(that.state.holdAllLegColorArrs)
-                    // console.log('push')
-                     	that.setState({
-                       	    finalStopColorArr:that.state.holdAllStopColorIndexes
-                       })
-                 }
-                // if((index + 1) === stops.length){
-                // console.log(that.state.holdAllLegColorArrs)
-                //     // console.log('push')
-                //      	that.setState({
-                //        	finalStopColorArr:that.state.holdAllStopColorIndexes
-                //        })
-                //  }
-                },100*(index))
-            })
+        // let arr = [1,2,3,4,5]
+        // let stops = [
+        //     {x:20, y:10},
+        //     {x: 20, y: 20}
+        //     // {x: 25, y: 30},
+        //     // {x: 25, y: 80}
+        // ]
+        // on click push to child state
+        this.setState({
+            finalStopColorArr: this.state.holdAllStopColorIndexes
+        })
     }
     render() {
     	return(
@@ -303,7 +295,7 @@ class Grid extends Component {
 
                 <div className="grid">
 
-                <Truck coords={this.state.truckMoveCoords}/>
+                <Truck legColor={this.state.finalDriverColorArr.length ? this.state.finalDriverColorArr : null}/>
                 <Stop coords={this.state.stopsDirsArr}/>
                 <Box
                     toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
@@ -336,11 +328,7 @@ class Grid extends Component {
         this.colorLeg(this.state.value)
 
     }
-    colorLeg(input){
-        let that = this
-        // - get val from Dropdown-
-        // change it to an index
-
+    _legIndex(input){
         let index
         switch(input){
             // pre-stop
@@ -384,55 +372,24 @@ class Grid extends Component {
                 console.error('Nothing in switch')
                 break
         }
-        console.log('input', input)
-        console.log('index', index)
+        return index
+    }
+    colorLeg(input){
+        let that = this
+        // - get val from Dropdown-
+        // change it to an index
 
-        // // get letters out of select value
-        // let firstStopLetter = input[0]
-        // console.log('first letter', firstStopLetter)
-        // let secondStopLetter = input[1]
-        // console.log('second Letter', secondStopLetter)
-        // // correlate with stops json to get coords for that those stops
-        // let firstStop = this.state.stops.filter(stop => {
-        //     // returns arr - with onj and coords
-        //     return stop.name === firstStopLetter
-        // })
-        // let secondStop = this.state.stops.filter(stop => {
-        //     return stop.name === secondStopLetter
-        // })
-        // console.log('first', firstStop)
-        // console.log('second', secondStop)
-        // call func to create arr  of cells
-        // this.legStartEnd(firstStop[0].x, firstStop[0].y)
-
-        // setTimeout(function(){
-        //     that.legStartEnd(secondStop[0].x, secondStop[0].y)
-        //
-        // })
+        let index = this._legIndex(input)
+        // get leg using index out of array
         let leg = this.state.holdAllLegColorArrs[index]
-        console.log('leg', leg)
+        // set state on child to change the color
         this.setState({
             finalLegColorArr: leg
         })
-
-        // setTimeout(function(){
-        //     console.log('state', that.state)
-        //     const leg = that.state.holdAllLegColorArrs[index]
-        //     console.log('arr', that.state.holdAllLegColorArrs)
-        //     console.log('leg',  leg)
-        //     that.setState({
-        //         finalLegColorArr:leg
-        //     })
-        //
-        // },1000)
-
-
-
-
     }
 
     // set coords in pxs of plots
-    setStopCoords(type){
+    _setStopCoords(type){
         let that = this
         let coordsArr = []
 
@@ -442,7 +399,7 @@ class Grid extends Component {
                 if(that.state.stops.length > 0){
                     that.state.stops.forEach(stop => {
                         // console.log(stop.x, stop.y)
-                        let pixels = that.convertToPixels(
+                        let pixels = that._convertToPixels(
                             stop.x, stop.y
                         )
                         let coords = {
@@ -460,7 +417,7 @@ class Grid extends Component {
                     stopsDirsArr: coordsArr
                 })
             } else if(type === 'truck'){
-                let pixels = that.convertToPixels(that.state.truckingStartCoords.x, that.state.truckingStartCoords.y)
+                let pixels = that._convertToPixels(that.state.truckingStartCoords.x, that.state.truckingStartCoords.y)
                 let coords = {
                     pixels: pixels,
                     directions: {
@@ -484,9 +441,10 @@ class Grid extends Component {
         setTimeout(function(){
             that.state.stops.map(stop => {
                 that.legStartEnd(stop.x, stop.y)
-                // that.colorGrid(stop.x, stop.y)
+                that.colorGrid(stop.x, stop.y)
 
             })
+            that.placeDriver()
         },100)
         setTimeout(function(){
                 console.log(that.state)
@@ -494,15 +452,20 @@ class Grid extends Component {
 
 
         // call to set stops and truck
-        this.setStopCoords('stop')
-        this.setStopCoords('truck')
+        this._setStopCoords('stop')
+        this._setStopCoords('truck')
         // Call our fetch function below once the component mounts
-        this.callStops()
+        this._callDriver()
+        .then(res => {
+            this.setState({ driver: res.driver })
+        })
+        .catch(err => console.log(err));
+        this._callStops()
         .then(res => {
             this.setState({ stops: res.stops })
         })
         .catch(err => console.log(err));
-        this.callLegs()
+        this._callLegs()
         .then(res => {
             console.log('res', res)
             this.setState({ legs: res.legs })
@@ -510,7 +473,7 @@ class Grid extends Component {
         .catch(err => console.log(err));
 
     }
-    callLegs = async () => {
+    _callLegs = async () => {
         const response = await fetch('/legs');
         const body = await response.json();
 
@@ -519,11 +482,21 @@ class Grid extends Component {
         }
         return body
     }
-    callStops = async () => {
+    _callStops = async () => {
         const response = await fetch('/stops');
         const body = await response.json();
 
         if (response.status !== 200) {
+            throw Error(body.message)
+        }
+        return body
+    }
+    _callDriver = async () => {
+        const response = await fetch('/driver');
+        const body = await response.json();
+
+        if (response.status !== 200) {
+
             throw Error(body.message)
         }
         return body

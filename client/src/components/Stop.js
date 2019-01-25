@@ -5,7 +5,7 @@ import { Manager, Reference, Popper } from 'react-popper';
 // takes and array of directions and pixes for x and y
 function Stop(props){
     if(!props.coords) return null
-    // console.log('props', props)
+    console.log('props', props)
     let coordsArr = props.coords
     return coordsArr.map((coord, i) => {
         let styles = {
@@ -14,10 +14,10 @@ function Stop(props){
         }
         // console.log('styles', styles)
         return(
-            <Manager>
+            <Manager key={i}>
             <Reference>
             {({ ref }) => (
-                <div className="stop-marker" style={styles} key={i}></div>
+                <div className="stop-marker" style={styles}></div>
             )}
             </Reference>
             <Popper placement="right">
