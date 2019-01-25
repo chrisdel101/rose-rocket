@@ -18,7 +18,7 @@ class Dropdown extends React.Component{
     // }
 
     render(){
-        console.log(this.state)
+        // console.log(this.state)
         if(this.props.legs){
             return(
                 <div className="legs-container">

@@ -8,15 +8,14 @@ class Box extends React.Component{
 		super(props)
         this.state = {
         }
-        this._items = new MultiRef();
 	}
 
     renderBoxes(i) {
       if (this.props.toRender) {
-        let { toRender, toAdd } = this.props;
+        let { toRender, stopsColor } = this.props;
         return toRender.map((obj, i) => {
           let hasColor = (() => {
-            if (!toAdd || !toAdd.length || !toAdd.includes(i)) return false;
+            if (!stopsColor || !stopsColor.length || !stopsColor.includes(i)) return false;
             return true;
           })();
           return (

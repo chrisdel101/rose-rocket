@@ -22,8 +22,9 @@ class Grid extends Component {
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
-            pushToColorGridArr:[],
-            legCoords: [],
+            finalStopColorArr:[],
+            finalLegColorArr: [],
+            legStartEndCoords: [],
 		};
         this.handleSelectSubmit = this.handleSelectSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -150,6 +151,7 @@ class Grid extends Component {
         // console.log(tempCellNumsArr)
         // holdAllStopColorIndexes - cells for color or entire plots - spread out
         // holdAllStopColorIndexes - each stops nums kept in its own arr
+
         this.setState({
             previousStopX: x,
             previousStopY: y,
@@ -158,11 +160,11 @@ class Grid extends Component {
             holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
         })
     }
-    legStartEnd(x, y, startingCell){
-
+    // takes x y and determine start and end cells
+    legStartEnd(x, y){
         console.log('previous X',this.state.previousLegX)
         console.log('previous Y', this.state.previousLegY)
-        // calc num of units to move based on prev position
+        // push all cellnums to arr like colors
         let tempCellNumsArr = []
 
 
@@ -192,25 +194,25 @@ class Grid extends Component {
         if(this.state.previousLegX === 0 && this.state.previousLegY  === 0){
             tempX = tempX - 1
             tempY = tempY - 1
-            // tempCellNumsArr.push(tempCellNum)
+            tempCellNumsArr.push(tempCellNum)
         }
         // move in tandem while both vals exist
         while(tempX && tempY){
             // if last was les than current- do this
             if(this.state.previousLegY < y){
                 tempCellNum = tempCellNum - 200
-                // tempCellNumsArr.push(tempCellNum)
+                tempCellNumsArr.push(tempCellNum)
             } else if(this.state.previousLegY > y){
                 tempCellNum = tempCellNum + 200
-                // tempCellNumsArr.push(tempCellNum)
+                tempCellNumsArr.push(tempCellNum)
             }
             if(this.state.previousLegX < x){
                 tempCellNum = tempCellNum + 1
-                // tempCellNumsArr.push(tempCellNum)
+                tempCellNumsArr.push(tempCellNum)
 
             } else if(this.state.previousLegX > x){
                 tempCellNum = tempCellNum - 1
-                // tempCellNumsArr.push(tempCellNum)
+                tempCellNumsArr.push(tempCellNum)
             }
             tempX = tempX - 1
             tempY = tempY - 1
@@ -224,20 +226,20 @@ class Grid extends Component {
                 if(this.state.previousLegY < y){
                     tempCellNum = tempCellNum - 200
 
-                    // tempCellNumsArr.push(tempCellNum)
+                    tempCellNumsArr.push(tempCellNum)
 
                 } else if(this.state.previousLegY > y){
                     tempCellNum = tempCellNum + 200
-                    // tempCellNumsArr.push(tempCellNum)
+                    tempCellNumsArr.push(tempCellNum)
                 }
             } else if(tempX){
 
                 if(this.state.previousLegX < x){
                     tempCellNum = tempCellNum + 1
-                    // tempCellNumsArr.push(tempCellNum)
+                    tempCellNumsArr.push(tempCellNum)
                 } else if(this.state.previousLegX > x){
                     tempCellNum = tempCellNum - 1
-                    // tempCellNumsArr.push(tempCellNum)
+                    tempCellNumsArr.push(tempCellNum)
                 }
             }
         }
@@ -247,12 +249,16 @@ class Grid extends Component {
             end: tempCellNum
         }
         console.log('coords', legCellNums)
+        console.log('x', x)
+        console.log('y', y)
+        console.log()
         // - make this previousLast
         this.setState({
             previousLegEndCell: tempCellNum,
-            previousLegX: x,
-            previousLegY: y,
-            legCoords:[...this.state.legCoords,legCellNums]
+            previousLegX: 10,
+            previousLegY: 10,
+            legStartEndCoords:[...this.state.legStartEndCoords,legCellNums],
+            holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
 
         })
     }
@@ -277,9 +283,16 @@ class Grid extends Component {
                 console.log(that.state.holdAllLegColorArrs)
                     // console.log('push')
                      	that.setState({
-                       	pushToColorGridArr:that.state.holdAllStopColorIndexes
+                       	    finalStopColorArr:that.state.holdAllStopColorIndexes
                        })
                  }
+                // if((index + 1) === stops.length){
+                // console.log(that.state.holdAllLegColorArrs)
+                //     // console.log('push')
+                //      	that.setState({
+                //        	finalStopColorArr:that.state.holdAllStopColorIndexes
+                //        })
+                //  }
                 },100*(index))
             })
     }
@@ -292,7 +305,10 @@ class Grid extends Component {
 
                 <Truck coords={this.state.truckMoveCoords}/>
                 <Stop coords={this.state.stopsDirsArr}/>
-                <Box toRender={this.state.boxesToRender} toAdd={(this.state.pushToColorGridArr.length ? this.state.pushToColorGridArr  : null)}/>
+                <Box
+                    toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
+                    legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
+                />
 
                 </div>
                 </div>
@@ -317,52 +333,91 @@ class Grid extends Component {
     }
     handleSelectSubmit(event) {
         event.preventDefault()
-            console.log(this.colorLeg(this.state.value))
+        this.colorLeg(this.state.value)
 
     }
     colorLeg(input){
-        console.log(input)
-        // - get val from Dropdown
+        let that = this
+        // - get val from Dropdown-
+        // change it to an index
+
         let index
         switch(input){
-            case 'AB':
+            // pre-stop
+            case 'ZZ':
                 index = 0
                 break
-            case 'BC':
+            case 'AB':
                 index = 1
                 break
-            case 'CD':
+            case 'BC':
                 index = 2
                 break
-            case 'DE':
+            case 'CD':
                 index = 3
                 break
-            case 'EF':
+            case 'DE':
                 index = 4
                 break
-            case 'FG':
+            case 'EF':
                 index = 5
                 break
-            case 'GH':
+            case 'FG':
                 index = 6
                 break
-            case 'HI':
+            case 'GH':
                 index = 7
                 break
-            case 'IJ':
+            case 'HI':
                 index = 8
                 break
-            case 'JK':
+            case 'IJ':
                 index = 9
                 break
-            case 'KL':
+            case 'JK':
                 index = 10
+                break
+            case 'KL':
+                index = 11
                 break
             default:
                 console.error('Nothing in switch')
                 break
         }
-        return index
+        // get letters out of select value
+        let firstStopLetter = input[0]
+        console.log(firstStopLetter)
+        let secondStopLetter = input[1]
+        console.log(secondStopLetter)
+        // correlate with stops json to get coords for that those stops
+        let firstStop = this.state.stops.filter(stop => {
+            return stop.name === firstStopLetter
+        })
+        let secondStop = this.state.stops.filter(stop => {
+            return stop.name === secondStopLetter
+        })
+        // call func to create arr  of cells
+        this.legStartEnd(firstStop[0].x, firstStop[0].y)
+
+        setTimeout(function(){
+            that.legStartEnd(secondStop[0].x, secondStop[0].y)
+
+        })
+
+        setTimeout(function(){
+            console.log('state', that.state)
+            const leg = that.state.holdAllLegColorArrs[index]
+            console.log('arr', that.state.holdAllLegColorArrs)
+            console.log('leg',  leg)
+            that.setState({
+                finalLegColorArr:leg
+            })
+
+        },1000)
+
+
+
+
     }
 
     // set coords in pxs of plots
