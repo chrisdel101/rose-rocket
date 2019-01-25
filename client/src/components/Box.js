@@ -8,33 +8,64 @@ class Box extends React.Component{
 		super(props)
         this.state = {
         }
-        this._items = new MultiRef();
 	}
 
     renderBoxes(i) {
-        console.log(this.props)
-      if (this.props.toRender) {
-        let { toRender, toAdd } = this.props;
-        return toRender.map((obj, i) => {
-          let hasColor = (() => {
-            if (!toAdd || !toAdd.length || !toAdd.includes(i)) return false;
-            return true;
-          })();
-          return (
-              <div
-              className={`box-container ${hasColor ? " backgroundColor" : ""}`}
-              key={i}
-              />)
-        });
-      }
-    }
-    render() {
-      if (this.props.toRender && this.props.toRender.length) {
-        return <React.Fragment>{this.renderBoxes()}</React.Fragment>;
-      } else {
-        return <div>No Boxes yet!</div>;
-      }
-    }
+        if (this.props.toRender) {
+          let { toRender, stopsColor, legsColor } = this.props;
+          return toRender.map((obj, i) => {
+            let hasStopColor = (() => {
+              if (!stopsColor || !stopsColor.length || !stopsColor.includes(i)) return false;
+              return true;
+            })();
+            let hasLegColor = (() => {
+                   if (!legsColor || !legsColor.length || !legsColor.includes(i)) return false;
+                   return true;
+                 })();
+            return (
+                <div
+                className={`box ${hasStopColor ? " stop-color" : ""} ${hasLegColor ? " leg-color" : ""}`}
+                key={i}
+                />)
+          });
+        }
+        }
+        render() {
+          // console.log(this.props)
+        if (this.props.toRender && this.props.toRender.length) {
+          return <React.Fragment>{this.renderBoxes()}</React.Fragment>;
+        } else {
+          return <div>No Boxes yet!</div>;
+        }
+        }
+    //
+    //   if (this.props.toRender) {
+    //     let { toRender, stopsColors } = this.props;
+    //     return toRender.map((obj, i) => {
+    //       let hasStopColor = (() => {
+    //         if (!stopsColors || !stopsColors.length || !stopsColors.includes(i)) return false;
+    //         return true;
+    //       })();
+    //       // let hasLegColor = (() => {
+    //       //   if (!legsColors || !legsColors.length || !legsColors.includes(i)) return false;
+    //       //   return true;
+    //       // })();
+    //       return (
+    //           <div
+    //           className={`box ${hasStopColor ? " stop-color" : ""}`}
+    //           key={i}
+    //           />)
+    //     });
+    //   }
+    // }
+    // render() {
+    //     console.log(this.props)
+    //   if (this.props.toRender && this.props.toRender.length) {
+    //     return <React.Fragment>{this.renderBoxes()}</React.Fragment>;
+    //   } else {
+    //     return <div>No Boxes yet!</div>;
+    //   }
+    // }
 }
 
 export default Box
