@@ -156,8 +156,7 @@ class Grid extends Component {
             previousStopX: x,
             previousStopY: y,
             startingCellNum: tempCellNum,
-            holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr],
-            holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
+            holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr]
         })
     }
     // takes x y and determine start and end cells
@@ -255,8 +254,8 @@ class Grid extends Component {
         // - make this previousLast
         this.setState({
             previousLegEndCell: tempCellNum,
-            previousLegX: 10,
-            previousLegY: 10,
+            previousLegX: x,
+            previousLegY: y,
             legStartEndCoords:[...this.state.legStartEndCoords,legCellNums],
             holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
 
@@ -384,36 +383,47 @@ class Grid extends Component {
                 console.error('Nothing in switch')
                 break
         }
-        // get letters out of select value
-        let firstStopLetter = input[0]
-        console.log(firstStopLetter)
-        let secondStopLetter = input[1]
-        console.log(secondStopLetter)
-        // correlate with stops json to get coords for that those stops
-        let firstStop = this.state.stops.filter(stop => {
-            return stop.name === firstStopLetter
-        })
-        let secondStop = this.state.stops.filter(stop => {
-            return stop.name === secondStopLetter
-        })
+        console.log('input', input)
+        console.log('index', index)
+
+        // // get letters out of select value
+        // let firstStopLetter = input[0]
+        // console.log('first letter', firstStopLetter)
+        // let secondStopLetter = input[1]
+        // console.log('second Letter', secondStopLetter)
+        // // correlate with stops json to get coords for that those stops
+        // let firstStop = this.state.stops.filter(stop => {
+        //     // returns arr - with onj and coords
+        //     return stop.name === firstStopLetter
+        // })
+        // let secondStop = this.state.stops.filter(stop => {
+        //     return stop.name === secondStopLetter
+        // })
+        // console.log('first', firstStop)
+        // console.log('second', secondStop)
         // call func to create arr  of cells
-        this.legStartEnd(firstStop[0].x, firstStop[0].y)
+        // this.legStartEnd(firstStop[0].x, firstStop[0].y)
 
-        setTimeout(function(){
-            that.legStartEnd(secondStop[0].x, secondStop[0].y)
-
+        // setTimeout(function(){
+        //     that.legStartEnd(secondStop[0].x, secondStop[0].y)
+        //
+        // })
+        let leg = this.state.holdAllLegColorArrs[index]
+        console.log('leg', leg)
+        this.setState({
+            finalLegColorArr: leg
         })
 
-        setTimeout(function(){
-            console.log('state', that.state)
-            const leg = that.state.holdAllLegColorArrs[index]
-            console.log('arr', that.state.holdAllLegColorArrs)
-            console.log('leg',  leg)
-            that.setState({
-                finalLegColorArr:leg
-            })
-
-        },1000)
+        // setTimeout(function(){
+        //     console.log('state', that.state)
+        //     const leg = that.state.holdAllLegColorArrs[index]
+        //     console.log('arr', that.state.holdAllLegColorArrs)
+        //     console.log('leg',  leg)
+        //     that.setState({
+        //         finalLegColorArr:leg
+        //     })
+        //
+        // },1000)
 
 
 
@@ -470,7 +480,19 @@ class Grid extends Component {
     componentDidMount() {
         let that = this
 
+        setTimeout(function(){
+            that.state.stops.map(stop => {
+                that.legStartEnd(stop.x, stop.y)
+                // that.colorGrid(stop.x, stop.y)
 
+            })
+        },100)
+        setTimeout(function(){
+                console.log(that.state)
+        },2000)
+
+
+        // call to set stops and truck
         this.setStopCoords('stop')
         this.setStopCoords('truck')
         // Call our fetch function below once the component mounts
