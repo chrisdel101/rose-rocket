@@ -15,7 +15,7 @@ class Grid extends Component {
 			stops: [],
             driver: "",
             driverLegStart: "",
-            driverMoveCoords: '',
+            driverCoords: "",
             startingCellNum: 39800,
             previousLegEndCell:0,
             previousStopX: 0,
@@ -140,17 +140,14 @@ class Grid extends Component {
     setDriver(){
         // get from api
         let positionData = this.state.driver
-        // leg name
+        // get leg name
         let legName = positionData.activeLegID
         console.log('leg name', positionData)
 
-        // let legIndex = this._legIndex(legName)
-
-
-        // letter to match stop
+        // correlate with stops- letters to match stops needed
         let firstLetter = legName[0]
         let secondLetter = legName[1]
-        // get stop coords - x, y
+        // get stop coords = filter ones that match
         let firstStopOfLeg = this.state.stops.filter(stop => {
             return stop.name === firstLetter
         })
@@ -159,18 +156,20 @@ class Grid extends Component {
         })
         // console.log('f', firstStopOfLeg)
         // console.log('s', lastStopOfLeg)
+        //calc abs distance bwt coords  - coords for first and last
         let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
 
         let progress = parseInt(this.state.driver.legProgress)
-
+        // takes number of moves and percent - returns number of moves that is
         let numToMove = this._percentToCoords(diffObj, progress)
         // console.log(numToMove)
-
+        // takes coords for first, last and how many -returns up / down & COORDS
         let { xToMove, yToMove } = this._getDriverDirection(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
-        let driverProgressCoords = this._convertToPixels(xToMove, yToMove)
+        // convert the number to move to pixels
+        let driverProgressinPixels = this._convertToPixels(xToMove, yToMove)
 
         let driverProgressObj = {
-            pixels: driverProgressCoords,
+            pixels: driverProgressinPixels,
             directions: {
                 xDir: "left",
                 yDir: "bottom"
@@ -183,14 +182,34 @@ class Grid extends Component {
 
         let index = this._legIndex(legName)
         let leg = this.state.holdAllLegColorArrs[index]
-            // console.log('leg', leg)
+            console.log('leg', leg)
 
             //finalDriverMoveObj - cell nums of drivers leg
         this.setState({
+            // x/y of driver
+            driverCoords: {
+                x: xToMove,
+                y: yToMove
+            },
             driverLegStart: driverLegStartcoords,
             finalDriverMoveObj: driverProgressObj
         })
 
+    }
+
+    // x=35
+    // y=64
+    colorCompleted(legID){
+    	var arr = legs.filter(leg => {
+    		return leg.legID === legID
+    	})
+    	let index = legs.indexOf(arr[0])
+    	//all previous legs to color
+        var previousLegs = legs.slice(0,index)
+    	//get cell of last leg in arr
+    	var chunk = finalLegColorArr[finalLegColorArr.length - 1]
+    	var cell = chunk[chunk.length - 1]
+	      // need to call color grid with a type condional to get the part btw legs
     }
     colorGrid(x, y){
         let that = this
@@ -513,15 +532,15 @@ class Grid extends Component {
                 })
             } else if(type === 'truck'){
 
-                let pixels = that._convertToPixels(that.state.driverLegStart.x, that.state.driverLegStart.y)
-                let coords = {
-                    pixels: pixels,
-                    directions: {
-                        xDir: "left",
-                        yDir: "bottom"
-                    }
-                }
-                console.log(coords)
+                // let pixels = that._convertToPixels(that.state.driverLegStart.x, that.state.driverLegStart.y)
+                // let coords = {
+                //     pixels: pixels,
+                //     directions: {
+                //         xDir: "left",
+                //         yDir: "bottom"
+                //     }
+                // }
+                // console.log(coords)
                 // set coords to change child state
                 // that.setState({
                 //     finalDriverMoveObj: coords
@@ -536,17 +555,16 @@ class Grid extends Component {
         let that = this
 
         setTimeout(function(){
+            console.log(that.state.legs)
             that.state.stops.map(stop => {
                 that.legStartEnd(stop.x, stop.y)
                 that.colorGrid(stop.x, stop.y)
 
             })
             that.setDriver()
-            console.log('state',that.state)
+            // console.log('state',that.state)
         },100)
-        setTimeout(function(){
-                console.log(that.state)
-        },2000)
+
 
 
         // call to set stops and truck
