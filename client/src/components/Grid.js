@@ -102,6 +102,41 @@ class Grid extends Component {
         return {xNum, yNum}
 
     }
+    // takes 3 objs - deterimine if driver moves coords up/down
+    _getDriverDirection(firstLegStopObj, lastLegStopObj, numToMoveObj ){
+        let x1 = firstLegStopObj.x
+        let x2 = lastLegStopObj.x
+        let y1 = firstLegStopObj.y
+        let y2 = lastLegStopObj.y
+        let xNum = numToMoveObj.xNum
+        let yNum = numToMoveObj.yNum
+        // if x moves up, add
+        let xToMove
+        let yToMove
+        if(x1 < x2){
+            // console.log(firstStopOfLeg[0].x)
+            // console.log(lastStopOfLeg[0].x)
+            xToMove = x1 + xNum
+            // console.log(xToMove)
+        } else if(x1 >= x2){
+            xToMove = x1 - xNum
+        } else {
+            console.error("error in driver movement")
+        }
+        if(y1 < y2){
+            yToMove = y1 + yNum
+        } else if(y1 >= y2){
+            yToMove = y1 - yNum
+        } else {
+            console.error("error in driver movement")
+        }
+        // console.log('x', xToMove)
+        // console.log('y', yToMove)
+        return {
+            xToMove,
+            yToMove
+        }
+    }
     setDriver(){
         // get from api
         let positionData = this.state.driver
@@ -122,43 +157,16 @@ class Grid extends Component {
         let lastStopOfLeg = this.state.stops.filter(stop => {
             return stop.name === secondLetter
         })
-        console.log('f', firstStopOfLeg)
+        // console.log('f', firstStopOfLeg)
         // console.log('s', lastStopOfLeg)
         let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
 
         let progress = parseInt(this.state.driver.legProgress)
 
         let numToMove = this._percentToCoords(diffObj, progress)
-        console.log(numToMove)
+        // console.log(numToMove)
 
-        function getTruckDirection(){
-            // if x moves up, add
-            let xToMove
-            let yToMove
-            if(firstStopOfLeg[0].x < lastStopOfLeg[0].x){
-                // console.log(firstStopOfLeg[0].x)
-                // console.log(lastStopOfLeg[0].x)
-
-                xToMove = firstStopOfLeg[0].x + numToMove.xNum
-                // console.log(xToMove)
-            } else if(firstStopOfLeg[0].x >= lastStopOfLeg[0].x){
-                xToMove = firstStopOfLeg[0].x - numToMove.xNum
-            }
-            if(firstStopOfLeg[0].y < lastStopOfLeg[0].y){
-                yToMove = firstStopOfLeg[0].y + numToMove.yNum
-            } else if(firstStopOfLeg[0].y >= lastStopOfLeg[0].y){
-                yToMove = firstStopOfLeg[0].y - numToMove.yNum
-            }
-            // console.log('x', xToMove)
-            // console.log('y', yToMove)
-            return {
-                xToMove,
-                yToMove
-            }
-        }
-        console.log(getTruckDirection())
-
-        let { xToMove, yToMove } = getTruckDirection()
+        let { xToMove, yToMove } = this._getDriverDirection(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
         let driverProgressCoords = this._convertToPixels(xToMove, yToMove)
 
         let driverProgressObj = {
@@ -168,7 +176,7 @@ class Grid extends Component {
                 yDir: "bottom"
             }
         }
-        console.log(driverProgressObj)
+        // console.log(driverProgressObj)
         // coords
         let {x, y} = firstStopOfLeg[0]
         let driverLegStartcoords = {x,y}
