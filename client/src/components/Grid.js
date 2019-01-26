@@ -65,7 +65,7 @@ class Grid extends Component {
         }
         return coordsObj
     }
-
+    // takes coords and type - needs access to state
     _numToMove(x,y, type){
         if(type === 'stop'){
             let moveX = Math.abs(this.state.previousStopX - x)
@@ -86,21 +86,84 @@ class Grid extends Component {
         }
 
     }
+    // takes 2 objs of coords and determines the diff
+    _absDiff(firstCoordsObj, secondCoordsObj){
+        let xDiff = Math.abs(firstCoordsObj.x - secondCoordsObj.x)
+        let yDiff = Math.abs(firstCoordsObj.y - secondCoordsObj.y)
+        return {
+            xDiff,
+            yDiff
+        }
+    }
+    // take amount in leg with a percent - returns num to move
+    _percentToCoords(diffObj, percent){
+        let xNum = Math.floor((diffObj.xDiff * 0.01) * percent)
+        let yNum = Math.floor((diffObj.yDiff * 0.01) * percent)
+        return {xNum, yNum}
+
+    }
     setDriver(){
         // get from api
         let positionData = this.state.driver
         // leg name
         let legName = positionData.activeLegID
-        // console.log('leg name', positionData)
+        console.log('leg name', positionData)
+
+        // let legIndex = this._legIndex(legName)
+
+
         // letter to match stop
         let firstLetter = legName[0]
-        // get stop coords
+        let secondLetter = legName[1]
+        // get stop coords - x, y
         let firstStopOfLeg = this.state.stops.filter(stop => {
             return stop.name === firstLetter
         })
+        let lastStopOfLeg = this.state.stops.filter(stop => {
+            return stop.name === secondLetter
+        })
+        console.log('f', firstStopOfLeg)
+        // console.log('s', lastStopOfLeg)
+        let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
+
+        let progress = parseInt(this.state.driver.legProgress)
+
+        let numToMove = this._percentToCoords(diffObj, progress)
+        console.log(numToMove)
+
+        function getTruckDirection(){
+            // if x moves up, add
+            let xToMove
+            let yToMove
+            if(firstStopOfLeg[0].x >= lastStopOfLeg[0].x){
+                // console.log(firstStopOfLeg[0].x)
+                // console.log(lastStopOfLeg[0].x)
+
+                xToMove = firstStopOfLeg[0].x + numToMove.xNum
+                // console.log(xToMove)
+            } else if(firstStopOfLeg[0].x < lastStopOfLeg[0].x){
+                xToMove = firstStopOfLeg[0].x - numToMove.xNum
+            }
+            if(firstStopOfLeg[0].y >= lastStopOfLeg[0].y){
+                yToMove = firstStopOfLeg[0].y + numToMove.yNum
+            } else if(firstStopOfLeg[0].y < lastStopOfLeg[0].y){
+                yToMove = firstStopOfLeg[0].y - numToMoveyNum
+            }
+            // console.log('x', xToMove)
+            // console.log('y', yToMove)
+            return {
+                xToMove,
+                yToMove
+            }
+        }
+        console.log(getTruckDirection())
+
+        let { xToMove, yToMove } = getTruckDirection()
+        let driverProgressCoords = this._convertToPixels(xToMove, yToMove)
+        console.log(driverProgressCoords)
         // coords
         let {x, y} = firstStopOfLeg[0]
-        let coords = {x,y}
+        let driverLegStartcoords = {x,y}
 
         let index = this._legIndex(legName)
         let leg = this.state.holdAllLegColorArrs[index]
@@ -108,7 +171,8 @@ class Grid extends Component {
 
             //finalDriverMoveObj - cell nums of drivers leg
         this.setState({
-            driverLegStart: coords
+            driverLegStart: driverLegStartcoords,
+            finalDriverMoveObj: driverProgressCoords
         })
 
     }
