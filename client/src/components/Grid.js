@@ -200,18 +200,21 @@ class Grid extends Component {
     // x=35
     // y=64
     colorCompleted(legID){
-    	var arr = legs.filter(leg => {
+    	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
     	})
-    	let index = legs.indexOf(arr[0])
+    	let index = this.state.legs.indexOf(arr[0])
     	//all previous legs to color
-        var previousLegs = legs.slice(0,index)
+        var previousLegs = this.state.legs.slice(0,index)
     	//get cell of last leg in arr
-    	var chunk = finalLegColorArr[finalLegColorArr.length - 1]
+    	var chunk = this.state.holdAllLegColorArrs[index]
     	var cell = chunk[chunk.length - 1]
+        console.log(this.state.holdAllLegColorArrs)
+        console.log(chunk)
+        console.log('cell', cell)
 	      // need to call color grid with a type condional to get the part btw legs
     }
-    colorGrid(x, y){
+    colorGrid(x, y, type){
         let that = this
         // console.log(this.state.previousStopX)
         // console.log(this.state.previousStopY)
@@ -279,13 +282,14 @@ class Grid extends Component {
         }
         // console.log(tempCellNumsArr)
         // holdAllStopColorIndexes - cells for color or entire plots - spread out
-
-        this.setState({
-            previousStopX: x,
-            previousStopY: y,
-            startingCellNum: tempCellNum,
-            holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr]
-        })
+        if(type === 'all'){
+            this.setState({
+                previousStopX: x,
+                previousStopY: y,
+                startingCellNum: tempCellNum,
+                holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr]
+            })
+        }
     }
     // takes x y and determine start and end cells
     legStartEnd(x, y){
@@ -558,10 +562,12 @@ class Grid extends Component {
             console.log(that.state.legs)
             that.state.stops.map(stop => {
                 that.legStartEnd(stop.x, stop.y)
-                that.colorGrid(stop.x, stop.y)
+                that.colorGrid(stop.x, stop.y, 'all')
 
             })
             that.setDriver()
+            that.colorCompleted("CD")
+            // that.colorCompleted(that.state.driverCoords.y)
             // console.log('state',that.state)
         },100)
 
