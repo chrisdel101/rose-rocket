@@ -147,7 +147,7 @@ class Grid extends Component {
             if(firstStopOfLeg[0].y >= lastStopOfLeg[0].y){
                 yToMove = firstStopOfLeg[0].y + numToMove.yNum
             } else if(firstStopOfLeg[0].y < lastStopOfLeg[0].y){
-                yToMove = firstStopOfLeg[0].y - numToMoveyNum
+                yToMove = firstStopOfLeg[0].y - numToMove.yNum
             }
             // console.log('x', xToMove)
             // console.log('y', yToMove)
@@ -160,7 +160,15 @@ class Grid extends Component {
 
         let { xToMove, yToMove } = getTruckDirection()
         let driverProgressCoords = this._convertToPixels(xToMove, yToMove)
-        console.log(driverProgressCoords)
+
+        let driverProgressObj = {
+            pixels: driverProgressCoords,
+            directions: {
+                xDir: "left",
+                yDir: "bottom"
+            }
+        }
+        console.log(driverProgressObj)
         // coords
         let {x, y} = firstStopOfLeg[0]
         let driverLegStartcoords = {x,y}
@@ -172,7 +180,7 @@ class Grid extends Component {
             //finalDriverMoveObj - cell nums of drivers leg
         this.setState({
             driverLegStart: driverLegStartcoords,
-            finalDriverMoveObj: driverProgressCoords
+            finalDriverMoveObj: driverProgressObj
         })
 
     }
@@ -497,19 +505,19 @@ class Grid extends Component {
                 })
             } else if(type === 'truck'){
 
-                let pixels = that._convertToPixels(that.state.driverLegStart.x, that.state.driverLegStart.y)
-                let coords = {
-                    pixels: pixels,
-                    directions: {
-                        xDir: "left",
-                        yDir: "bottom"
-                    }
-                }
-                console.log(coords)
-                // set coords to change child state
-                that.setState({
-                    finalDriverMoveObj: coords
-                })
+                // let pixels = that._convertToPixels(that.state.driverLegStart.x, that.state.driverLegStart.y)
+                // let coords = {
+                //     pixels: pixels,
+                //     directions: {
+                //         xDir: "left",
+                //         yDir: "bottom"
+                //     }
+                // }
+                // console.log(coords)
+                // // set coords to change child state
+                // that.setState({
+                //     finalDriverMoveObj: coords
+                // })
 
             }
 
