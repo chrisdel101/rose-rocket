@@ -263,7 +263,7 @@ class Grid extends Component {
         console.log(start, end)
         // set state to start coords
         // inout end coords
-        this.state.driverCoords.x = 10
+        this.state.driverCoords.x = 20
         this.state.driverCoords.y = 13
         this.colorGrid(this.state.driverCoords.x,this.state.driverCoords.y, 'partialLeg')
 
@@ -410,7 +410,7 @@ class Grid extends Component {
         }
     }
     legStartEnd(x,y){
-        console.log(x, y)
+        // console.log(x, y)
     // takes x y and determine start and end cells
         // legStartEnd(x, y){
         // console.log('previous X',this.state.previousLegX)
@@ -500,7 +500,7 @@ class Grid extends Component {
             start: tempStartNum,
             end: tempCellNum
         }
-        console.log('coords', legCellNums)
+        // console.log('coords', legCellNums)
         // each array b4 being pushing into main one
         // console.log('tempCellNumsArr', tempCellNumsArr)
         // console.log('x', x)
@@ -539,7 +539,7 @@ class Grid extends Component {
             //     },100*(index))
             // })
             this.setState({
-                finalStopColorArr: [39600, 39599, 39399, 39398, 39198, 39197, 39196, 39195, 39194, 39193, 39192, 39191, 39190]
+                finalStopColorArr: [37819, 37619, 37419]
             })
         // on click push to child state
     }
