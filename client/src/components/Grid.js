@@ -16,7 +16,8 @@ class Grid extends Component {
             driver: "",
             driverLegStart: "",
             driverCoords: "",
-            startingCellNum: 39800,
+            startingCellNumAll: 39800,
+            startingCellNumPartial: "",
             previousLegEndCell:0,
             previousStopX: 0,
             previousStopY: 0,
@@ -70,18 +71,22 @@ class Grid extends Component {
     // takes coords and type - needs access to state
     _numToMove(x,y, type){
         if(type === 'stop'){
+            console.log('moveX',this.state.previousStopX )
+            console.log('moveY', this.state.previousStopY)
             let moveX = Math.abs(this.state.previousStopX - x)
+            console.log('abs x', moveX)
             let moveY = Math.abs(this.state.previousStopY - y)
+            console.log('abs y', moveY)
             return {
-                moveX: moveX,
-                moveY: moveY
+                tempX: moveX,
+                tempY: moveY
             }
         } else if(type === 'leg'){
             let moveX = Math.abs(this.state.previousLegX - x)
             let moveY = Math.abs(this.state.previousLegY - y)
             return {
-                moveX: moveX,
-                moveY: moveY
+                tempX: moveX,
+                tempY: moveY
             }
         } else {
             console.error("error in the num to move function")
@@ -101,6 +106,7 @@ class Grid extends Component {
     _percentToCoords(diffObj, percent){
         let xNum = Math.floor((diffObj.xDiff * 0.01) * percent)
         let yNum = Math.floor((diffObj.yDiff * 0.01) * percent)
+        let newX
         return {xNum, yNum}
 
     }
@@ -206,18 +212,22 @@ class Grid extends Component {
     	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
     	})
-    	let index = this.state.legs.indexOf(arr[0])
-        // console.log(index)
+
+        let holdingArrIndex = this._legIndex(arr[0].legID)
+        let dataIndex = this.state.legs.indexOf(arr[0])
+        console.log('holding' ,holdingArrIndex)
     	//all previous legs to color
         // var previousLegNames = this.state.legs.slice(0,index)
         // get arr of all previous arrs to color
-        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, index)
+        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
+        var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
         console.log('previouslegs', previousLegArrs)
+        console.log('currnt arr', currentLegArr)
         // get start and end of current legs
 
-        let thisLeg = this.state.legs[index]
-        let nextLeg = this.state.legs[index + 1]
-        console.log(thisLeg)
+        let thisLeg = this.state.legs[dataIndex]
+        let nextLeg = this.state.legs[dataIndex + 1]
+        // console.log(thisLeg)
         let legFirstStop = this.state.stops.filter(stop => {
             return stop.name === thisLeg.startStop
         })
@@ -237,15 +247,15 @@ class Grid extends Component {
         // console.log(diff)
         // percent driver is complete of leg
         let progress = parseInt(this.state.driver.legProgress)
-        // takes number of moves and percent - returns number of moves that is
+        // takes number of moves and percent - returns number of moves that is partial of leg in coords
         let numToMove = this._percentToCoords(diffObj, progress)
-        console.log('num to move',numToMove)
+        console.log('num to move', numToMove)
         console.log(this.state.legStartEndCellNums)
         // cell nums
-        let { start, end } = this.state.legStartEndCellNums[index]
+        let { start, end } = this.state.legStartEndCellNums[holdingArrIndex]
         // set startingCell and start x / y
         this.setState({
-            startingCellNum: start,
+            startingCellNumPartial: start,
             partialLegStartCoords: stopStartCoords,
             partialLegEndCoords: stopEndCoords
         })
@@ -253,7 +263,10 @@ class Grid extends Component {
         console.log(start, end)
         // set state to start coords
         // inout end coords
-        // this.colorGrid(stopEndCoords.x, stopEndCoords.y, 'partialLeg')
+        this.state.driverCoords.x = 10
+        this.state.driverCoords.y = 13
+        this.colorGrid(this.state.driverCoords.x,this.state.driverCoords.y, 'partialLeg')
+
         // get start cell num
 
         // let legStartEndCellNUm = this.state.legStartEndCellNums[index]
@@ -272,6 +285,7 @@ class Grid extends Component {
 	    //   // need to call color grid with a type condional to get the part btw legs
     }
     colorGrid(x, y, type){
+
         let that = this
         // console.log(this.state.previousStopX)
         // console.log(this.state.previousStopY)
@@ -283,7 +297,7 @@ class Grid extends Component {
         let tempY = y
         let tempCellNum
         if(type === 'all'){
-            tempCellNum = 39800
+            tempCellNum = this.state.startingCellNumAll
             // if(this.state.previousStopY !== 0 || this.state.previousStopX !== 0){
             //     this.setState({
             //         previousStopX: 0,
@@ -297,23 +311,29 @@ class Grid extends Component {
         } else if(type === 'partialLeg'){
             console.log('partial')
             // start of leg
-            tempCellNum = this.state.startingCellNum
+            tempCellNum = this.state.startingCellNumPartial
+            console.log('staring cell' ,this.state.startingCellNumPartial)
             // set to start coords - it should compute to end coord form here
+            console.log('leg end x', this.state.partialLegEndCoords.x)
+            console.log('leg end y', this.state.partialLegEndCoords.y)
             this.setState({
                 previousStopX: this.state.partialLegStartCoords.x,
                 previousStopY: this.state.partialLegStartCoords.y
             })
-            // console.log('previous',this.state.partialLegStartCoords)
+            console.log(this.state.previousStopX)
+            console.log(this.state.previousStopY)
+            console.log('previous',this.state.partialLegStartCoords)
             // console.log('previousx', this.state.previousStopX)
             // console.log('previousy', this.state.previousStopY)
             // console.log('currentx ', x)
             // console.log('currenty', y)
 
         }
-
+        // console.log(tempX)
         // convert based on next move using above function
-        tempX = this._numToMove(tempX, tempY, 'stop').moveX
-        tempY = this._numToMove(tempX, tempY, 'stop').moveY
+        tempX = this._numToMove(tempX, tempY, 'stop').tempX
+        tempY = this._numToMove(tempX, tempY, 'stop').tempY
+        // tempY = this._numToMove(tempX, tempY, 'stop').moveY
         console.log('tempx', tempX)
         console.log('tempy', tempY)
 
@@ -370,28 +390,29 @@ class Grid extends Component {
         }
         // holdAllStopColorIndexes - cells for color or entire plots - spread out
         if(type === 'all'){
-            console.log(tempCellNumsArr)
+            // console.log(tempCellNumsArr)
 
             this.setState({
                 previousStopX: x,
                 previousStopY: y,
-                startingCellNum: tempCellNum,
+                startingCellNumAll: tempCellNum,
                 holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr]
             })
             // will get call twice. Once for firs and last
         } else if(type === 'partialLeg'){
-            console.log('cells arr',    tempCellNumsArr)
+            console.log('cells arr',tempCellNumsArr)
             this.setState({
                 previousStopX: x,
                 previousStopY: y,
-                startingCellNum: tempCellNum,
+                startingCellNumPartial: tempCellNum,
 
             })
         }
     }
-    // legStartEnd(x,y){
+    legStartEnd(x,y){
+        console.log(x, y)
     // takes x y and determine start and end cells
-    legStartEnd(x, y){
+        // legStartEnd(x, y){
         // console.log('previous X',this.state.previousLegX)
         // console.log('previous Y', this.state.previousLegY)
         // push all cellnums to arr like colors
@@ -406,9 +427,9 @@ class Grid extends Component {
         let tempCellNum
         // on first move only
         if(this.state.previousLegEndCell === 0){
-            tempStartNum = 39800
-            tempCellNum = 39800
-            // tempStartNum = this.state.startingCellNum
+            tempStartNum = this.state.startingCellNumAll
+            tempCellNum = this.state.startingCellNumAll
+            // tempStartNum = this.state.startingCellNumAll
         } else {
             tempStartNum = this.state.previousLegEndCell
             tempCellNum = this.state.previousLegEndCell
@@ -416,8 +437,8 @@ class Grid extends Component {
         // console.log('start temp', tempCellNum)
         // console.log('staring cell', tempStartNum)
         // convert based on next move using above function
-        tempX = this._numToMove(tempX, tempY, 'leg').moveX
-        tempY = this._numToMove(tempX, tempY, 'leg').moveY
+        tempX = this._numToMove(tempX, tempY, 'leg').tempX
+        tempY = this._numToMove(tempX, tempY, 'leg').tempY
         // console.log('x to move',tempX)
         // console.log('y to move', tempY)
         // on first move on grid only - for bottom corner
@@ -453,6 +474,7 @@ class Grid extends Component {
         // if only on val left, move on its own
         for (var i = 0; i < loopAxis; i++) {
             if(tempY){
+
                 if(this.state.previousLegY < y){
                     tempCellNum = tempCellNum - 200
 
@@ -478,7 +500,7 @@ class Grid extends Component {
             start: tempStartNum,
             end: tempCellNum
         }
-        // console.log('coords', legCellNums)
+        console.log('coords', legCellNums)
         // each array b4 being pushing into main one
         // console.log('tempCellNumsArr', tempCellNumsArr)
         // console.log('x', x)
@@ -503,9 +525,9 @@ class Grid extends Component {
             // {x: 25, y: 80}
         ]
         let that = this
-        stops.map((stop, index) => {
-                setTimeout(function(){
-                    that.colorGrid(stop.x, stop.y)
+        // stops.map((stop, index) => {
+        //         setTimeout(function(){
+        //             that.colorGrid(stop.x, stop.y)
             // console.log(index + 1)
             // console.log(stops.length)
                 // if((index + 1) === that.state.stops.length){
@@ -514,13 +536,11 @@ class Grid extends Component {
                 //        	pushToChildArr:that.state.holdingAllIndexes
                 //        })
                 //  }
-                },100*(index))
+            //     },100*(index))
+            // })
+            this.setState({
+                finalStopColorArr: [39600, 39599, 39399, 39398, 39198, 39197, 39196, 39195, 39194, 39193, 39192, 39191, 39190]
             })
-            setTimeout(function(){
-                that.setState({
-                    finalLegColorArr: that.state.holdAllLegColorArrs
-                })
-            },2000 )
         // on click push to child state
     }
     render() {
@@ -678,12 +698,12 @@ class Grid extends Component {
         setTimeout(function(){
             // console.log(that.state.legs)
             that.state.stops.map(stop => {
-                that.legStartEnd(stop.x, stop.y)
+                    that.legStartEnd(stop.x, stop.y)
                 // that.colorGrid(stop.x, stop.y, 'all')
 
             })
-            // that.setDriver()
-            // that.colorCompleted("AB")
+            that.setDriver()
+            that.colorCompleted("AB")
             // that.colorCompleted(that.state.driverCoords.y)
             // console.log('state',that.state)
         },100)
