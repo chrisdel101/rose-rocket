@@ -11,13 +11,13 @@ class Form extends React.Component{
 // onChange={(ev) => this.props.onChange(ev.target.value)}>
         return(
             <form onSubmit={(ev) => this.props.onSubmit(ev)}>
-                <label>
-                    X-coords: <input className="x-coord" type="text" value={this.state.value} onChange={ev => this.props.onChange(ev)} >
+
+                    X-coords: <input className="x-coord" name="x" type="text" value={this.state.value} onChange={ev => this.props.onChange(ev.target.value)} >
                     </input>
-                </label>
-                <label>
-                    Y-coords: <input className="y-coord" type="text" value={this.state.value} onChange={ev => this.props.onChange(ev)}  ></input>
-                </label>
+
+                    Y-coords: <input className="y-coord" name="y" type="text" value={this.state.value} onChange={ev => this.props.onChange(ev.target.value)}></input>
+                    {this.state.value}
+            
                 <input type="submit" value="Submit" />
             </form>)
 

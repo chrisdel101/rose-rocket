@@ -640,7 +640,7 @@ class Grid extends Component {
 
                 <Form
                     onChange={this.updateXvalue.bind(this)}
-                    onChange={this.updateYvalue.bind(this)}
+                    // onChange={this.updateYvalue.bind(this)}
                     onSubmit={this.handleFormSubmit.bind(this)}/>
                 <button onClick={this.testPartial.bind(this)}>Test</button>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
@@ -664,9 +664,9 @@ class Grid extends Component {
     // hold vals in input until next entered
     updateXvalue(evt) {
         console.log(evt)
-        this.setState({
-            tempX: evt.target.value
-        })
+        // this.setState({
+        //     tempX: evt.target.value
+        // })
         // console.log(`temp x: ${this.state.tempX}`)
 
     }
