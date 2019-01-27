@@ -272,7 +272,7 @@ class Grid extends Component {
         // inout end coords
         // this.state.driverCoords.x = 20
         // this.state.driverCoords.y = 13
-        this.colorGrid(this.state.driverCoords.x,this.state.driverCoords.y, 'partialLeg')
+        this.legStartEnd(this.state.driverCoords.x,this.state.driverCoords.y, 'partial')
 
         // get start cell num
 
@@ -305,27 +305,8 @@ class Grid extends Component {
         let tempCellNum
         if(type === 'all'){
             tempCellNum = this.state.startingCellNumAll
-        } else if(type === 'partialLeg'){
-            console.log('partial')
-            // start of leg
-            tempCellNum = this.state.startingCellNumPartial
-            console.log('staring cell' ,this.state.startingCellNumPartial)
-            // set to start coords - it should compute to end coord form here
-            console.log('leg end x', this.state.partialLegEndCoords.x)
-            console.log('leg end y', this.state.partialLegEndCoords.y)
-            this.setState({
-                previousStopX: this.state.partialLegStartCoords.x,
-                previousStopY: this.state.partialLegStartCoords.y
-            })
-            // console.log(this.state.previousStopX)
-            // console.log(this.state.previousStopY)
-            // console.log('previous',this.state.partialLegStartCoords)
-            // console.log('previousx', this.state.previousStopX)
-            // console.log('previousy', this.state.previousStopY)
-            // console.log('currentx ', x)
-            // console.log('currenty', y)
-
         }
+
         // console.log(tempX)
         // convert based on next move using above function
         tempX = this._numToMove(tempX, tempY, 'stop').tempX
@@ -395,28 +376,13 @@ class Grid extends Component {
                 startingCellNumAll: tempCellNum,
                 holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr]
             })
-            // will get call twice. Once for firs and last
-        } else if(type === 'partialLeg'){
-            // console.log('cells arr',tempCellNumsArr)
-            this.setState({
-                previousStopX: x,
-                previousStopY: y,
-                startingCellNumPartial: tempCellNum,
-                holdingCompletedArrs:[...this.state.holdingCompletedArrs, tempCellNumsArr]
-
-            })
-            console.log('complete', this.state.holdingCompletedArrs)
         }
-    }
-    legStartEnd(x,y){
-        // console.log(x, y)
-    // takes x y and determine start and end cells
-        // legStartEnd(x, y){
-        // console.log('previous X',this.state.previousLegX)
-        // console.log('previous Y', this.state.previousLegY)
-        // push all cellnums to arr like colors
-        let tempCellNumsArr = []
 
+    }
+    // takes x y and determine start and end cells
+    legStartEnd(x,y, type){
+        // console.log(x, y)
+        let tempCellNumsArr = []
 
         let tempX = x
         let tempY = y
@@ -424,15 +390,41 @@ class Grid extends Component {
         let tempStartNum
         // cell num changes with calcs
         let tempCellNum
-        // on first move only
-        if(this.state.previousLegEndCell === 0){
-            tempStartNum = this.state.startingCellNumAll
-            tempCellNum = this.state.startingCellNumAll
-            // tempStartNum = this.state.startingCellNumAll
-        } else {
-            tempStartNum = this.state.previousLegEndCell
-            tempCellNum = this.state.previousLegEndCell
+
+        if(type === 'all'){
+            // on first move only
+            if(this.state.previousLegEndCell === 0){
+                tempStartNum = this.state.startingCellNumAll
+                tempCellNum = this.state.startingCellNumAll
+                // tempStartNum = this.state.startingCellNumAll
+            } else {
+                tempStartNum = this.state.previousLegEndCell
+                tempCellNum = this.state.previousLegEndCell
+            }
+        } else if(type === 'partial'){
+            console.log('partial')
+            // start of leg
+            tempCellNum = this.state.startingCellNumPartial
+            console.log('staring cell' ,this.state.startingCellNumPartial)
+            // set to start coords - it should compute to end coord form here
+            console.log('leg end x', this.state.partialLegEndCoords.x)
+            console.log('leg end y', this.state.partialLegEndCoords.y)
+            this.setState({
+                previousStopX: this.state.partialLegStartCoords.x,
+                previousStopY: this.state.partialLegStartCoords.y
+            })
+            // console.log(this.state.previousStopX)
+            // console.log(this.state.previousStopY)
+            // console.log('previous',this.state.partialLegStartCoords)
+            // console.log('previousx', this.state.previousStopX)
+            // console.log('previousy', this.state.previousStopY)
+            // console.log('currentx ', x)
+            // console.log('currenty', y)
+
+
+
         }
+
         // console.log('start temp', tempCellNum)
         // console.log('staring cell', tempStartNum)
         // convert based on next move using above function
@@ -505,14 +497,31 @@ class Grid extends Component {
         // console.log('x', x)
         // console.log('y', y)
         // - make this previousLast
-        this.setState({
-            previousLegEndCell: tempCellNum,
-            previousLegX: x,
-            previousLegY: y,
-            legStartEndCellNums:[...this.state.legStartEndCellNums,legCellNums],
-            holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
+        if(type === 'all'){
+            this.setState({
+                previousLegEndCell: tempCellNum,
+                previousLegX: x,
+                previousLegY: y,
+                legStartEndCellNums:[...this.state.legStartEndCellNums,legCellNums],
+                holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
 
-        })
+            })
+        } else if(type === 'partial'){
+            // console.log('cells arr',tempCellNumsArr)
+            this.setState({
+                previousStopX: x,
+                previousStopY: y,
+                startingCellNumPartial: tempCellNum,
+                holdingCompletedArrs:[...this.state.holdingCompletedArrs, tempCellNumsArr]
+
+            })
+            console.log('complete', this.state.holdingCompletedArrs)
+
+        }
+    }
+
+    testPartial(){
+        this.legStartEnd(35,64, 'partial')
     }
 
     colorAllStops(){
@@ -548,7 +557,7 @@ class Grid extends Component {
     colorCompletedStops(){
 
             let merged = [].concat.apply([], this.state.holdingCompletedArrs);
-            console.log(merged)
+            // console.log(merged)
             this.setState({
                 finalCompletedColorsArr: merged
             })
@@ -710,7 +719,7 @@ class Grid extends Component {
         setTimeout(function(){
             // console.log(that.state.legs)
             that.state.stops.map(stop => {
-                    that.legStartEnd(stop.x, stop.y)
+                    that.legStartEnd(stop.x, stop.y,'all')
                     that.colorGrid(stop.x, stop.y, 'all')
 
             })
