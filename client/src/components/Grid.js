@@ -639,8 +639,8 @@ class Grid extends Component {
                 <div className="utils-container">
 
                 <Form
-                    // onChange={this.updateXvalue.bind(this)}
-                    // onChange={this.updateYvalue.bind(this)}
+                    onChange={this.updateXvalue.bind(this)}
+                    onChange={this.updateYvalue.bind(this)}
                     onSubmit={this.handleFormSubmit.bind(this)}/>
                 <button onClick={this.testPartial.bind(this)}>Test</button>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
