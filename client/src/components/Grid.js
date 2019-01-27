@@ -84,8 +84,12 @@ class Grid extends Component {
                 tempY: moveY
             }
         } else if(type === 'leg'){
+            console.log('prevX', this.state.previousLegX)
+            console.log('prevY', this.state.previousLegY)
             let moveX = Math.abs(this.state.previousLegX - x)
+            console.log('in move previous', moveX)
             let moveY = Math.abs(this.state.previousLegY - y)
+            console.log('in move previous', moveY)
             return {
                 tempX: moveX,
                 tempY: moveY
@@ -277,12 +281,19 @@ class Grid extends Component {
             partialLegEndCoords: stopEndCoords,
             holdingCompletedArrs: [...previousLegArrs]
         })
+        console.log('startingCell', start)
+        console.log('stop/start', stopStartCoords)
+        console.log('partial leg end', stopEndCoords)
+        console.log('all', [...previousLegArrs])
+
+
         // console.log(this.state.holdingCompletedArrs)
         // console.log(start, end)
         // set state to start coords
         // inout end coords
         // this.state.driverCoords.x = 20
         // this.state.driverCoords.y = 13
+        console.log(this.state.driverCoords)
         this.legStartEnd(this.state.driverCoords.x,this.state.driverCoords.y, 'partial')
 
         // get start cell num
@@ -392,7 +403,7 @@ class Grid extends Component {
     }
     // takes x y and determine start and end cells
     legStartEnd(x,y, type){
-        // console.log(x, y)
+
         let tempCellNumsArr = []
 
         let tempX = x
@@ -401,6 +412,7 @@ class Grid extends Component {
         let tempStartNum
         // cell num changes with calcs
         let tempCellNum
+
 
         if(type === 'all'){
             // on first move only
@@ -413,17 +425,27 @@ class Grid extends Component {
                 tempCellNum = this.state.previousLegEndCell
             }
         } else if(type === 'partial'){
-            console.log('partial')
+            // previous X and Y wrong in here
+
+            // console.log('previousX', this.state.previousLegEndCell)
+            // console.log('previousY', this.state.previousLegEndCell)
             // start of leg
             tempCellNum = this.state.startingCellNumPartial
-            console.log('staring cell' ,this.state.startingCellNumPartial)
+            // console.log('staring cell' ,this.state.startingCellNumPartial)
             // set to start coords - it should compute to end coord form here
-            console.log('leg end x', this.state.partialLegEndCoords.x)
-            console.log('leg end y', this.state.partialLegEndCoords.y)
+            // console.log('leg start x', this.state.partialLegStartCoords.x)
+            // console.log('leg startStop y', this.state.partialLegStartCoords.y)
+            // console.log('prevX',this.state.previousLegX)
+            // console.log('prevXY',this.state.previousLegY)
+            // need to reset previous x and y
             this.setState({
-                previousStopX: this.state.partialLegStartCoords.x,
-                previousStopY: this.state.partialLegStartCoords.y
+                previousLegX: this.state.partialLegStartCoords.x,
+                previousLegY: this.state.partialLegStartCoords.y
             })
+            console.log('prevX',this.state.previousLegX)
+            console.log('prevXY',this.state.previousLegY)
+            console.log('to x', x)
+            console.log('to y', y)
             // console.log(this.state.previousStopX)
             // console.log(this.state.previousStopY)
             // console.log('previous',this.state.partialLegStartCoords)
@@ -439,8 +461,8 @@ class Grid extends Component {
         // console.log('start temp', tempCellNum)
         // console.log('staring cell', tempStartNum)
         // convert based on next move using above function
-        tempX = this._numToMove(tempX, tempY, 'leg').tempX
-        tempY = this._numToMove(tempX, tempY, 'leg').tempY
+        ({ tempX, tempY } = this._numToMove(tempX, tempY, 'leg'))
+        // tempY = this._numToMove(tempX, tempY, 'leg').tempY
         // console.log('x to move',tempX)
         // console.log('y to move', tempY)
         // on first move on grid only - for bottom corner
@@ -517,6 +539,8 @@ class Grid extends Component {
                 holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
 
             })
+            console.log('end of run x', this.state.previousLegX)
+            console.log('end of run y', this.state.previousLegY)
         } else if(type === 'partial'){
             // console.log('cells arr',tempCellNumsArr)
             this.setState({
@@ -613,11 +637,11 @@ class Grid extends Component {
             spo    </div>
                 <div className="utils-container">
 
-                <form onSubmit={''}>
+                <form>
                 X-coords: <input className="x-coord" type="text" value={this.state.tempX} onChange={evt => this.updateXvalue(evt)} >
                 </input>
                 Y-coords: <input className="y-coord" type="text" value={this.state.tempY} onChange={evt => this.updateYvalue(evt)}  ></input>
-                <input type="submit" value="Submit" onMouseOver={''}></input>
+                <input type="submit" value="Submit"></input>
 
                 </form>
                 <button onClick={this.testPartial.bind(this)}>Test</button>
