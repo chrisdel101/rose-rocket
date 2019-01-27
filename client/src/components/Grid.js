@@ -71,12 +71,12 @@ class Grid extends Component {
     // takes coords and type - needs access to state
     _numToMove(x,y, type){
         if(type === 'stop'){
-            console.log('moveX',this.state.previousStopX )
-            console.log('moveY', this.state.previousStopY)
+            // console.log('moveX',this.state.previousStopX )
+            // console.log('moveY', this.state.previousStopY)
             let moveX = Math.abs(this.state.previousStopX - x)
-            console.log('abs x', moveX)
+            // console.log('abs x', moveX)
             let moveY = Math.abs(this.state.previousStopY - y)
-            console.log('abs y', moveY)
+            // console.log('abs y', moveY)
             return {
                 tempX: moveX,
                 tempY: moveY
@@ -335,8 +335,8 @@ class Grid extends Component {
         tempX = this._numToMove(tempX, tempY, 'stop').tempX
         tempY = this._numToMove(tempX, tempY, 'stop').tempY
         // tempY = this._numToMove(tempX, tempY, 'stop').moveY
-        console.log('tempx', tempX)
-        console.log('tempy', tempY)
+        // console.log('tempx', tempX)
+        // console.log('tempy', tempY)
 
         // on first move on grid only - for bottom corner
         if(this.state.previousStopX === 0 && this.state.previousStopY  === 0){
@@ -542,11 +542,11 @@ class Grid extends Component {
                 //  }
             //     },100*(index))
             // })
-            console.log(this.state.finalStopColorArr)
+            let merged = [].concat.apply([], this.state.holdingCompletedArrs);
             this.setState({
-                finalStopColorArr: this.state.holdAllLegColorArrs
+                finalStopColorArr: merged  
             })
-            console.log(this.state.finalStopColorArr)
+            // console.log(this.state.finalStopColorArr)
         // on click push to child state
     }
     render() {
@@ -705,11 +705,11 @@ class Grid extends Component {
             // console.log(that.state.legs)
             that.state.stops.map(stop => {
                     that.legStartEnd(stop.x, stop.y)
-                // that.colorGrid(stop.x, stop.y, 'all')
+                    that.colorGrid(stop.x, stop.y, 'all')
 
             })
             that.setDriver()
-            that.colorCompleted("CD")
+            that.colorCompleted("FG")
             // that.colorCompleted(that.state.driverCoords.y)
             // console.log('state',that.state)
         },100)

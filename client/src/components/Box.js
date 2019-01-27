@@ -31,7 +31,7 @@ class Box extends React.Component{
         }
     }
     render() {
-      console.log(this.props)
+      // console.log(this.props)
         if (this.props.toRender && this.props.toRender.length) {
           return <React.Fragment>{this.renderBoxes()}</React.Fragment>;
         } else {
