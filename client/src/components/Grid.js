@@ -18,6 +18,7 @@ class Grid extends Component {
             legFormY:"",
             driverFormX:"",
             driverFormY:"",
+            progressInput: "",
             driver: "",
             driverLegStart: "",
             driverCoords: "",
@@ -693,29 +694,33 @@ class Grid extends Component {
 
     }
     handleDropdownChange(e) {
-        console.log(e.target.name)
         if(e.target.name === 'driver'){
-            console.log(e.target.value)
+            // console.log(e.target.value)
 
         } else if(e.target.name === 'color'){
-            console.log(e.target.value)
+            // console.log(e.target.value)
             // this.setState({
-        } else if(e.target.name === 'progressXinput'){
-            console.log('x', e.target.value)
+        } else if(e.target.name === 'driverXinput'){
+            // console.log('x', e.target.value)
             this.setState({
                 driverFormX: e.target.value
             })
-        } else if(e.target.name === 'progressYinput') {
-            console.log('y', e.target.value)
+        } else if(e.target.name === 'driverYinput') {
+            // console.log('y', e.target.value)
             this.setState({
                 driverFormY:e.target.value
+            })
+        } else if(e.target.name === 'progressInput') {
+            this.setState({
+                progressInput:e.target.value
             })
         }
         // this.setState({: });
     }
     handleDropdownSublit(event) {
         event.preventDefault()
-        this.colorLeg(this.state.value)
+        console.log(event.target.name)
+        // this.colorLeg(this.state.value)
 
     }
     // hold vals in input until next entered

@@ -34,13 +34,12 @@ class Dropdown extends React.Component{
         console.log(this.props)
         return(
             <div className="progress-input-wrapper">
-                 X Coords: <input className="progress-input" name="progressXinput" type="text" value={this.props.xVal} onChange={ev =>  this.props.onChange(ev)}>
+                 X Coords: <input className="progress-input" name="driverXinput" type="text" value={this.props.values.x} onChange={ev =>  this.props.onChange(ev)}>
                 </input>
-                 Y Coords: <input className="progress-input" name="progressYinput" type="text" value={this.props.yVal} onChange={ev =>  this.props.onChange(ev)}>
+                 Y Coords: <input className="progress-input" name="driverYinput" type="text" value={this.props.values.y} onChange={ev =>  this.props.onChange(ev)}>
                 </input>
-                Progress:  <input className="progress-input" name="progressYinput" type="text" value={this.props.xVal} onChange={ev =>  this.props.onChange(ev)}>
+                Progress:  <input className="progress-input" name="progressInput" type="text" value={this.props.xVal} onChange={ev =>  this.props.onChange(ev)}>
                 </input>
-                <button onClick={ev => this.props.onClick(ev)}>Clear Input</button>
             </div>
         )
     }
@@ -50,7 +49,7 @@ class Dropdown extends React.Component{
             return(
                 <div className="legs-container">
 
-                <form onSubmit={(ev) => this.props.onSubmit(ev)}>
+                <form name={this.props.type === 'driver' ? 'driver': 'color'} onSubmit={(ev) => this.props.onSubmit(ev)}>
                     <label>
                     {this.props.type === 'driver' ? this.props.utils.driverText: this.props.utils.colorText}
                     <select name={this.props.type === 'driver' ? 'driver': 'color'} value={this.state.value} onChange={(ev) => this.props.onChange(ev)}>
@@ -65,7 +64,7 @@ class Dropdown extends React.Component{
                     {this.props.type === 'driver'?
                     this.renderInput() : null
                     }
-                    <input type="submit" value="Submit" />
+                    <input  type="submit" value="Submit" />
                 </form>
 
                 </div>
