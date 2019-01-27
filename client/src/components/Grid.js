@@ -657,6 +657,7 @@ class Grid extends Component {
                             utils={this.state.utils}
                             legs={this.state.legs.length ? this.state.legs : null}
                             onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSublit}
+                            onClick={this.handleDropDownClick.bind(this)}
                             />
 
                     </div>
@@ -672,6 +673,18 @@ class Grid extends Component {
 
             </main>
         )
+    }
+    handleDropDownClick(e){
+        e.preventDefault()
+        this.setState({
+            driverFormX: '',
+            driverFormY: ''
+        })
+        let that = this
+        setTimeout(function(){
+            console.log(that.state.driverFormX)
+            console.log(that.state.driverFormY)
+        })
     }
     handleDriverLegChange(){
 

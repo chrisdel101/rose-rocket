@@ -17,26 +17,30 @@ class Dropdown extends React.Component{
     //     alert('Your favorite flavor is: ' + this.state.value);
     //     event.preventDefault();
     // }
-    static getDerivedStateFromProps(props) {
-        if(props.values){
-            if(props.values.x || props.values.y){
-                console.log(props.values)
-                return {
-                    xVal: props.values.x,
-                    yVal: props.values.y
-                }
-            }
-            return null
-        }
-        return null
-    }
+    // static getDerivedStateFromProps(props) {
+    //     if(props.values){
+    //         if(props.values.x || props.values.y){
+    //             console.log(props.values)
+    //             return {
+    //                 xVal: props.values.x,
+    //                 yVal: props.values.y
+    //             }
+    //         }
+    //         return null
+    //     }
+    //     return null
+    // }
     renderInput(){
+        console.log(this.props)
         return(
             <div className="progress-input-wrapper">
-                 <input className="progress-input" name="progressXinput" type="text" value={this.state.xVal} onChange={ev =>  this.props.onChange(ev)}>
+                 X Coords: <input className="progress-input" name="progressXinput" type="text" value={this.props.xVal} onChange={ev =>  this.props.onChange(ev)}>
                 </input>
-                 <input className="progress-input" name="progressYinput" type="text" value={this.state.yVal} onChange={ev =>  this.props.onChange(ev)}>
+                 Y Coords: <input className="progress-input" name="progressYinput" type="text" value={this.props.yVal} onChange={ev =>  this.props.onChange(ev)}>
                 </input>
+                Progress:  <input className="progress-input" name="progressYinput" type="text" value={this.props.xVal} onChange={ev =>  this.props.onChange(ev)}>
+                </input>
+                <button onClick={ev => this.props.onClick(ev)}>Clear Input</button>
             </div>
         )
     }
