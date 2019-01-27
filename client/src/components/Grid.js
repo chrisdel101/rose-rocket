@@ -214,29 +214,31 @@ class Grid extends Component {
     	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
     	})
-
+        //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
+        // index for json with legs info
         let dataIndex = this.state.legs.indexOf(arr[0])
-        console.log('holding' ,holdingArrIndex)
+        // console.log('holding' ,holdingArrIndex)
     	//all previous legs to color
         // var previousLegNames = this.state.legs.slice(0,index)
-        // get arr of all previous arrs to color
-        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
-        var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
-        console.log('previouslegs', previousLegArrs)
-        console.log('currnt arr', currentLegArr)
-        // get start and end of current legs
 
+        // get arr of all previous arrs to cell nums
+        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
+        //get current arr leg of cell nums
+        var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
+        // console.log('previouslegs', previousLegArrs)
+        // console.log('currnt arr', currentLegArr)
+        // get current and next leg json info
         let thisLeg = this.state.legs[dataIndex]
         let nextLeg = this.state.legs[dataIndex + 1]
-        // console.log(thisLeg)
+
         let legFirstStop = this.state.stops.filter(stop => {
             return stop.name === thisLeg.startStop
         })
         let legLastStop = this.state.stops.filter(stop => {
             return stop.name === thisLeg.endStop
         })
-        // use coords to calc with percent
+        // get first and end coords
         let stopStartCoords = {
             x: legFirstStop[0].x,
             y: legFirstStop[0].y
@@ -245,14 +247,16 @@ class Grid extends Component {
             x: legLastStop[0].x,
             y: legLastStop[0].y
         }
-        let diffObj = this._absDiff(stopStartCoords, stopEndCoords)
+        console.log(stopStartCoords)
+        // get diff to get number of moves
+        // let diffObj = this._absDiff(stopStartCoords, stopEndCoords)
         // console.log(diff)
         // percent driver is complete of leg
-        let progress = parseInt(this.state.driver.legProgress)
-        // takes number of moves and percent - returns number of moves that is partial of leg in coords
-        let numToMove = this._percentToCoords(diffObj, progress)
-        console.log('num to move', numToMove)
-        console.log(this.state.legStartEndCellNums)
+        // let progress = parseInt(this.state.driver.legProgress)
+        // // takes number of moves and percent - returns number of moves that is partial of leg in coords
+        // let numToMove = this._percentToCoords(diffObj, progress)
+        // console.log('num to move', numToMove)
+        // console.log(this.state.legStartEndCellNums)
         // cell nums
         let { start, end } = this.state.legStartEndCellNums[holdingArrIndex]
         // set startingCell and start x / y
@@ -262,8 +266,8 @@ class Grid extends Component {
             partialLegEndCoords: stopEndCoords,
             holdingCompletedArrs: [...previousLegArrs]
         })
-        console.log(this.state.holdingCompletedArrs)
-        console.log(start, end)
+        // console.log(this.state.holdingCompletedArrs)
+        // console.log(start, end)
         // set state to start coords
         // inout end coords
         // this.state.driverCoords.x = 20
@@ -301,16 +305,6 @@ class Grid extends Component {
         let tempCellNum
         if(type === 'all'){
             tempCellNum = this.state.startingCellNumAll
-            // if(this.state.previousStopY !== 0 || this.state.previousStopX !== 0){
-            //     this.setState({
-            //         previousStopX: 0,
-            //         previousStopY: 0
-            //     })
-            // }
-            // console.log('previousx', this.state.previousStopX)
-            // console.log('previousy', this.state.previousStopY)
-            // console.log('currentx ', x)
-            // console.log('currenty', y)
         } else if(type === 'partialLeg'){
             console.log('partial')
             // start of leg
@@ -323,9 +317,9 @@ class Grid extends Component {
                 previousStopX: this.state.partialLegStartCoords.x,
                 previousStopY: this.state.partialLegStartCoords.y
             })
-            console.log(this.state.previousStopX)
-            console.log(this.state.previousStopY)
-            console.log('previous',this.state.partialLegStartCoords)
+            // console.log(this.state.previousStopX)
+            // console.log(this.state.previousStopY)
+            // console.log('previous',this.state.partialLegStartCoords)
             // console.log('previousx', this.state.previousStopX)
             // console.log('previousy', this.state.previousStopY)
             // console.log('currentx ', x)
@@ -403,7 +397,7 @@ class Grid extends Component {
             })
             // will get call twice. Once for firs and last
         } else if(type === 'partialLeg'){
-            console.log('cells arr',tempCellNumsArr)
+            // console.log('cells arr',tempCellNumsArr)
             this.setState({
                 previousStopX: x,
                 previousStopY: y,
