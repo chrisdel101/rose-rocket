@@ -16,7 +16,7 @@ class Box extends React.Component{
           return toRender.map((obj, i) => {
             let hasStopColor = (() => {
               if (!stopsColor || !stopsColor.length || !stopsColor.includes(i)) return false;
-              return true;
+              return true
             })();
             let hasLegColor = (() => {
                    if (!legsColor || !legsColor.length || !legsColor.includes(i)) return false;
@@ -24,7 +24,7 @@ class Box extends React.Component{
                  })();
             return (
                 <div
-                className={`box ${hasStopColor ? " stop-color" : ""} ${hasLegColor ? " leg-color" : ""}`}
+                className={`box ${hasStopColor ? "stop-color" : ""} ${hasLegColor ? " leg-color" : ""}`}
                 key={i}
                 />)
           });
