@@ -157,6 +157,7 @@ class Grid extends Component {
     setDriver(){
         // get from api
         let positionData = this.state.driver
+        console.log(positionData)
         // get leg name
         let legName = positionData.activeLegID
         console.log('leg name', positionData)
@@ -679,13 +680,21 @@ class Grid extends Component {
 
     }
     handleFormSubmit(event) {
-
-        // console.log(`temp x: ${this.state.tempX}`)
-        // console.log(`temp y: ${this.state.tempY}`)
         event.preventDefault();
-        // this.move(this.state.tempX, this.state.tempY)
-        console.log(event.target.value)
-        // alert('A name was submitted: ' + this.state.value);
+
+        console.log(this.state.formX)
+        console.log(this.state.formY)
+        this.setState({
+            driver:{
+                activeLegID: "AB",
+                legProgress: "33"
+            }
+        })
+        let that = this
+        setTimeout(function(){
+            that.setDriver()
+
+        })
     }
     _legIndex(input){
         let index

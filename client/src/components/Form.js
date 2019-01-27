@@ -23,7 +23,7 @@ class Form extends React.Component{
         // })
     }
     static getDerivedStateFromProps(props) {
-        console.log(props)
+        // console.log(props)
         // if(props.values.x || props.values.y){
             return {
                 xVal: props.values.x,
