@@ -3,25 +3,30 @@ import React from 'react'
 class Form extends React.Component{
     constructor(props) {
 		super(props)
-        this.state = {
+        this.state = {value: ''};
+        this.handleXchange = this.handleXchange.bind(this);
 
-        }
     }
-    renderForm(){
+    handleXchange(event) {
+        console.log(event.target.value)
+        this.setState({value: event.target.value});
+    }
 
+    renderForm(){
         return(
             <form onSubmit={(ev) => this.props.onSubmit(ev)}>
                 <label>
-                    X-coords: <input className="x-coord" type="text" value={this.state.value} onChange={evt => this.updateXvalue(evt)} >
-                    </input>
-                </label>
-                <label>
-                    Y-coords: <input className="y-coord" type="text" value={this.state.value} onChange={evt => this.updateYvalue(evt)}  ></input>
+
+                    <input type="text" value={this.state.value} onChange={this.handleXchange} />
                 </label>
                 <input type="submit" value="Submit" />
             </form>)
 
     }
+    // <label>
+    //     Y-coords: <input className="y-coord" type="text" value={this.state.value} onChange={''}>
+    //     </input>
+    // </label>
 
     render(){
         return(

@@ -6,6 +6,7 @@ import Box from './Box'
 import Stop from './Stop'
 import Truck from './Truck'
 import Dropdown from './Dropdown'
+import Form from './Form'
 
 class Grid extends Component {
 	constructor(props) {
@@ -25,7 +26,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 100}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -172,12 +173,12 @@ class Grid extends Component {
         // console.log('s', lastStopOfLeg)
         //calc abs distance bwt coords  - coords for first and last
         let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
-        console.log(diffObj)
+        // console.log(diffObj)
 
         let progress = parseInt(this.state.driver.legProgress)
         // takes number of moves and percent - returns number of moves that is
         let numToMove = this._percentToCoords(diffObj, progress)
-        console.log('num to move',numToMove)
+        // console.log('num to move',numToMove)
         // takes coords for first, last and how many -returns up / down & COORDS
         let { xToMove, yToMove } = this._getDriverDirection(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
         // convert the number to move to pixels
@@ -209,7 +210,7 @@ class Grid extends Component {
             driverLegStart: driverLegStartcoords,
             finalDriverMoveObj: driverProgressObj
         })
-        console.log(this.state.driverCoords)
+        // console.log(this.state.driverCoords)
     }
 
     // x=35
@@ -220,7 +221,7 @@ class Grid extends Component {
     	})
         //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
-        console.log(holdingArrIndex)
+        // console.log(holdingArrIndex)
         // index for json with legs info
         let dataIndex = this.state.legs.indexOf(arr[0])
         // console.log('holding' ,holdingArrIndex)
@@ -252,7 +253,7 @@ class Grid extends Component {
             x: legLastStop[0].x,
             y: legLastStop[0].y
         }
-        console.log(stopEndCoords)
+        // console.log(stopEndCoords)
         // get diff to get number of moves
         // let diffObj = this._absDiff(stopStartCoords, stopEndCoords)
         // console.log(diff)
@@ -264,7 +265,7 @@ class Grid extends Component {
         // console.log(this.state.legStartEndCellNums)
         // cell nums
         let { start, end } = this.state.legStartEndCellNums[holdingArrIndex]
-        console.log('start/end', start, end)
+        // console.log('start/end', start, end)
         // set startingCell and start x / y
 
         // this.state.startingCellNumPartial: start/end cells
@@ -281,10 +282,10 @@ class Grid extends Component {
             partialLegEndCoords: stopEndCoords,
             holdingCompletedArrs: [...previousLegArrs]
         })
-        console.log('startingCell', start)
-        console.log('stop/start', stopStartCoords)
-        console.log('partial leg end', stopEndCoords)
-        console.log('all', [...previousLegArrs])
+        // console.log('startingCell', start)
+        // console.log('stop/start', stopStartCoords)
+        // console.log('partial leg end', stopEndCoords)
+        // console.log('all', [...previousLegArrs])
 
 
         // console.log(this.state.holdingCompletedArrs)
@@ -293,7 +294,7 @@ class Grid extends Component {
         // inout end coords
         // this.state.driverCoords.x = 20
         // this.state.driverCoords.y = 13
-        console.log(this.state.driverCoords)
+        // console.log(this.state.driverCoords)
         this.legStartEnd(this.state.driverCoords.x,this.state.driverCoords.y, 'partial')
 
         // get start cell num
@@ -442,10 +443,10 @@ class Grid extends Component {
                 previousLegX: this.state.partialLegStartCoords.x,
                 previousLegY: this.state.partialLegStartCoords.y
             })
-            console.log('prevX',this.state.previousLegX)
-            console.log('prevXY',this.state.previousLegY)
-            console.log('to x', x)
-            console.log('to y', y)
+            // console.log('prevX',this.state.previousLegX)
+            // console.log('prevXY',this.state.previousLegY)
+            // console.log('to x', x)
+            // console.log('to y', y)
             // console.log(this.state.previousStopX)
             // console.log(this.state.previousStopY)
             // console.log('previous',this.state.partialLegStartCoords)
@@ -539,8 +540,8 @@ class Grid extends Component {
                 holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
 
             })
-            console.log('end of run x', this.state.previousLegX)
-            console.log('end of run y', this.state.previousLegY)
+            // console.log('end of run x', this.state.previousLegX)
+            // console.log('end of run y', this.state.previousLegY)
         } else if(type === 'partial'){
             // console.log('cells arr',tempCellNumsArr)
             this.setState({
@@ -550,7 +551,7 @@ class Grid extends Component {
                 holdingCompletedArrs:[...this.state.holdingCompletedArrs, tempCellNumsArr]
 
             })
-            console.log('complete', this.state.holdingCompletedArrs)
+            // console.log('complete', this.state.holdingCompletedArrs)
 
         }
     }
@@ -623,30 +624,30 @@ class Grid extends Component {
             <main className="page-container">
                 <div className="grid-container">
 
-                <div className="grid">
+                    <div className="grid">
 
-                <Truck coords={this.state.finalDriverMoveObj ? this.state.finalDriverMoveObj : null}/>
-                <Stop coords={this.state.stopsDirsArr}/>
-                <Box
-                    toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
-                    legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
-                    completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
-                />
+                    <Truck coords={this.state.finalDriverMoveObj ? this.state.finalDriverMoveObj : null}/>
+                    <Stop coords={this.state.stopsDirsArr}/>
+                    <Box
+                        toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
+                        legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
+                        completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
+                    />
 
+                    </div>
                 </div>
-            spo    </div>
                 <div className="utils-container">
 
-                <form>
-                X-coords: <input className="x-coord" type="text" value={this.state.tempX} onChange={evt => this.updateXvalue(evt)} >
-                </input>
-                Y-coords: <input className="y-coord" type="text" value={this.state.tempY} onChange={evt => this.updateYvalue(evt)}  ></input>
-                <input type="submit" value="Submit"></input>
-
-                </form>
+                <Form
+                    // onChange={this.updateXvalue.bind(this)}
+                    // onChange={this.updateYvalue.bind(this)}
+                    onSubmit={this.handleFormSubmit.bind(this)}/>
                 <button onClick={this.testPartial.bind(this)}>Test</button>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
-                <Dropdown legs={this.state.legs.length ? this.state.legs : null} onChange={this.handleChange} onSubmit={this.handleSelectSubmit}/>
+                <Dropdown
+                    legs={this.state.legs.length ? this.state.legs : null}
+                    onChange={this.handleChange} onSubmit={this.handleSelectSubmit}
+                    />
                 </div>
 
             </main>
@@ -662,6 +663,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     updateXvalue(evt) {
+        console.log(evt)
         this.setState({
             tempX: evt.target.value
         })
@@ -669,18 +671,21 @@ class Grid extends Component {
 
     }
     updateYvalue(evt) {
+        console.log('e',evt)
         this.setState({
             tempY: evt.target.value
         })
         console.log(`temp y: ${this.state.tempY}`)
 
     }
-    handleSubmit(event) {
+    handleFormSubmit(event) {
+
         // console.log(`temp x: ${this.state.tempX}`)
         // console.log(`temp y: ${this.state.tempY}`)
-        this.move(this.state.tempX, this.state.tempY)
-        // alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
+        // this.move(this.state.tempX, this.state.tempY)
+        console.log(event.target.value)
+        // alert('A name was submitted: ' + this.state.value);
     }
     _legIndex(input){
         let index
