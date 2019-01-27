@@ -84,12 +84,12 @@ class Grid extends Component {
                 tempY: moveY
             }
         } else if(type === 'leg'){
-            console.log('prevX', this.state.previousLegX)
-            console.log('prevY', this.state.previousLegY)
+            // console.log('prevX', this.state.previousLegX)
+            // console.log('prevY', this.state.previousLegY)
             let moveX = Math.abs(this.state.previousLegX - x)
-            console.log('in move previous', moveX)
+            // console.log('in move previous', moveX)
             let moveY = Math.abs(this.state.previousLegY - y)
-            console.log('in move previous', moveY)
+            // console.log('in move previous', moveY)
             return {
                 tempX: moveX,
                 tempY: moveY
@@ -659,6 +659,28 @@ class Grid extends Component {
         event.preventDefault()
         this.colorLeg(this.state.value)
 
+    }
+    // hold vals in input until next entered
+    updateXvalue(evt) {
+        this.setState({
+            tempX: evt.target.value
+        })
+        // console.log(`temp x: ${this.state.tempX}`)
+
+    }
+    updateYvalue(evt) {
+        this.setState({
+            tempY: evt.target.value
+        })
+        console.log(`temp y: ${this.state.tempY}`)
+
+    }
+    handleSubmit(event) {
+        // console.log(`temp x: ${this.state.tempX}`)
+        // console.log(`temp y: ${this.state.tempY}`)
+        this.move(this.state.tempX, this.state.tempY)
+        // alert('A name was submitted: ' + this.state.value);
+        event.preventDefault();
     }
     _legIndex(input){
         let index
