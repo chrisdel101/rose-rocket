@@ -18,7 +18,8 @@ class Grid extends Component {
             legFormY:"",
             driverFormX:"",
             driverFormY:"",
-            progressInput: "",
+            driverLegInput:"",
+            driverProgressInput: "",
             driver: "",
             driverLegStart: "",
             driverCoords: "",
@@ -694,9 +695,10 @@ class Grid extends Component {
 
     }
     handleDropdownChange(e) {
-        if(e.target.name === 'driver'){
-            // console.log(e.target.value)
-
+        if(e.target.name === 'driver-select'){
+            this.setState({
+                driverLegInput: e.target.value
+            })
         } else if(e.target.name === 'color'){
             // console.log(e.target.value)
             // this.setState({
@@ -712,13 +714,18 @@ class Grid extends Component {
             })
         } else if(e.target.name === 'progressInput') {
             this.setState({
-                progressInput:e.target.value
+                driverProgressInput:e.target.value
             })
         }
         // this.setState({: });
     }
     handleDropdownSublit(event) {
         event.preventDefault()
+        if(event.target.name === 'driver'){
+            console.log(this.state)
+        } else if(event.target.name === 'color'){
+
+        }
         console.log(event.target.name)
         // this.colorLeg(this.state.value)
 

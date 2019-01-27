@@ -52,7 +52,7 @@ class Dropdown extends React.Component{
                 <form name={this.props.type === 'driver' ? 'driver': 'color'} onSubmit={(ev) => this.props.onSubmit(ev)}>
                     <label>
                     {this.props.type === 'driver' ? this.props.utils.driverText: this.props.utils.colorText}
-                    <select name={this.props.type === 'driver' ? 'driver': 'color'} value={this.state.value} onChange={(ev) => this.props.onChange(ev)}>
+                    <select name={this.props.type === 'driver' ? 'driver-select': 'color-select'} value={this.state.value} onChange={(ev) => this.props.onChange(ev)}>
                         <option></option>
                     {
                         this.props.legs.map((leg, i) => {
