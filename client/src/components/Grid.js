@@ -723,6 +723,16 @@ class Grid extends Component {
         event.preventDefault()
         if(event.target.name === 'driver'){
             console.log(this.state)
+            this.setState({
+                driver:{
+                    activeLegID: this.state.driverLegInput,
+                    legProgress: this.state.driverProgressInput
+                }
+            })
+            let that = this
+            setTimeout(function(){
+                that.setDriver()
+            })
         } else if(event.target.name === 'color'){
 
         }
