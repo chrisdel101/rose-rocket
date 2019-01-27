@@ -4,6 +4,7 @@ class Dropdown extends React.Component{
     constructor(props) {
 		super(props)
         this.state = {
+            progressInput: ''
             }
         // this.handleChange = this.handleChange.bind(this);
 
@@ -16,7 +17,29 @@ class Dropdown extends React.Component{
     //     alert('Your favorite flavor is: ' + this.state.value);
     //     event.preventDefault();
     // }
-
+    static getDerivedStateFromProps(props) {
+        if(props.values){
+            if(props.values.x || props.values.y){
+                console.log(props.values)
+                return {
+                    xVal: props.values.x,
+                    yVal: props.values.y
+                }
+            }
+            return null
+        }
+        return null
+    }
+    renderInput(){
+        return(
+            <div className="progress-input-wrapper">
+                 <input className="progress-input" name="progressXinput" type="text" value={this.state.xVal} onChange={ev =>  this.props.onChange(ev)}>
+                </input>
+                 <input className="progress-input" name="progressYinput" type="text" value={this.state.yVal} onChange={ev =>  this.props.onChange(ev)}>
+                </input>
+            </div>
+        )
+    }
     render(){
         // console.log(this.state)
         if(this.props.legs){
@@ -25,8 +48,8 @@ class Dropdown extends React.Component{
 
                 <form onSubmit={(ev) => this.props.onSubmit(ev)}>
                     <label>
-                    Select a Leg
-                    <select value={this.state.value} onChange={(ev) => this.props.onChange(ev.target.value)}>
+                    {this.props.type === 'driver' ? this.props.utils.driverText: this.props.utils.colorText}
+                    <select name={this.props.type === 'driver' ? 'driver': 'color'} value={this.state.value} onChange={(ev) => this.props.onChange(ev)}>
                         <option></option>
                     {
                         this.props.legs.map((leg, i) => {
@@ -35,6 +58,9 @@ class Dropdown extends React.Component{
                     }
                     </select>
                     </label>
+                    {this.props.type === 'driver'?
+                    this.renderInput() : null
+                    }
                     <input type="submit" value="Submit" />
                 </form>
 

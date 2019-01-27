@@ -14,8 +14,10 @@ class Grid extends Component {
 		this.state = {
             legs: [],
 			stops: [],
-            formX:"",
-            formY:"",
+            legFormX:"",
+            legFormY:"",
+            driverFormX:"",
+            driverFormY:"",
             driver: "",
             driverLegStart: "",
             driverCoords: "",
@@ -37,9 +39,13 @@ class Grid extends Component {
             finalCompletedColorsArr: [],
             finalDriverMoveObj: "",
             legStartEndCellNums: [],
+            utils: {
+                driverText: "Select leg for driver",
+                colorText: "Select a Leg to color"
+            }
 		};
-        this.handleSelectSubmit = this.handleSelectSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleDropdownSublit = this.handleDropdownSublit.bind(this);
+        this.handleDropdownChange = this.handleDropdownChange.bind(this);
 
 
 	}
@@ -640,41 +646,77 @@ class Grid extends Component {
                     </div>
                 </div>
                 <div className="utils-container">
+                    <div className="driver-controls">
+                    <Form
+                        values={{x:this.state.legFormX, y:this.state.legFormY}}
+                        onChange={this.handleFormChange.bind(this)}
+                        onSubmit={this.handleFormSubmit.bind(this)}/>
+                        <Dropdown
+                            values={{x:this.state.driverFormX,y:this.state.driverFormY}}
+                            type="driver"
+                            utils={this.state.utils}
+                            legs={this.state.legs.length ? this.state.legs : null}
+                            onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSublit}
+                            />
 
-                <Form
-                    values={{x:this.state.formX, y:this.state.formY}}
-                    onChange={this.handleFormChange.bind(this)}
-                    onSubmit={this.handleFormSubmit.bind(this)}/>
+                    </div>
                 <button onClick={this.testPartial.bind(this)}>Test</button>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
                 <Dropdown
+                    type="color"
+                    utils={this.state.utils}
                     legs={this.state.legs.length ? this.state.legs : null}
-                    onChange={this.handleChange} onSubmit={this.handleSelectSubmit}
+                    onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSublit}
                     />
                 </div>
 
             </main>
         )
     }
-    handleChange(value) {
-        this.setState({value: value});
+    handleDriverLegChange(){
+
     }
-    handleSelectSubmit(event) {
+    handleDriverLegSubmit(){
+
+    }
+    handleDropdownChange(e) {
+        console.log(e.target.name)
+        if(e.target.name === 'driver'){
+            console.log(e.target.value)
+
+        } else if(e.target.name === 'color'){
+            console.log(e.target.value)
+            // this.setState({
+        } else if(e.target.name === 'progressXinput'){
+            console.log('x', e.target.value)
+            this.setState({
+                driverFormX: e.target.value
+            })
+        } else if(e.target.name === 'progressYinput') {
+            console.log('y', e.target.value)
+            this.setState({
+                driverFormY:e.target.value
+            })
+        }
+        // this.setState({: });
+    }
+    handleDropdownSublit(event) {
         event.preventDefault()
         this.colorLeg(this.state.value)
 
     }
     // hold vals in input until next entered
     handleFormChange(evt) {
+
         console.log(evt.target.name)
         if(evt.target.name === 'x'){
             this.setState({
-                formX: evt.target.value
+                legFormX: evt.target.value
             })
 
         } else if(evt.target.name === 'y'){
             this.setState({
-                formY: evt.target.value
+                legFormY: evt.target.value
             })
         }
 
@@ -682,8 +724,8 @@ class Grid extends Component {
     handleFormSubmit(event) {
         event.preventDefault();
 
-        console.log(this.state.formX)
-        console.log(this.state.formY)
+        console.log(this.state.legFormX)
+        console.log(this.state.legFormY)
         this.setState({
             driver:{
                 activeLegID: "AB",

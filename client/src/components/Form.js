@@ -24,12 +24,13 @@ class Form extends React.Component{
     }
     static getDerivedStateFromProps(props) {
         // console.log(props)
-        // if(props.values.x || props.values.y){
+        if(props.values.x || props.values.y){
             return {
                 xVal: props.values.x,
                 yVal: props.values.y
             }
-        // }
+        }
+        return null
     }
     renderForm(){
         // if(this.props.values.x || this.props.values.y){
