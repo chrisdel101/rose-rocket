@@ -216,6 +216,7 @@ class Grid extends Component {
     	})
         //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
+        console.log(holdingArrIndex)
         // index for json with legs info
         let dataIndex = this.state.legs.indexOf(arr[0])
         // console.log('holding' ,holdingArrIndex)
@@ -226,7 +227,7 @@ class Grid extends Component {
         var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
         //get current arr leg of cell nums
         var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
-        // console.log('previouslegs', previousLegArrs)
+        console.log('previouslegs', previousLegArrs)
         // console.log('currnt arr', currentLegArr)
         // get current and next leg json info
         let thisLeg = this.state.legs[dataIndex]
@@ -247,7 +248,7 @@ class Grid extends Component {
             x: legLastStop[0].x,
             y: legLastStop[0].y
         }
-        console.log(stopStartCoords)
+        console.log(stopEndCoords)
         // get diff to get number of moves
         // let diffObj = this._absDiff(stopStartCoords, stopEndCoords)
         // console.log(diff)
@@ -259,7 +260,17 @@ class Grid extends Component {
         // console.log(this.state.legStartEndCellNums)
         // cell nums
         let { start, end } = this.state.legStartEndCellNums[holdingArrIndex]
+        console.log('start/end', start, end)
         // set startingCell and start x / y
+
+        // this.state.startingCellNumPartial: start/end cells
+        // 24034 34034
+        // this.partialLegStartCoords: start x/y
+        // {x: 35, y: 80}
+        // this.state.partialLegEndCoords: end
+        // {x: 35, y: 30}
+        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
+
         this.setState({
             startingCellNumPartial: start,
             partialLegStartCoords: stopStartCoords,
@@ -521,6 +532,19 @@ class Grid extends Component {
     }
 
     testPartial(){
+        // this.state.startingCellNumPartial: start/end cells
+        // 24034 34034
+        // this.partialLegStartCoords: start x/y
+        // {x: 35, y: 80}
+        // this.state.partialLegEndCoords: end
+        // {x: 35, y: 30}
+        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, 6)
+        this.setState({
+            startingCellNumPartial: 24034,
+            partialLegStartCoords:{x: 35, y: 80},
+            partialLegEndCoords:{x: 35, y: 30},
+            holdingCompletedArrs:[...previousLegArrs]
+        })
         this.legStartEnd(35,64, 'partial')
     }
 
@@ -588,7 +612,7 @@ class Grid extends Component {
                 <input type="submit" value="Submit" onMouseOver={''}></input>
 
                 </form>
-                <button onClick={this.colorAllStops.bind(this)}>ColorAllStops</button>
+                <button onClick={this.testPartial.bind(this)}>Test</button>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
                 <Dropdown legs={this.state.legs.length ? this.state.legs : null} onChange={this.handleChange} onSubmit={this.handleSelectSubmit}/>
                 </div>
