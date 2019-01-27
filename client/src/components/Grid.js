@@ -28,8 +28,10 @@ class Grid extends Component {
             boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
+            holdingCompletedArrs: [],
             finalStopColorArr:[],
             finalLegColorArr: [],
+            finalCompletedColorsArr: [],
             finalDriverMoveObj: "",
             legStartEndCellNums: [],
 		};
@@ -542,12 +544,20 @@ class Grid extends Component {
                 //  }
             //     },100*(index))
             // })
-            let merged = [].concat.apply([], this.state.holdingCompletedArrs);
+
             this.setState({
-                finalStopColorArr: merged  
+                finalStopColorArr: this.state.holdAllStopColorIndexes
             })
             // console.log(this.state.finalStopColorArr)
         // on click push to child state
+    }
+    colorCompletedStops(){
+
+            let merged = [].concat.apply([], this.state.holdingCompletedArrs);
+            console.log(merged)
+            this.setState({
+                finalCompletedColorsArr: merged
+            })
     }
     render() {
     	return(
@@ -561,6 +571,7 @@ class Grid extends Component {
                 <Box
                     toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
                     legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
+                    completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
                 />
 
                 </div>
@@ -575,6 +586,7 @@ class Grid extends Component {
 
                 </form>
                 <button onClick={this.colorAllStops.bind(this)}>ColorAllStops</button>
+                <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
                 <Dropdown legs={this.state.legs.length ? this.state.legs : null} onChange={this.handleChange} onSubmit={this.handleSelectSubmit}/>
                 </div>
 
@@ -710,6 +722,7 @@ class Grid extends Component {
             })
             that.setDriver()
             that.colorCompleted("FG")
+            console.log('state', that.state)
             // that.colorCompleted(that.state.driverCoords.y)
             // console.log('state',that.state)
         },100)
