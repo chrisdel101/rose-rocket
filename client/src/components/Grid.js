@@ -14,6 +14,8 @@ class Grid extends Component {
 		this.state = {
             legs: [],
 			stops: [],
+            formX:"",
+            formY:"",
             driver: "",
             driverLegStart: "",
             driverCoords: "",
@@ -639,8 +641,8 @@ class Grid extends Component {
                 <div className="utils-container">
 
                 <Form
-                    onChange={this.updateXvalue.bind(this)}
-                    // onChange={this.updateYvalue.bind(this)}
+                    values={{x:this.state.formX, y:this.state.formY}}
+                    onChange={this.handleFormChange.bind(this)}
                     onSubmit={this.handleFormSubmit.bind(this)}/>
                 <button onClick={this.testPartial.bind(this)}>Test</button>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
@@ -662,20 +664,18 @@ class Grid extends Component {
 
     }
     // hold vals in input until next entered
-    updateXvalue(evt) {
-        console.log(evt)
-        // this.setState({
-        //     tempX: evt.target.value
-        // })
-        // console.log(`temp x: ${this.state.tempX}`)
+    handleFormChange(evt) {
+        console.log(evt.target.name)
+        if(evt.target.name === 'x'){
+            this.setState({
+                formX: evt.target.value
+            })
 
-    }
-    updateYvalue(evt) {
-        console.log('e',evt)
-        this.setState({
-            tempY: evt.target.value
-        })
-        console.log(`temp y: ${this.state.tempY}`)
+        } else if(evt.target.name === 'y'){
+            this.setState({
+                formY: evt.target.value
+            })
+        }
 
     }
     handleFormSubmit(event) {
