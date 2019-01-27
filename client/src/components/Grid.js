@@ -532,6 +532,7 @@ class Grid extends Component {
     }
 
     testPartial(){
+        let that = this
         // this.state.startingCellNumPartial: start/end cells
         // 24034 34034
         // this.partialLegStartCoords: start x/y
@@ -546,6 +547,13 @@ class Grid extends Component {
             holdingCompletedArrs:[...previousLegArrs]
         })
         this.legStartEnd(35,64, 'partial')
+        setTimeout(function(){
+            let merged = [].concat.apply([], that.state.holdingCompletedArrs);
+            // console.log(merged)
+            that.setState({
+                finalCompletedColorsArr: merged
+            })
+        },1000)
     }
 
     colorAllStops(){
@@ -602,7 +610,7 @@ class Grid extends Component {
                 />
 
                 </div>
-                </div>
+            spo    </div>
                 <div className="utils-container">
 
                 <form onSubmit={''}>
