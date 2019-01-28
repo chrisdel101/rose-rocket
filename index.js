@@ -3,7 +3,8 @@ const app = express();
 const port = process.env.PORT || 4000;
 const legs = require('./data/legs.json')
 const stops = require('./data/stops.json')
-const driver = require('./data/driver.json')
+var driver = require('./data/driver.json')
+const fs = require('fs')
 app.use(express.json())
 
 // console.log that your server is up and running
@@ -26,10 +27,11 @@ app.get('/driver', (req, res) => {
 	});
 });
 // https://stackoverflow.com/a/49943829/5972531
+// just add to memory
 app.put('/driver', (req, res) => {
     res.json({requestBody: req.body})  // <==== req.body will be a parsed JSON object
-    console.log(req.body)
-    // driver = req.body
-    // console.log(driver)
+    driver["activeLegID"] = req.body.activeLegID
+    driver["legProgress"] = req.body.legProgress
+    console.log(driver)
 
 });
