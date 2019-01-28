@@ -32,7 +32,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 100}, (v, i) => i),
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -191,8 +191,8 @@ class Grid extends Component {
         let lastStopOfLeg = this.state.stops.filter(stop => {
             return stop.name === secondLetter
         })
-        console.log('f', firstStopOfLeg)
-        console.log('s', lastStopOfLeg)
+        // console.log('f', firstStopOfLeg)
+        // console.log('s', lastStopOfLeg)
         //calc abs distance bwt coords  - coords for first and last
         let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
         // console.log(diffObj)
@@ -564,6 +564,7 @@ class Grid extends Component {
                 holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
 
             })
+            console.log('all', this.state.holdAllLegColorArrs)
             // console.log('end of run x', this.state.previousLegX)
             // console.log('end of run y', this.state.previousLegY)
         } else if(type === 'partial'){
@@ -578,31 +579,6 @@ class Grid extends Component {
             // console.log('complete', this.state.holdingCompletedArrs)
 
         }
-    }
-
-    testPartial(){
-        let that = this
-        // this.state.startingCellNumPartial: start/end cells
-        // 24034 34034
-        // this.partialLegStartCoords: start x/y
-        // {x: 35, y: 80}
-        // this.state.partialLegEndCoords: end
-        // {x: 35, y: 30}
-        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, 6)
-        this.setState({
-            startingCellNumPartial: 24034,
-            partialLegStartCoords:{x: 35, y: 80},
-            partialLegEndCoords:{x: 35, y: 30},
-            holdingCompletedArrs:[...previousLegArrs]
-        })
-        this.legStartEnd(35,64, 'partial')
-        setTimeout(function(){
-            let merged = [].concat.apply([], that.state.holdingCompletedArrs);
-            // console.log(merged)
-            that.setState({
-                finalCompletedColorsArr: merged
-            })
-        },1000)
     }
 
     colorAllStops(){
@@ -636,9 +612,9 @@ class Grid extends Component {
         // on click push to child state
     }
     colorCompletedStops(){
-
+            console.log(this.state.holdingCompletedArrs)
             let merged = [].concat.apply([], this.state.holdingCompletedArrs);
-            // console.log(merged)
+            console.log(merged)
             this.setState({
                 finalCompletedColorsArr: merged
             })
@@ -699,7 +675,6 @@ class Grid extends Component {
                             />
 
                     </div>
-                <button onClick={this.testPartial.bind(this)}>Test</button>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
                 <Dropdown
                     type="color"
@@ -742,12 +717,14 @@ class Grid extends Component {
                 } else {
                     progress = this.state.driverProgressInput
                 }
+                //update driver position in state
                 this.setState({
                     driver:{
                         activeLegID: this.state.driverLegInput,
                         legProgress: progress
                     }
                 })
+                // update driver position on API
                 fetch('/driver', {
                     method: "PUT",
                     headers: {
@@ -858,7 +835,7 @@ class Grid extends Component {
 
     // set coords in pxs of plots
     _setStopCoords(type,x,y){
-        console.log(type)
+        // console.log(type)
         let that = this
         let coordsArr = []
 
@@ -927,6 +904,7 @@ class Grid extends Component {
 
             })
             that.setDriver()
+            that.colorCompleted(that.state.driver.activeLegID)
             console.log('state', that.state)
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
@@ -939,13 +917,13 @@ class Grid extends Component {
         // Call our fetch function below once the component mounts
         this._callDriver()
         .then(res => {
-            console.log('r', res)
+            // console.log('r', res)
             this.setState({ driver: res.driver })
         })
         .catch(err => console.log(err));
         this._callStops()
         .then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ stops: res.stops })
         })
         .catch(err => console.log(err));
