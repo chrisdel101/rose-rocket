@@ -32,7 +32,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 100}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -629,17 +629,49 @@ class Grid extends Component {
             finalDriverMoveObj: coords
         })
     }
-    upsateDriverPostionWcoords(){
-        //get arr of tuples of coords
-        let temp = {x: 23, y: 23}
-        var tuples = []
-        for(var i = 0; i < this.state.stops.length; i += 2){
-        	let slice = arr.slice(i,i+2)
-        	store.push(slice)
-        }
-        //check if that matches any stops exactly
-
-        //check what closest is the
+    // takes driver coords and finds the leg start
+    getLegStartfromCoords(){
+        let coords = this.state.driverCoords
+        // if x & y is between the stops
+        let firstStop = this.state.stops.filter((coord, index) => {
+            // console.log('stop1', this.state.stops[index])
+            // console.log('stop2', this.state.stops[index+1])
+            // console.log('x',coords.x)
+            // console.log('y', coords.y)
+        	if(this.state.stops[index+1] === undefined) return
+        	if( //x/y are both btw
+                (
+                    ((coords.y > this.state.stops[index].y && coords.y < this.state.stops[index+1].y)||
+                    (coords.y < this.state.stops[index].y && coords.y > this.state.stops[index+1].y))
+                    &&
+                    (coords.x > this.state.stops[index].x && coords.x < this.state.stops[index+1].x) ||
+                    (coords.x < this.state.stops[index].x && coords.x > this.state.stops[index+1].x)
+                )
+            ){
+                    return coord
+            } else if(
+                // y is bwn and x is equal
+                (
+                    ((coords.y > this.state.stops[index].y && coords.y < this.state.stops[index+1].y) ||
+                    (coords.y < this.state.stops[index].y && coords.y > this.state.stops[index+1].y))
+                    &&
+                    (coords.x === this.state.stops[index].x && coords.x === this.state.stops[index+1].x)
+                )
+            ){
+                    return coord
+            } else if(
+                // x is bwn and y is equal
+                (
+                    ((coords.x > this.state.stops[index].x && coords.x < this.state.stops[index+1].x) ||
+                    (coords.x < this.state.stops[index].x && coords.x > this.state.stops[index+1].x))
+                    &&
+                    (coords.y === this.state.stops[index].y && coords.y === this.state.stops[index+1].y)
+                )
+            ){
+                return coord
+            }
+        })
+        return firstStop
     }
     _resetTruck(){
         this.setState({
@@ -922,6 +954,7 @@ class Grid extends Component {
             console.log('state', that.state)
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
+            that.upsateDriverPostionWcoords()
         },100)
 
 
