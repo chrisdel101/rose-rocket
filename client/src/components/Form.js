@@ -22,16 +22,16 @@ class Form extends React.Component{
         //
         // })
     }
-    static getDerivedStateFromProps(props) {
-        // console.log(props)
-        if(props.values.x || props.values.y){
-            return {
-                xVal: props.values.x,
-                yVal: props.values.y
-            }
-        }
-        return null
-    }
+    // static getDerivedStateFromProps(props) {
+    //     // console.log(props)
+    //     if(props.values.x || props.values.y){
+    //         return {
+    //             xVal: props.values.x,
+    //             yVal: props.values.y
+    //         }
+    //     }
+    //     return null
+    // }
     renderForm(){
         // if(this.props.values.x || this.props.values.y){
         //     this.updateState()
@@ -41,10 +41,10 @@ class Form extends React.Component{
         return(
             <form onSubmit={(ev) => this.props.onSubmit(ev)}>
 
-                    X-coords: <input className="x-coord" name="x" type="text" value={this.state.Xval} onChange={ev =>  this.props.onChange(ev)}>
+                    X-coords: <input className="x-coord" name="x" type="text" value={this.props.values.x} onChange={ev =>  this.props.onChange(ev)}>
                     </input>
 
-                    Y-coords: <input className="y-coord" name="y" type="text" value={this.state.yVal} onChange={ev => this.props.onChange(ev)}></input>
+                    Y-coords: <input className="y-coord" name="y" type="text" value={this.props.values.y} onChange={ev => this.props.onChange(ev)}></input>
 
                 <input type="submit" value="Submit" />
             </form>)
@@ -52,7 +52,7 @@ class Form extends React.Component{
     }
 
     render(){
-
+// console.log(this .props)
         return(
             <React.Fragment>
             {this.renderForm()}

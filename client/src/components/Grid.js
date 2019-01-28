@@ -663,7 +663,7 @@ class Grid extends Component {
                 <div className="utils-container">
                     <div className="driver-controls">
                     <Form
-                        values={{x:this.state.legFormX, y:this.state.legFormY}}
+                        values={{x:this.state.driverFormX, y:this.state.driverFormY}}
                         onChange={this.handleFormChange.bind(this)}
                         onSubmit={this.handleFormSubmit.bind(this)}/>
                         <Dropdown
@@ -770,16 +770,14 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleFormChange(evt) {
-
-        console.log(evt.target.name)
         if(evt.target.name === 'x'){
             this.setState({
-                legFormX: evt.target.value
+                driverFormX: evt.target.value
             })
 
         } else if(evt.target.name === 'y'){
             this.setState({
-                legFormY: evt.target.value
+                driverFormY: evt.target.value
             })
         }
 
@@ -789,17 +787,21 @@ class Grid extends Component {
 
         console.log(this.state.legFormX)
         console.log(this.state.legFormY)
-        this.setState({
-            driver:{
-                activeLegID: "AB",
-                legProgress: "33"
-            }
-        })
-        let that = this
-        setTimeout(function(){
-            that.setDriver()
-
-        })
+        // this.setState({
+        //     driver:{
+        //         activeLegID: "AB",
+        //         legProgress: "33"
+        //     }
+        // })
+        console.log(this.state)
+        if(this.state.driverFormX || this.state.driverFormY){
+            this.setDriverWithCoords()
+        }
+        // let that = this
+        // setTimeout(function(){
+        //     that.setDriver()
+        //
+        // })
     }
     _legIndex(input){
         let index
