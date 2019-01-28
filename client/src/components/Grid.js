@@ -714,7 +714,6 @@ class Grid extends Component {
     }
     handleDropdownChange(e) {
         if(e.target.name === 'driver-select'){
-            // console.log('driver')
             this.setState({
                 driverLegInput: e.target.value
             })
@@ -726,17 +725,15 @@ class Grid extends Component {
                 driverProgressInput:e.target.value
             })
         }
-        // this.setState({: });
     }
 
 
     handleDropdownSubmit(event) {
         console.log(event.target.name)
         event.preventDefault()
+
         if(event.target.name === 'driver'){
-            console.log(this.state)
             if(this.state.driverFormX || this.state.driverFormY){
-                console.log('with coords')
                 this.setDriverWithCoords()
             } else if(this.state.driverLegInput){
                 let progress
@@ -745,7 +742,6 @@ class Grid extends Component {
                 } else {
                     progress = this.state.driverProgressInput
                 }
-                console.log('p',progress)
                 this.setState({
                     driver:{
                         activeLegID: this.state.driverLegInput,
@@ -790,9 +786,10 @@ class Grid extends Component {
         //     }
         // })
         // console.log(this.state)
-        // if(this.state.driverFormX || this.state.driverFormY){
-        //     this.setDriverWithCoords()
-        // }
+        if(this.state.driverFormX || this.state.driverFormY){
+            this.setDriverWithCoords()
+            console.log(this.state)
+        }
 
         // let that = this
         // setTimeout(function(){
