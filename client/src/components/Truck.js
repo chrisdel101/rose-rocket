@@ -3,7 +3,7 @@ import React from 'react'
 // takes and array of directions and pixes for x and y
 function Truck(props){
     if(!props.coords) return null
-    // console.    log(props)
+    // console.log(props)
     let coord = props.coords
     // console.log(coord)
     let style = {

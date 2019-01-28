@@ -749,8 +749,19 @@ class Grid extends Component {
                     }
                 })
                 fetch('/driver', {
-                    method: "POST"
+                    method: "PUT",
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        activeLegID: this.state.driverLegInput,
+                        legProgress: progress
+                    })
                 })
+                .then(res=>res.json())
+                .then(res => console.log('r',res));
+
                 let that = this
                 setTimeout(function(){
                     that.setDriver()
@@ -928,11 +939,13 @@ class Grid extends Component {
         // Call our fetch function below once the component mounts
         this._callDriver()
         .then(res => {
+            console.log('r', res)
             this.setState({ driver: res.driver })
         })
         .catch(err => console.log(err));
         this._callStops()
         .then(res => {
+            console.log(res)
             this.setState({ stops: res.stops })
         })
         .catch(err => console.log(err));
