@@ -24,3 +24,6 @@ app.get('/driver', (req, res) => {
 		driver: driver
 	});
 });
+app.post('/driver', (req, res) => {
+	console.log('ping')
+});

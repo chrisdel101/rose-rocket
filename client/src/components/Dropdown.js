@@ -4,10 +4,7 @@ class Dropdown extends React.Component{
     constructor(props) {
 		super(props)
         this.state = {
-            progressInput: ''
             }
-        // this.handleChange = this.handleChange.bind(this);
-
 	}
 
     renderInput(){
@@ -20,7 +17,6 @@ class Dropdown extends React.Component{
         )
     }
     render(){
-        // console.log(this.state)
         if(this.props.legs){
             return(
                 <div className="legs-container">

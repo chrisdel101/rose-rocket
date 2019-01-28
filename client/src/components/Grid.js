@@ -748,6 +748,9 @@ class Grid extends Component {
                         legProgress: progress
                     }
                 })
+                fetch('/driver', {
+                    method: "POST"
+                })
                 let that = this
                 setTimeout(function(){
                     that.setDriver()
@@ -777,25 +780,10 @@ class Grid extends Component {
     handleFormSubmit(event) {
         event.preventDefault();
 
-        console.log(this.state.legFormX)
-        console.log(this.state.legFormY)
-        // this.setState({
-        //     driver:{
-        //         activeLegID: "AB",
-        //         legProgress: "33"
-        //     }
-        // })
-        // console.log(this.state)
         if(this.state.driverFormX || this.state.driverFormY){
             this.setDriverWithCoords()
             console.log(this.state)
         }
-
-        // let that = this
-        // setTimeout(function(){
-        //     that.setDriver()
-        //
-        // })
     }
     _legIndex(input){
         let index
@@ -928,9 +916,8 @@ class Grid extends Component {
 
             })
             that.setDriver()
-            that.colorCompleted("FG")
             console.log('state', that.state)
-            // that.colorCompleted(that.state.driverCoords.y)
+            // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
         },100)
 
