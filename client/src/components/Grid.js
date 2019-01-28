@@ -46,7 +46,7 @@ class Grid extends Component {
                 colorText: "Select a Leg to color"
             }
 		};
-        this.handleDropdownSublit = this.handleDropdownSublit.bind(this);
+        this.handleDropdownSubmit = this.handleDropdownSubmit.bind(this);
         this.handleDropdownChange = this.handleDropdownChange.bind(this);
 
 
@@ -119,7 +119,7 @@ class Grid extends Component {
             yDiff
         }
     }
-    // take amount in leg with a percent - returns num to move out total leg number
+    // take amount in leg with a percent - returns num to move out of total leg number
     _percentToCoords(diffObj, percent){
         let xNum = Math.floor((diffObj.xDiff * 0.01) * percent)
         let yNum = Math.floor((diffObj.yDiff * 0.01) * percent)
@@ -127,8 +127,18 @@ class Grid extends Component {
         return {xNum, yNum}
 
     }
+    _driverCurrentCoords(numToMove, direction){
+        if(direction === 'up'){
+            console.log('driver C', this.state.driverCoords)
+        } else if(direction === 'down'){
+
+        } else {
+            console.error("Error in get driver coords")
+            return
+        }
+    }
     // takes 3 objs - deterimine if driver moves coords up/down
-    _getDriverDirection(firstLegStopObj, lastLegStopObj, numToMoveObj ){
+    _getDriverCoords(firstLegStopObj, lastLegStopObj, numToMoveObj ){
         let x1 = firstLegStopObj.x
         let x2 = lastLegStopObj.x
         let y1 = firstLegStopObj.y
@@ -162,13 +172,14 @@ class Grid extends Component {
             yToMove
         }
     }
+    // set driver updates based on the legData and progress
     setDriver(){
         // get from api
         let positionData = this.state.driver
-        console.log(positionData)
+        // console.log(positionData)
         // get leg name
         let legName = positionData.activeLegID
-        console.log('leg name', positionData)
+        // console.log('leg name', positionData)
 
         // correlate with stops- letters to match stops needed
         let firstLetter = legName[0]
@@ -180,8 +191,8 @@ class Grid extends Component {
         let lastStopOfLeg = this.state.stops.filter(stop => {
             return stop.name === secondLetter
         })
-        // console.log('f', firstStopOfLeg)
-        // console.log('s', lastStopOfLeg)
+        console.log('f', firstStopOfLeg)
+        console.log('s', lastStopOfLeg)
         //calc abs distance bwt coords  - coords for first and last
         let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
         // console.log(diffObj)
@@ -189,9 +200,10 @@ class Grid extends Component {
         let progress = parseInt(this.state.driver.legProgress)
         // takes number of moves and percent - returns number of moves that is
         let numToMove = this._percentToCoords(diffObj, progress)
-        // console.log('num to move',numToMove)
+        console.log('num to move',numToMove)
         // takes coords for first, last and how many -returns up / down & COORDS
-        let { xToMove, yToMove } = this._getDriverDirection(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
+        let { xToMove, yToMove } = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
+        console.log(xToMove, yToMove)
         // convert the number to move to pixels
         let driverProgressinPixels = this._convertToPixels(xToMove, yToMove)
 
@@ -202,11 +214,12 @@ class Grid extends Component {
                 yDir: "bottom"
             }
         }
-        // console.log(driverProgressObj)
+        console.log(driverProgressObj)
         // coords
         let {x, y} = firstStopOfLeg[0]
         let driverLegStartcoords = {x,y}
         //
+        console.log(driverLegStartcoords)
         // let index = this._legIndex(legName)
         // let leg = this.state.holdAllLegColorArrs[index]
         // console.log('leg', leg)
@@ -658,8 +671,7 @@ class Grid extends Component {
                             type="driver"
                             utils={this.state.utils}
                             legs={this.state.legs.length ? this.state.legs : null}
-                            onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSublit}
-                            onClick={this.handleDropDownClick.bind(this)}
+                            onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSubmit}
                             />
 
                     </div>
@@ -669,25 +681,25 @@ class Grid extends Component {
                     type="color"
                     utils={this.state.utils}
                     legs={this.state.legs.length ? this.state.legs : null}
-                    onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSublit}
+                    onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSubmit}
                     />
                 </div>
 
             </main>
         )
     }
-    handleDropDownClick(e){
-        e.preventDefault()
-        this.setState({
-            driverFormX: '',
-            driverFormY: ''
-        })
-        let that = this
-        setTimeout(function(){
-            console.log(that.state.driverFormX)
-            console.log(that.state.driverFormY)
-        })
-    }
+    // handleDropDownClick(e){
+    //     e.preventDefault()
+    //     this.setState({
+    //         driverFormX: '',
+    //         driverFormY: ''
+    //     })
+    //     let that = this
+    //     setTimeout(function(){
+    //         console.log(that.state.driverFormX)
+    //         console.log(that.state.driverFormY)
+    //     })
+    // }
     handleDriverLegChange(){
 
     }
@@ -719,24 +731,40 @@ class Grid extends Component {
         }
         // this.setState({: });
     }
-    handleDropdownSublit(event) {
+    resetTruck(){
+        this.setState({
+            finalDriverMoveObj: {
+                directions: {
+                    xDir: "left",
+                    yDir: "bottom"
+                },
+                pixels:{
+                    moveX: 0,
+                    moveY: 0
+                }
+            }
+        })
+    }
+    setDriverWithCoords(){
+        // reset to zero
+        this.resetTruck()
+        // get pixels to new location
+        let coords = this._setStopCoords('driver',
+        this.state.driverFormX, this.state.driverFormY)
+        this.setState({
+            finalDriverMoveObj: coords
+        })
+    }
+    handleDropdownSubmit(event) {
         event.preventDefault()
         if(event.target.name === 'driver'){
             console.log(this.state)
-            this.setState({
-                driver:{
-                    activeLegID: this.state.driverLegInput,
-                    legProgress: this.state.driverProgressInput
-                }
-            })
-            let that = this
-            setTimeout(function(){
-                that.setDriver()
-            })
+            if(this.state.driverFormX || this.state.driverFormY){
+                this.setDriverWithCoords()
+            }
         } else if(event.target.name === 'color'){
 
         }
-        console.log(event.target.name)
         // this.colorLeg(this.state.value)
 
     }
@@ -834,13 +862,14 @@ class Grid extends Component {
     }
 
     // set coords in pxs of plots
-    _setStopCoords(type){
+    _setStopCoords(type,x,y){
+        console.log(type)
         let that = this
         let coordsArr = []
 
-        setTimeout(function(){
             // filter out undefined
             if(type === 'stop'){
+                setTimeout(function(){
                 if(that.state.stops.length > 0){
                     that.state.stops.forEach(stop => {
                         // console.log(stop.x, stop.y)
@@ -861,8 +890,19 @@ class Grid extends Component {
                 that.setState({
                     stopsDirsArr: coordsArr
                 })
-            } else if(type === 'truck'){
-
+            },1050)
+            } else if(type === 'driver'){
+                let pixels = that._convertToPixels(
+                    x, y
+                )
+                let coords = {
+                    pixels: pixels,
+                    directions: {
+                        xDir: "left",
+                        yDir: "bottom"
+                    }
+                }
+                return coords
                 // let pixels = that._convertToPixels(that.state.driverLegStart.x, that.state.driverLegStart.y)
                 // let coords = {
                 //     pixels: pixels,
@@ -880,7 +920,6 @@ class Grid extends Component {
             }
 
 
-        },1050)
     }
     componentDidMount() {
         let that = this
@@ -903,7 +942,6 @@ class Grid extends Component {
 
         // call to set stops and truck
         this._setStopCoords('stop')
-        this._setStopCoords('truck')
         // Call our fetch function below once the component mounts
         this._callDriver()
         .then(res => {

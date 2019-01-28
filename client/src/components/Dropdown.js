@@ -31,7 +31,7 @@ class Dropdown extends React.Component{
     //     return null
     // }
     renderInput(){
-        console.log(this.props)
+        // console.log(this.props)
         return(
             <div className="progress-input-wrapper">
                  X Coords: <input className="progress-input" name="driverXinput" type="text" value={this.props.values.x} onChange={ev =>  this.props.onChange(ev)}>
