@@ -611,7 +611,14 @@ class Grid extends Component {
             // console.log(this.state.finalStopColorArr)
         // on click push to child state
     }
-    // set driver with coords in form - rather than json data
+    colorCompletedStops(){
+            console.log(this.state.holdingCompletedArrs)
+            let merged = [].concat.apply([], this.state.holdingCompletedArrs);
+            console.log(merged)
+            this.setState({
+                finalCompletedColorsArr: merged
+            })
+    }
     setDriverWithCoords(){
         // reset to zero
         this._resetTruck()
@@ -622,9 +629,17 @@ class Grid extends Component {
             finalDriverMoveObj: coords
         })
     }
-    //update driver data when setting pos with coords form
     upsateDriverPostionWcoords(){
-        
+        //get arr of tuples of coords
+        let temp = {x: 23, y: 23}
+        var tuples = []
+        for(var i = 0; i < this.state.stops.length; i += 2){
+        	let slice = arr.slice(i,i+2)
+        	store.push(slice)
+        }
+        //check if that matches any stops exactly
+
+        //check what closest is the
     }
     _resetTruck(){
         this.setState({
@@ -672,6 +687,7 @@ class Grid extends Component {
                             />
 
                     </div>
+                <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
                 <Dropdown
                     type="color"
                     utils={this.state.utils}
