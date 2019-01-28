@@ -33,11 +33,6 @@ class Form extends React.Component{
     //     return null
     // }
     renderForm(){
-        // if(this.props.values.x || this.props.values.y){
-        //     this.updateState()
-        //     return
-        // }
-// onChange={(ev) => this.props.onChange(ev.target.value)}>
         return(
             <form onSubmit={(ev) => this.props.onSubmit(ev)}>
 

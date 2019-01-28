@@ -9,36 +9,12 @@ class Dropdown extends React.Component{
         // this.handleChange = this.handleChange.bind(this);
 
 	}
-    // handleChange(event) {
-    //     console.log(event)
-    //     this.setState({value: event.target.value});
-    // }
-    // handleSelectSubmit(event) {
-    //     alert('Your favorite flavor is: ' + this.state.value);
-    //     event.preventDefault();
-    // }
-    // static getDerivedStateFromProps(props) {
-    //     if(props.values){
-    //         if(props.values.x || props.values.y){
-    //             console.log(props.values)
-    //             return {
-    //                 xVal: props.values.x,
-    //                 yVal: props.values.y
-    //             }
-    //         }
-    //         return null
-    //     }
-    //     return null
-    // }
+
     renderInput(){
         // console.log(this.props)
         return(
             <div className="progress-input-wrapper">
-                 X Coords: <input className="progress-input" name="driverXinput" type="text" value={this.props.values.x} onChange={ev =>  this.props.onChange(ev)}>
-                </input>
-                 Y Coords: <input className="progress-input" name="driverYinput" type="text" value={this.props.values.y} onChange={ev =>  this.props.onChange(ev)}>
-                </input>
-                Progress:  <input className="progress-input" name="progressInput" type="text" value={this.props.xVal} onChange={ev =>  this.props.onChange(ev)}>
+                Progress:  <input className="progress-input" name="progressInput" type="text" value={this.props.driverProgressInput} onChange={ev =>  this.props.onChange(ev)}>
                 </input>
             </div>
         )

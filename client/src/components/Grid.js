@@ -176,7 +176,7 @@ class Grid extends Component {
     setDriver(){
         // get from api
         let positionData = this.state.driver
-        // console.log(positionData)
+        console.log(positionData)
         // get leg name
         let legName = positionData.activeLegID
         // console.log('leg name', positionData)
@@ -643,6 +643,30 @@ class Grid extends Component {
                 finalCompletedColorsArr: merged
             })
     }
+    setDriverWithCoords(){
+        // reset to zero
+        this._resetTruck()
+        // get pixels to new location
+        let coords = this._setStopCoords('driver',
+        this.state.driverFormX, this.state.driverFormY)
+        this.setState({
+            finalDriverMoveObj: coords
+        })
+    }
+    _resetTruck(){
+        this.setState({
+            finalDriverMoveObj: {
+                directions: {
+                    xDir: "left",
+                    yDir: "bottom"
+                },
+                pixels:{
+                    moveX: 0,
+                    moveY: 0
+                }
+            }
+        })
+    }
     render() {
     	return(
             <main className="page-container">
@@ -667,7 +691,7 @@ class Grid extends Component {
                         onChange={this.handleFormChange.bind(this)}
                         onSubmit={this.handleFormSubmit.bind(this)}/>
                         <Dropdown
-                            values={{x:this.state.driverFormX,y:this.state.driverFormY}}
+                            values={{x:this.state.driverFormX,y:this.state.driverFormY, driverProgressInput: this.state.driverProgressInput}}
                             type="driver"
                             utils={this.state.utils}
                             legs={this.state.legs.length ? this.state.legs : null}
@@ -688,42 +712,15 @@ class Grid extends Component {
             </main>
         )
     }
-    // handleDropDownClick(e){
-    //     e.preventDefault()
-    //     this.setState({
-    //         driverFormX: '',
-    //         driverFormY: ''
-    //     })
-    //     let that = this
-    //     setTimeout(function(){
-    //         console.log(that.state.driverFormX)
-    //         console.log(that.state.driverFormY)
-    //     })
-    // }
-    handleDriverLegChange(){
-
-    }
-    handleDriverLegSubmit(){
-
-    }
     handleDropdownChange(e) {
         if(e.target.name === 'driver-select'){
+            // console.log('driver')
             this.setState({
                 driverLegInput: e.target.value
             })
         } else if(e.target.name === 'color'){
             // console.log(e.target.value)
             // this.setState({
-        } else if(e.target.name === 'driverXinput'){
-            // console.log('x', e.target.value)
-            this.setState({
-                driverFormX: e.target.value
-            })
-        } else if(e.target.name === 'driverYinput') {
-            // console.log('y', e.target.value)
-            this.setState({
-                driverFormY:e.target.value
-            })
         } else if(e.target.name === 'progressInput') {
             this.setState({
                 driverProgressInput:e.target.value
@@ -731,36 +728,35 @@ class Grid extends Component {
         }
         // this.setState({: });
     }
-    resetTruck(){
-        this.setState({
-            finalDriverMoveObj: {
-                directions: {
-                    xDir: "left",
-                    yDir: "bottom"
-                },
-                pixels:{
-                    moveX: 0,
-                    moveY: 0
-                }
-            }
-        })
-    }
-    setDriverWithCoords(){
-        // reset to zero
-        this.resetTruck()
-        // get pixels to new location
-        let coords = this._setStopCoords('driver',
-        this.state.driverFormX, this.state.driverFormY)
-        this.setState({
-            finalDriverMoveObj: coords
-        })
-    }
+
+
     handleDropdownSubmit(event) {
+        console.log(event.target.name)
         event.preventDefault()
         if(event.target.name === 'driver'){
             console.log(this.state)
             if(this.state.driverFormX || this.state.driverFormY){
+                console.log('with coords')
                 this.setDriverWithCoords()
+            } else if(this.state.driverLegInput){
+                let progress
+                if(!this.state.driverProgressInput){
+                    progress = 0
+                } else {
+                    progress = this.state.driverProgressInput
+                }
+                console.log('p',progress)
+                this.setState({
+                    driver:{
+                        activeLegID: this.state.driverLegInput,
+                        legProgress: progress
+                    }
+                })
+                let that = this
+                setTimeout(function(){
+                    that.setDriver()
+
+                })
             }
         } else if(event.target.name === 'color'){
 
@@ -793,10 +789,11 @@ class Grid extends Component {
         //         legProgress: "33"
         //     }
         // })
-        console.log(this.state)
-        if(this.state.driverFormX || this.state.driverFormY){
-            this.setDriverWithCoords()
-        }
+        // console.log(this.state)
+        // if(this.state.driverFormX || this.state.driverFormY){
+        //     this.setDriverWithCoords()
+        // }
+
         // let that = this
         // setTimeout(function(){
         //     that.setDriver()
