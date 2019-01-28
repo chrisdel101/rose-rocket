@@ -174,7 +174,6 @@ class Grid extends Component {
     }
     // set driver updates based on the legData and progress
     setDriver(){
-        console.log('fired')
         // get from api
         let positionData = this.state.driver
         console.log(positionData)
@@ -201,10 +200,10 @@ class Grid extends Component {
         let progress = parseInt(this.state.driver.legProgress)
         // takes number of moves and percent - returns number of moves that is
         let numToMove = this._percentToCoords(diffObj, progress)
-        console.log('num to move',numToMove)
+        // console.log('num to move',numToMove)
         // takes coords for first, last and how many -returns up / down & COORDS
         let { xToMove, yToMove } = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
-        console.log(xToMove, yToMove)
+        // console.log(xToMove, yToMove)
         // convert the number to move to pixels
         let driverProgressinPixels = this._convertToPixels(xToMove, yToMove)
 
@@ -215,12 +214,12 @@ class Grid extends Component {
                 yDir: "bottom"
             }
         }
-        console.log(driverProgressObj)
+        // console.log(driverProgressObj)
         // coords
         let {x, y} = firstStopOfLeg[0]
         let driverLegStartcoords = {x,y}
         //
-        console.log(driverLegStartcoords)
+        // console.log(driverLegStartcoords)
         // let index = this._legIndex(legName)
         // let leg = this.state.holdAllLegColorArrs[index]
         // console.log('leg', leg)
@@ -565,7 +564,7 @@ class Grid extends Component {
                 holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
 
             })
-            console.log('all', this.state.holdAllLegColorArrs)
+            // console.log('all', this.state.holdAllLegColorArrs)
             // console.log('end of run x', this.state.previousLegX)
             // console.log('end of run y', this.state.previousLegY)
         } else if(type === 'partial'){
@@ -612,14 +611,7 @@ class Grid extends Component {
             // console.log(this.state.finalStopColorArr)
         // on click push to child state
     }
-    colorCompletedStops(){
-            console.log(this.state.holdingCompletedArrs)
-            let merged = [].concat.apply([], this.state.holdingCompletedArrs);
-            console.log(merged)
-            this.setState({
-                finalCompletedColorsArr: merged
-            })
-    }
+    // set driver with coords in form - rather than json data
     setDriverWithCoords(){
         // reset to zero
         this._resetTruck()
@@ -629,6 +621,10 @@ class Grid extends Component {
         this.setState({
             finalDriverMoveObj: coords
         })
+    }
+    //update driver data when setting pos with coords form
+    upsateDriverPostionWcoords(){
+        
     }
     _resetTruck(){
         this.setState({
@@ -676,7 +672,6 @@ class Grid extends Component {
                             />
 
                     </div>
-                <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
                 <Dropdown
                     type="color"
                     utils={this.state.utils}
