@@ -174,6 +174,7 @@ class Grid extends Component {
     }
     // set driver updates based on the legData and progress
     setDriver(){
+        console.log('fired')
         // get from api
         let positionData = this.state.driver
         console.log(positionData)
@@ -689,16 +690,11 @@ class Grid extends Component {
     }
     handleDropdownChange(e) {
         if(e.target.name === 'driver-select'){
-            this.setState({
-                driverLegInput: e.target.value
-            })
-        } else if(e.target.name === 'color'){
-            // console.log(e.target.value)
-            // this.setState({
+            this.setState({driverLegInput: e.target.value})
+        } else if(e.target.name === 'color-select'){
+            this.setState({value: e.target  .value});
         } else if(e.target.name === 'progressInput') {
-            this.setState({
-                driverProgressInput:e.target.value
-            })
+            this.setState({driverProgressInput:e.target.value})
         }
     }
 
@@ -741,12 +737,19 @@ class Grid extends Component {
 
                 let that = this
                 setTimeout(function(){
+                    console.log('driver func')
                     that.setDriver()
+                    that.colorCompleted(that.state.driver.activeLegID)
 
-                })
+                },100)
             }
         } else if(event.target.name === 'color'){
-
+            console.log(this.state.holdingCompletedArrs)
+            let merged = [].concat.apply([], this.state.holdingCompletedArrs);
+            console.log(merged)
+            this.setState({
+                finalCompletedColorsArr: merged
+            })
         }
         // this.colorLeg(this.state.value)
 
