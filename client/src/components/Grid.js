@@ -983,6 +983,7 @@ class Grid extends Component {
         setTimeout(function(){
             //UPDATE DRIVER DATA
             that.updateDriverData()
+            that.colorCompleted(that.state.driver.activeLegID)
         },100)
     }
     _legIndex(input){
