@@ -8,10 +8,10 @@ class Switch extends React.Component{
         this.state = {}
     }
     render(){
-        console.log(this.props  )
+        console.log(this.props)
         return(
             <div className="button-switch">
-                    <Button className={this.props.isActive.button1 ? "button" : "butto disabled"} name="coords" size="small" variant="outlined" onClick={(ev) => this.props.onClick(ev)}>
+                    <Button className={this.props.isActive.button1 ? "button" : "button disabled"} name="coords" size="small" variant="outlined" onClick={(ev) => this.props.onClick(ev)}>
                         Coords
                     </Button>
                     <Button className={this.props.isActive.button2 ? "button" : "button disabled"} name="progress" size="small" variant="outlined" onClick={(ev) => this.props.onClick(ev)}>

@@ -882,10 +882,23 @@ class Grid extends Component {
         )
     }
     handleSwitchClick(e){
+        let isActive = Object.assign({}, this.state.isActive)
         if(e.target.name === 'coords'){
-
+            if(!this.state.isActive.button1){
+                isActive.button1 = true
+                isActive.button2 = false
+                this.setState({
+                    isActive: isActive
+                })
+            }
         } else if(e.target.name === 'progress'){
-
+            if(!this.state.isActive.button2){
+                isActive.button1 = false
+                isActive.button2 = true
+                this.setState({
+                    isActive: isActive
+                })
+            }
         } else {
             console.error("error on button click")
         }
