@@ -673,9 +673,14 @@ class Grid extends Component {
                 )
             ){
                 return coord
-            } else {
-                console.error('something else idiot')
-                return 
+            } else if(
+                //coords are exact match
+                (
+                    coords.x === this.state.stops[index].x && coords.y === this.state.stops[index].y
+                )
+
+            ){
+                return coord
             }
         })
         return firstStop
@@ -734,6 +739,8 @@ class Grid extends Component {
                 console.error("An error occured in driver percent")
             }
         }
+        console.log('x%',xPercent)
+        console.log('y%',yPercent)
         if(xPercent >= yPercent){
             return finalPercent = xPercent * 100
         } else if(xPercent < yPercent){
