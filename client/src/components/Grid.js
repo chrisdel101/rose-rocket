@@ -191,7 +191,7 @@ class Grid extends Component {
         let lastStopOfLeg = this.state.stops.filter(stop => {
             return stop.name === secondLetter
         })
-        // console.log('f', firstStopOfLeg)
+        console.log('f', firstStopOfLeg)
         // console.log('s', lastStopOfLeg)
         //calc abs distance bwt coords  - coords for first and last
         let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
@@ -611,6 +611,7 @@ class Grid extends Component {
             // console.log(this.state.finalStopColorArr)
         // on click push to child state
     }
+    // on click pass props to chilc
     colorCompletedStops(){
             console.log(this.state.holdingCompletedArrs)
             let merged = [].concat.apply([], this.state.holdingCompletedArrs);
@@ -619,6 +620,7 @@ class Grid extends Component {
                 finalCompletedColorsArr: merged
             })
     }
+    // on click set driver with coords and send to child
     setDriverWithCoords(){
         // reset to zero
         this._resetTruck()
@@ -630,7 +632,7 @@ class Grid extends Component {
         })
     }
     // takes driver coords and finds the leg start
-    getLegStartfromCoords(){
+    _getLegStartfromCoords(){
         let coords = this.state.driverCoords
         // if x & y is between the stops
         let firstStop = this.state.stops.filter((coord, index) => {
@@ -672,6 +674,88 @@ class Grid extends Component {
             }
         })
         return firstStop
+    }
+    // takes first stop obj, driver coords obj, and abs diff of a single stops axis
+    _findPercentFromDriverCoords(firstStop, driverCoords, diff){
+        let x1 = parseInt(firstStop.x)
+        let y1 = parseInt(firstStop.y)
+        let x2 = parseInt(driverCoords.x)
+        let y2 = parseInt(driverCoords.y)
+        console.log('1', x1)
+        console.log('2', y1)
+        console.log('3', x2)
+        console.log('4', y2)
+        let xDiff
+        let yDiff
+        console.log('diff', diff)
+        // find number moved from last stop
+        if(x1 < x2){
+            // console.log(firstStopOfLeg[0].x)
+            // console.log(lastStopOfLeg[0].x)
+            xDiff = x1 + x2
+            // console.log(xToMove)
+        } else if(x1 >= x2){
+            yDiff = x1 - x2
+        } else {
+            console.error("error in driver movement")
+        }
+        if(y1 < y2){
+            xDiff = y1 + y2
+        } else if(y1 >= y2){
+            yDiff = y1 - y2
+        } else {
+            console.error("error in driver movement")
+        }
+        // divide number moved so far in leg by total number in leg
+        let xPercent
+        let yPercent
+        if(xDiff){
+            console.log('xdiff', xDiff)
+            xPercent = xDiff / diff
+
+        }
+        if(yDiff){
+            console.log('yDiff',yDiff)
+            yPercent = yDiff / diff
+        }
+        let finalPercent
+        // if one is missing use the other alone
+        if(!xPercent || !yPercent){
+            if(xPercent){
+                return finalPercent = xPercent * 100
+            } else if(yPercent){
+                return finalPercent = yPercent * 100
+            } else {
+                console.error("An error occured in driver percent")
+            }
+        }
+        if(xPercent >= yPercent){
+            return finalPercent = xPercent * 100
+        } else if(xPercent < yPercent){
+            return finalPercent = yPercent * 100
+        } else {
+            console.error("An error occured in driver percent")
+        }
+    }
+    updateDriverData(){
+        let firstStop = this._getLegStartfromCoords()[0]
+        let firstStopIndex = this.state.stops.indexOf(firstStop)
+        let secondStop = this.state.stops[firstStopIndex+1]
+        let diff = this._absDiff(firstStop, secondStop)
+
+        // run once for x and for y
+        let percent = this._findPercentFromDriverCoords(firstStop, this.state.driverCoords, diff.yDiff)
+        console.log(firstStop.name)
+        let currentLeg = this.state.legs.filter(leg => {
+            return leg.startStop === firstStop.name
+        })
+        let newPosition = {
+            activeLegID: currentLeg[0].legID,
+            legProgress: percent
+        }
+        this.setState({
+            driver: newPosition
+        })
     }
     _resetTruck(){
         this.setState({
@@ -954,7 +1038,7 @@ class Grid extends Component {
             console.log('state', that.state)
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
-            that.upsateDriverPostionWcoords()
+            that.updateDriverData()
         },100)
 
 
