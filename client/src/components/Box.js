@@ -1,5 +1,4 @@
 import React from 'react'
-import MultiRef from 'react-multi-ref';
 
 
 // takes the num of boxes/cells to be produced

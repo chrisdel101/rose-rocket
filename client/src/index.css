@@ -81,3 +81,12 @@ code {
 	position: absolute;
 	bottom: 0;
 }
+
+.button.disabled {
+	background-color: rgba(0, 0, 0, 0.12);
+	color: rgba(0, 0, 0, 0.12);
+}
+
+.button-switch span {
+	pointer-events: none !important;
+}

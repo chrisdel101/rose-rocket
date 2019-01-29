@@ -1,17 +1,21 @@
 import React, { Component } from "react";
 import { Manager, Reference, Popper, Arrow } from "react-popper";
-
 import "../App.css";
 import Box from './Box'
 import Stop from './Stop'
 import Truck from './Truck'
 import Dropdown from './Dropdown'
 import Form from './Form'
+import Switch from './Switch'
 
 class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+            isActive:{
+                button1: true,
+                button2: false
+            },
             legs: [],
 			stops: [],
             legToColorID:"",
@@ -848,7 +852,9 @@ class Grid extends Component {
                 </div>
                 <div className="utils-container">
                     <div className="driver-controls">
-                        <input type="radio" name="postion-select" value={this.state.positionSelect} checked={this.state.positionSelect} onChange={this.handleFormChange.bind(this)}/>
+                        <Switch
+                            isActive={this.state.isActive}
+                            onClick={this.handleSwitchClick.bind(this)}/>
                         <Form
                             values={{x:this.state.driverFormX, y:this.state.driverFormY}}
                             onChange={this.handleFormChange.bind(this)}
@@ -874,6 +880,15 @@ class Grid extends Component {
 
             </main>
         )
+    }
+    handleSwitchClick(e){
+        if(e.target.name === 'coords'){
+
+        } else if(e.target.name === 'progress'){
+
+        } else {
+            console.error("error on button click")
+        }
     }
     handleDropdownChange(e) {
         if(e.target.name === 'driver-select'){
