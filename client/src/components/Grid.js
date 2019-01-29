@@ -14,8 +14,7 @@ class Grid extends Component {
 		this.state = {
             legs: [],
 			stops: [],
-            legFormX:"",
-            legFormY:"",
+            legToColorID:"",
             driverFormX:"",
             driverFormY:"",
             driverLegInput:"",
@@ -32,7 +31,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 100}, (v, i) => i),
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -692,7 +691,7 @@ class Grid extends Component {
                 return null
             }
         })
-        console.log('return firstStop', firstStop)
+            console.log('return firstStop', firstStop)
         return firstStop
     }
     // takes first stop obj, driver coords obj, and abs diff of a single stops axis
@@ -713,9 +712,9 @@ class Grid extends Component {
             console.log('run 1')
             // console.log(firstStopOfLeg[0].x)
             // console.log(lastStopOfLeg[0].x)
-            xDiff = x1 + x2
+            xDiff = x2 - x1
             // console.log(xToMove)
-        } else if(x1 >= x2){
+        } else if(x1 > x2){
             // console.log('run 2')
             xDiff = x1 - x2
         }  else if(x1 === x2){
@@ -725,7 +724,7 @@ class Grid extends Component {
         }
         if(y1 < y2){
             // console.log('run 1')
-            xDiff = y1 + y2
+            yDiff = y2 - y1
         } else if(y1 > y2){
             // console.log('run 2')
             yDiff = y1 - y2
@@ -755,12 +754,16 @@ class Grid extends Component {
             yPercent = yDiff / diff
         }
         let finalPercent
+        console.log(xPercent)
+        console.log(yPercent)
         // if one val is missing use the other alone
         if(!xPercent || !yPercent){
             if(xPercent){
-                return finalPercent = xPercent * 100
+                console.log('final x', finalPercent)
+                return finalPercent = xPercent * 1000
             } else if(yPercent){
-                return finalPercent = yPercent * 100
+                console.log('final y', finalPercent)
+                return finalPercent = yPercent * 1000
             }
         }
         // it both are zero then zero percent
@@ -781,10 +784,11 @@ class Grid extends Component {
     // takes updated driver coords from state and sets new progress and leg
     updateDriverData(){
         let firstStop = this._getLegStartfromCoords()[0]
-        console.log('fs', firstStop)
+        if(!firstStop) return 'Not a stop on map'
         let firstStopIndex = this.state.stops.indexOf(firstStop)
         let secondStop = this.state.stops[firstStopIndex+1]
         let diff = this._absDiff(firstStop, secondStop)
+
 
         // run once for x and for y
         let percent = this._findPercentFromDriverCoords(firstStop, this.state.driverCoords, diff.yDiff)
@@ -864,7 +868,11 @@ class Grid extends Component {
         if(e.target.name === 'driver-select'){
             this.setState({driverLegInput: e.target.value})
         } else if(e.target.name === 'color-select'){
-            this.setState({value: e.target  .value});
+            console.log('color')
+            this.setState({
+                value: e.target.value,
+                legToColorID: e.target.value
+            })
         } else if(e.target.name === 'progressInput') {
             this.setState({driverProgressInput:e.target.value})
         }
@@ -914,12 +922,14 @@ class Grid extends Component {
                 },100)
             }
         } else if(event.target.name === 'color'){
-            console.log(this.state.holdingCompletedArrs)
-            let merged = [].concat.apply([], this.state.holdingCompletedArrs);
-            console.log(merged)
-            this.setState({
-                finalCompletedColorsArr: merged
-            })
+            this.colorLeg(this.state.legToColorID)
+            // console.log(this.state.holdingCompletedArrs)
+            // let merged = [].concat.apply([], this.state.holdingCompletedArrs);
+            // console.log(merged)
+            // this.setState({
+            //     finalCompletedColorsArr: merged
+            // })
+
         }
         // this.colorLeg(this.state.value)
 
@@ -933,7 +943,8 @@ class Grid extends Component {
 
         } else if(evt.target.name === 'y'){
             this.setState({
-                driverFormY: evt.target.value
+                driverFormY: evt.target.value,
+
             })
         }
 
