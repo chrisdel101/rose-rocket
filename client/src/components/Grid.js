@@ -638,51 +638,61 @@ class Grid extends Component {
         console.log('driver coords', coords)
         // if x & y is between the stops
         let firstStop = this.state.stops.filter((coord, index) => {
-            // console.log('stop1', this.state.stops[index])
-            // console.log('stop2', this.state.stops[index+1])
-            // console.log('x',coords.x)
-            // console.log('y', coords.y)
-        	if(this.state.stops[index+1] === undefined) return
+            let stop1 = this.state.stops[index  ]
+            let stop2 = this.state.stops[index + 1]
+            console.log('stop1', stop1)
+            console.log('stop2', stop2)
+            console.log('x',coords.x)
+            console.log('y', coords.y)
+        	if(stop2 === undefined) return
         	if( //x/y are both btw
                 (
-                    ((coords.y > this.state.stops[index].y && coords.y < this.state.stops[index+1].y)||
-                    (coords.y < this.state.stops[index].y && coords.y > this.state.stops[index+1].y))
-                    &&
-                    (coords.x > this.state.stops[index].x && coords.x < this.state.stops[index+1].x) ||
-                    (coords.x < this.state.stops[index].x && coords.x > this.state.stops[index+1].x)
+                    ((coords.y > stop1.y && coords.y < stop2.y) ||
+                    (coords.y < stop1.y && coords.y > stop2.y)) &&
+                    ((coords.x > stop1.x && coords.x < stop2.x) ||
+                    (coords.x < stop1.x && coords.x > stop2.x))
                 )
             ){
+                console.log('both are btw')
                     return coord
             } else if(
                 // y is bwn and x is equal
                 (
-                    ((coords.y > this.state.stops[index].y && coords.y < this.state.stops[index+1].y) ||
-                    (coords.y < this.state.stops[index].y && coords.y > this.state.stops[index+1].y))
+                    ((coords.y > stop1.y && coords.y < stop2.y) ||
+                    (coords.y < stop1.y && coords.y > stop2.y))
                     &&
-                    (coords.x === this.state.stops[index].x && coords.x === this.state.stops[index+1].x)
+                    (coords.x === stop1.x && coords.x === stop2.x)
                 )
             ){
+                console.log('y btw. x equal' )
                     return coord
             } else if(
                 // x is bwn and y is equal
                 (
-                    ((coords.x > this.state.stops[index].x && coords.x < this.state.stops[index+1].x) ||
-                    (coords.x < this.state.stops[index].x && coords.x > this.state.stops[index+1].x))
+                    ((coords.x > stop1.x && coords.x < stop2.x) ||
+                    (coords.x < stop1.x && coords.x > stop2.x))
                     &&
-                    (coords.y === this.state.stops[index].y && coords.y === this.state.stops[index+1].y)
+                    (coords.y === stop1.y && coords.y === stop2.y)
                 )
             ){
+                console.log('x btw. y equal' )
+
                 return coord
             } else if(
                 //coords are exact match
                 (
-                    coords.x === this.state.stops[index].x && coords.y === this.state.stops[index].y
+                    coords.x === stop1.x && coords.y === stop1.y
                 )
 
             ){
+                console.log('both equal')
                 return coord
+            } else {
+                // not within the stops
+                return null
             }
         })
+        console.log('return firstStop', firstStop)
         return firstStop
     }
     // takes first stop obj, driver coords obj, and abs diff of a single stops axis
@@ -700,45 +710,64 @@ class Grid extends Component {
         console.log('diff', diff)
         // find number moved from last stop
         if(x1 < x2){
+            console.log('run 1')
             // console.log(firstStopOfLeg[0].x)
             // console.log(lastStopOfLeg[0].x)
             xDiff = x1 + x2
             // console.log(xToMove)
         } else if(x1 >= x2){
-            yDiff = x1 - x2
+            // console.log('run 2')
+            xDiff = x1 - x2
+        }  else if(x1 === x2){
+            xDiff = 0
         } else {
-            console.error("error in driver movement")
+            // console.error("error in driver movement")
         }
         if(y1 < y2){
+            // console.log('run 1')
             xDiff = y1 + y2
-        } else if(y1 >= y2){
+        } else if(y1 > y2){
+            // console.log('run 2')
             yDiff = y1 - y2
+        } else if(y1 === y2){
+            yDiff = 0
         } else {
             console.error("error in driver movement")
         }
+        console.log('xDiff', xDiff)
+        console.log('yDiff', yDiff)
         // divide number moved so far in leg by total number in leg
         let xPercent
         let yPercent
+        // check for zero vals
+        if(xDiff === 0){
+            xPercent = 0
+        }
+        if(yDiff === 0){
+            yPercent = 0
+        }
         if(xDiff){
             console.log('xdiff', xDiff)
             xPercent = xDiff / diff
-
         }
         if(yDiff){
             console.log('yDiff',yDiff)
             yPercent = yDiff / diff
         }
         let finalPercent
-        // if one is missing use the other alone
+        // if one val is missing use the other alone
         if(!xPercent || !yPercent){
             if(xPercent){
                 return finalPercent = xPercent * 100
             } else if(yPercent){
                 return finalPercent = yPercent * 100
-            } else {
-                console.error("An error occured in driver percent")
             }
         }
+        // it both are zero then zero percent
+        if(xPercent === 0 && yPercent === 0){
+            return finalPercent = 0
+        }
+
         console.log('x%',xPercent)
         console.log('y%',yPercent)
         if(xPercent >= yPercent){
