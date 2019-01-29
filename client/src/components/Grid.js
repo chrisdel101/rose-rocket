@@ -22,6 +22,7 @@ class Grid extends Component {
             driver: "",
             driverLegStart: "",
             driverCoords: "",
+            positionSelect: "coords",
             startingCellNumAll: 39800,
             startingCellNumPartial: "",
             previousLegEndCell:0,
@@ -31,7 +32,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 100}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -847,10 +848,11 @@ class Grid extends Component {
                 </div>
                 <div className="utils-container">
                     <div className="driver-controls">
-                    <Form
-                        values={{x:this.state.driverFormX, y:this.state.driverFormY}}
-                        onChange={this.handleFormChange.bind(this)}
-                        onSubmit={this.handleFormSubmit.bind(this)}/>
+                        <input type="radio" name="postion-select" value={this.state.positionSelect} checked={this.state.positionSelect} onChange={this.handleFormChange.bind(this)}/>
+                        <Form
+                            values={{x:this.state.driverFormX, y:this.state.driverFormY}}
+                            onChange={this.handleFormChange.bind(this)}
+                            onSubmit={this.handleFormSubmit.bind(this)}/>
                         <Dropdown
                             values={{x:this.state.driverFormX,y:this.state.driverFormY, driverProgressInput: this.state.driverProgressInput}}
                             type="driver"
@@ -861,6 +863,7 @@ class Grid extends Component {
 
                     </div>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
+                <button onClick={this.colorAllStops.bind(this)}>Color All</button>
                 <Dropdown
                     type="color"
                     utils={this.state.utils}
@@ -954,6 +957,8 @@ class Grid extends Component {
                 driverFormY: evt.target.value,
 
             })
+        } else if(evt.target.name === 'position-select'){
+
         }
 
     }
