@@ -627,6 +627,7 @@ class Grid extends Component {
         // get pixels to new location
         let coords = this._setStopCoords('driver',
         this.state.driverFormX, this.state.driverFormY)
+
         this.setState({
             finalDriverMoveObj: coords
         })
@@ -737,6 +738,7 @@ class Grid extends Component {
             console.error("An error occured in driver percent")
         }
     }
+    // takes updated driver coords from state and sets new progress and leg
     updateDriverData(){
         let firstStop = this._getLegStartfromCoords()[0]
         let firstStopIndex = this.state.stops.indexOf(firstStop)
@@ -751,11 +753,12 @@ class Grid extends Component {
         })
         let newPosition = {
             activeLegID: currentLeg[0].legID,
-            legProgress: percent
+            legProgress: percent.toString()
         }
         this.setState({
             driver: newPosition
         })
+        console.log('new driver state', this.state.driver)
     }
     _resetTruck(){
         this.setState({
@@ -831,9 +834,7 @@ class Grid extends Component {
         event.preventDefault()
 
         if(event.target.name === 'driver'){
-            if(this.state.driverFormX || this.state.driverFormY){
-                this.setDriverWithCoords()
-            } else if(this.state.driverLegInput){
+            if(this.state.driverLegInput){
                 let progress
                 if(!this.state.driverProgressInput){
                     progress = 0
@@ -897,11 +898,33 @@ class Grid extends Component {
     }
     handleFormSubmit(event) {
         event.preventDefault();
-
+        // update coords
+        //set driver to those
+        //update data
         if(this.state.driverFormX || this.state.driverFormY){
-            this.setDriverWithCoords()
-            console.log(this.state)
+            if(this.state.driverFormX){
+                let val = parseInt(this.state.driverFormX)
+                this.setState(prevState => ({
+                driverCoords: {
+                    ...prevState.y,
+                    val
+                }
+                }))
+            }
+            if(this.state.driverFormY){
+                let val = parseInt(this.state.driverFormY)
+                this.setState(prevState => ({
+                driverCoords: {
+                    ...prevState.y,
+                    val
+                }
+                }))
+            }
         }
+        let that = this
+        setTimeout(function(){
+            console.log(that.state)
+        })
     }
     _legIndex(input){
         let index
@@ -1038,7 +1061,6 @@ class Grid extends Component {
             console.log('state', that.state)
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
-            that.updateDriverData()
         },100)
 
 
