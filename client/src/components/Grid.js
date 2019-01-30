@@ -25,7 +25,7 @@ class Grid extends Component {
             driverFormY:"",
             driverLegInput:"",
             driverProgressInput: "",
-            driver: "",
+            currentDriver: "",
             driverLegStart: "",
             driverCoords: "",
             positionSelect: "coords",
@@ -180,11 +180,9 @@ class Grid extends Component {
         }
     }
     //get driver pos based on the legData and progress - add to array - send to child
-    setDriver(driverData){
+    addDriver(driverData){
         // get from api
         let legName = driverData.activeLegID
-        // console.log('leg name', positionData)
-
         // correlate with stops- letters to match stops needed
         let firstLetter = legName[0]
         let secondLetter = legName[1]
@@ -195,8 +193,6 @@ class Grid extends Component {
         let lastStopOfLeg = this.state.stops.filter(stop => {
             return stop.name === secondLetter
         })
-        console.log('f', firstStopOfLeg)
-        // console.log('s', lastStopOfLeg)
         //calc abs distance bwt coords  - coords for first and last
         let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
         // console.log(diffObj)
@@ -204,7 +200,6 @@ class Grid extends Component {
         let progress = parseInt(driverData.legProgress)
         // takes number of moves and percent - returns number of moves that is
         let numToMove = this._percentToCoords(diffObj, progress)
-        // console.log('num to move',numToMove)
         // takes coords for first, last and how many -returns up / down & COORDS
         let { xToMove, yToMove } = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
         // console.log(xToMove, yToMove)
@@ -216,7 +211,8 @@ class Grid extends Component {
             directions: {
                 xDir: "left",
                 yDir: "bottom"
-            }
+            },
+            data: driverData
         }
             //finalDriverMoveObj - cell nums of drivers leg
         this.setState({
@@ -227,11 +223,8 @@ class Grid extends Component {
             },
             finalDriverMoveArr: [...this.state.finalDriverMoveArr, driverProgressObj]
         })
-
     }
-
-    // x=35
-    // y=64
+    // calc up to driver position to color
     colorCompleted(legID){
     	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
@@ -784,7 +777,7 @@ class Grid extends Component {
             return
         }
     }
-    // takes updated driver coords from state and sets new progress and leg
+    // takes driver coords from state and sets new progress and leg
     updateDriverData(){
         let firstStop = this._getLegStartfromCoords()[0]
         if(!firstStop) return 'Not a stop on map'
@@ -826,20 +819,12 @@ class Grid extends Component {
         this.uniqueId = this.uniqueId || 0
         return this.uniqueId++
     }
-    addTruck(){
-        // need new driver coords - default to 0/0
-        //
-        let newTruck = {
-            driverCoords: {x:0, y:0},
-            driver: {
-                activeLegID: "AB",
-                legProgress: "0",
-                id: this._addId()
-            }
-        }
-        return(
-            <Truck coords={this.state.finalDriverMoveArr[this._addId()] ? this.state.finalDriverMoveArr[this._addId()] : null} id={this._addId()}/>
-        )
+    // renders all truck instances
+    renderTrucks(){
+        return this.state.finalDriverMoveArr.map(truck => {
+            return <Truck coords={truck} />
+        })
+
     }
     render() {
     	return(
@@ -849,11 +834,7 @@ class Grid extends Component {
                     <div className="grid">
 
 
-                    {
-                        this.state.finalDriverMoveArr.map(truck => {
-                            return <Truck coords={truck} />
-                        })
-                    }
+                    {this.renderTrucks()}
 
                     <Stop coords={this.state.stopsDirsArr}/>
                     <Box
@@ -933,7 +914,9 @@ class Grid extends Component {
         }
     }
 
+    changeDriverData(){
 
+    }
     handleDropdownSubmit(event) {
         console.log(event.target.name)
         event.preventDefault()
@@ -971,7 +954,7 @@ class Grid extends Component {
                 let that = this
                 setTimeout(function(){
                     console.log('driver func')
-                    that.setDriver()
+                    // that.addDriver()
                     that.colorCompleted(that.state.driver.activeLegID)
 
                 },100)
@@ -1165,8 +1148,8 @@ class Grid extends Component {
                     that.colorGrid(stop.x, stop.y, 'all')
 
             })
-            that.setDriver(that.state.driver)
-            that.colorCompleted(that.state.driver.activeLegID)
+            that.addDriver(that.state.currentDriver)
+            that.colorCompleted(that.state.currentDriver.activeLegID)
             console.log('state', that.state)
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
@@ -1180,7 +1163,7 @@ class Grid extends Component {
         this._callDriver()
         .then(res => {
             // console.log('r', res)
-            this.setState({ driver: res.driver })
+            this.setState({ currentDriver: res.driver })
         })
         .catch(err => console.log(err));
         this._callStops()
