@@ -66,7 +66,7 @@ class SimpleTabs extends React.Component {
         </AppBar>
         {value === 0 && (
           <TabContainer>
-            <Accordion />
+            <Accordion onChange={this.props.onChange} />
           </TabContainer>
         )}
         {value === 1 && <TabContainer>Item Two</TabContainer>}

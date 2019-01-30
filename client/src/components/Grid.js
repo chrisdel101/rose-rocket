@@ -854,7 +854,7 @@ class Grid extends Component {
                 <div className="utils-container">
 
                     <div className="driver-controls">
-                        <Tabs/>
+                        <Tabs onChange={this.handleFormChange.bind(this)}/>
 
                         <Switch
                             isActive={this.state.isActive}
@@ -923,7 +923,7 @@ class Grid extends Component {
         }
     }
     handleDropdownSubmit(event) {
-        console.log(event.target.name)
+
         event.preventDefault()
 
         if(event.target.name === 'driver'){
@@ -979,7 +979,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleFormChange(evt) {
-        console.log(evt)
+        console.log(evt.target.value)
         if(evt.target.name === 'x'){
             this.setState({
                 driverFormX: evt.target.value
