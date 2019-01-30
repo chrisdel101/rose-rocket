@@ -179,12 +179,8 @@ class Grid extends Component {
             yToMove
         }
     }
-    // set driver updates based on the legData and progress
-<<<<<<< Updated upstream
-    setDriver(driverDataOb){
-=======
+    //get driver pos based on the legData and progress - add to array - send to child
     setDriver(driverData){
->>>>>>> Stashed changes
         // get from api
         let legName = driverData.activeLegID
         // console.log('leg name', positionData)
@@ -222,16 +218,6 @@ class Grid extends Component {
                 yDir: "bottom"
             }
         }
-        // console.log(driverProgressObj)
-        // coords
-        let {x, y} = firstStopOfLeg[0]
-        let driverLegStartcoords = {x,y}
-        //
-        // console.log(driverLegStartcoords)
-        // let index = this._legIndex(legName)
-        // let leg = this.state.holdAllLegColorArrs[index]
-        // console.log('leg', leg)
-
             //finalDriverMoveObj - cell nums of drivers leg
         this.setState({
             // x/y of driver
@@ -239,10 +225,9 @@ class Grid extends Component {
                 x: xToMove,
                 y: yToMove
             },
-            driverLegStart: driverLegStartcoords,
             finalDriverMoveArr: [...this.state.finalDriverMoveArr, driverProgressObj]
         })
-        // console.log(this.state.driverCoords)
+
     }
 
     // x=35
@@ -864,7 +849,11 @@ class Grid extends Component {
                     <div className="grid">
 
 
-
+                    {
+                        this.state.finalDriverMoveArr.map(truck => {
+                            return <Truck coords={truck} />
+                        })
+                    }
 
                     <Stop coords={this.state.stopsDirsArr}/>
                     <Box
