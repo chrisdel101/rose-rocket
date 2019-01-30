@@ -1,39 +1,62 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import TabsComp from '@material-ui/core/Tabs';
+import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-
-
-class Tabs extends React.Component{
-    constructor(props){
-        super(props)
-        this.state = {
-
-        }
-    }
-    TabContainer(props) {
-          return (
-            <Typography component="div" style={{ padding: 8 * 3 }}>
-              {props.children}
-            </Typography>
-          );
-        }
-    render(){
-        return(
-            <div className="app-bar">
-                <AppBar position="static">
-                <TabsComp value={this.props.value} name="tabs" onChange={(ev) => this.props.onClick(ev)} >
-                <Tab label="Set Driver" />
-                <Tab label="Add a Driver" />
-                </TabsComp>
-            {this.props.value === 0 && <this.TabContainer>Item One</this.TabContainer>}
-            {this.props.value === 1 && <this.TabContainer>Item Two</this.TabContainer>}
-                </AppBar>
-            </div>
-        )
-    }
+import Accordion from './Accordion'
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: 8 * 3 }}>
+      {props.children}
+    </Typography>
+  );
 }
 
-export default Tabs
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+});
+
+class SimpleTabs extends React.Component {
+  state = {
+    value: 0,
+  };
+
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
+
+  render() {
+    const { classes } = this.props;
+    const { value } = this.state;
+
+    return (
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Tabs value={value} onChange={this.handleChange}>
+            <Tab label="Driver Positioning" />
+            <Tab label="Add Driver" />
+            <Tab label="Item Three" />
+          </Tabs>
+        </AppBar>
+        {value === 0 && <TabContainer><Accordion/></TabContainer>}
+        {value === 1 && <TabContainer>Item Two</TabContainer>}
+        {value === 2 && <TabContainer>Item Three</TabContainer>}
+      </div>
+    );
+  }
+}
+
+SimpleTabs.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(SimpleTabs);

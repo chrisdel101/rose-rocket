@@ -19,6 +19,7 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
+            expandedPanelName: "",
             uniqueId:0,
             legs: [],
 			stops: [],
@@ -824,8 +825,8 @@ class Grid extends Component {
     }
     // renders all truck instances
     renderTrucks(){
-        return this.state.finalDriverMoveArr.map(truck => {
-            return <Truck coords={truck} />
+        return this.state.finalDriverMoveArr.map((truck,i) => {
+            return <Truck coords={truck} key={i} />
         })
 
     }
@@ -839,7 +840,7 @@ class Grid extends Component {
 
                     {this.renderTrucks()}
 
-                    <Accordion />
+
                     <Stop coords={this.state.stopsDirsArr}/>
                     <Box
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
@@ -919,10 +920,6 @@ class Grid extends Component {
             this.setState({driverProgressInput:e.target.value})
         }
     }
-
-    changeDriverData(){
-
-    }
     handleDropdownSubmit(event) {
         console.log(event.target.name)
         event.preventDefault()
@@ -980,6 +977,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleFormChange(evt) {
+        console.log(evt)
         if(evt.target.name === 'x'){
             this.setState({
                 driverFormX: evt.target.value
