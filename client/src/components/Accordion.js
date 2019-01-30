@@ -8,6 +8,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Form from './Form'
+import Dropdown from './Dropdown'
 
 const styles = theme => ({
   root: {
@@ -44,10 +45,13 @@ class Accordion extends React.Component {
         <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Set Driver Coordinates</Typography>
-            <Typography className={classes.secondaryHeading}></Typography>
+            <Typography className={classes.secondaryHeading}>Set driver postion with coordinates.</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Form onChange={this.props.onChange}/>
+            <Form
+                onChange={this.props.onChange}
+                values={this.props.values}
+                />
             <Typography>
 
             </Typography>
@@ -55,15 +59,19 @@ class Accordion extends React.Component {
         </ExpansionPanel>
         <ExpansionPanel expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Users</Typography>
+            <Typography className={classes.heading}>Set Driver Leg</Typography>
             <Typography className={classes.secondaryHeading}>
-              You are currently not an owner
+              Set driver position with leg and progress.
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
+          <Dropdown
+                onChange={this.props.onChange}
+                legs={this.props.legs ? this.props.legs : null}
+                type="driver"
+                texts={this.props.texts}
+          />
             <Typography>
-              Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
-              diam eros in elit. Pellentesque convallis laoreet laoreet.
             </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>
@@ -102,3 +110,12 @@ Accordion.propTypes = {
 };
 
 export default withStyles(styles)(Accordion);
+
+
+
+
+
+// type="color"
+// utils={this.state.utils}
+// legs={this.state.legs.length ? this.state.legs : null}
+// onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSubmit}

@@ -53,7 +53,7 @@ class Grid extends Component {
             finalDriverMoveObj: "",
             finalDriverMoveArr: [],
             legStartEndCellNums: [],
-            utils: {
+            texts: {
                 driverText: "Select leg for driver",
                 colorText: "Select a Leg to color"
             }
@@ -854,31 +854,23 @@ class Grid extends Component {
                 <div className="utils-container">
 
                     <div className="driver-controls">
-                        <Tabs onChange={this.handleFormChange.bind(this)}/>
+                        <Tabs onChange={this.handleFormChange.bind(this)}
+                        values={{x:this.state.driverFormX, y:this.state.driverFormY}}
+                        legs={this.state.legs ? this.state.legs : null}
+                        texts={this.state.texts}
+                        />
 
                         <Switch
                             isActive={this.state.isActive}
                             onClick={this.handleSwitchClick.bind(this)}/>
-                        {this.state.isActive.button1 ?
-                        <Form
-                            values={{x:this.state.driverFormX, y:this.state.driverFormY}}
-                            onChange={this.handleFormChange.bind(this)}
-                            onSubmit={this.handleFormSubmit.bind(this)}/>
-                        : <Dropdown
-                            values={{x:this.state.driverFormX,y:this.state.driverFormY, driverProgressInput: this.state.driverProgressInput}}
-                            type="driver"
-                            utils={this.state.utils}
-                            legs={this.state.legs.length ? this.state.legs : null}
-                            onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSubmit}
-                            />
-                        }
+
 
                     </div>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
                 <button onClick={this.colorAllStops.bind(this)}>Color All</button>
                 <Dropdown
                     type="color"
-                    utils={this.state.utils}
+                    texts={this.state.texts}
                     legs={this.state.legs.length ? this.state.legs : null}
                     onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSubmit}
                     />

@@ -66,7 +66,12 @@ class SimpleTabs extends React.Component {
         </AppBar>
         {value === 0 && (
           <TabContainer>
-            <Accordion onChange={this.props.onChange} />
+            <Accordion
+                onChange={this.props.onChange}
+                values={this.props.values}
+                legs={this.props.legs ? this.props.legs : null}
+                texts={this.props.texts}
+            />
           </TabContainer>
         )}
         {value === 1 && <TabContainer>Item Two</TabContainer>}

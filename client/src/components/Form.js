@@ -22,21 +22,19 @@ class Form extends React.Component{
     }
     render(){
     let {values} = this.props
-
+    console.log(this.props)
         return(
             <form onSubmit={(ev) => this.props.onSubmit(ev)}>
 
                     {this.props.values ?
                         <React.Fragment>
-                        {console.log(this.props.values)}
-                        X-coords: <input className="x-coord" name="x" type="text" value={this.props.values.x} onChange={this.props.onChange}>
+                        X-coords: <input className="x-coord" name="x" type="text" value={values.x} onChange={this.props.onChange}>
                         </input>
 
-                        Y-coords: <input className="y-coord" name="y" type="text" value={this.props.values.y} onChange={this.props.onChange}></input>
+                        Y-coords: <input className="y-coord" name="y" type="text" value={values.y} onChange={this.props.onChange}></input>
                         </React.Fragment>
                     :
                         <React.Fragment>
-                        {console.log(this.props.values)}
                         X-coords: <input className="x-coord" name="x" type="text"  onChange={this.props.onChange}>
                         </input>
 
