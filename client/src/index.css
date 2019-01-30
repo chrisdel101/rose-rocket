@@ -90,3 +90,11 @@ code {
 .button-switch span {
 	pointer-events: none !important;
 }
+
+.button span {
+	pointer-events: none !important;
+}
+
+.button span svg {
+	pointer-events: none !important;
+}

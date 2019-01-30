@@ -10,6 +10,7 @@ import Form from './Form'
 import Switch from './Switch'
 import Tabs from './Tabs'
 import Accordion from './Accordion'
+import AddButton from './AddButton'
 
 class Grid extends Component {
 	constructor(props) {
@@ -853,7 +854,8 @@ class Grid extends Component {
                 <div className="utils-container">
 
                     <div className="driver-controls">
-                        <Tabs value={0}/>
+                        <Tabs/>
+
                         <Switch
                             isActive={this.state.isActive}
                             onClick={this.handleSwitchClick.bind(this)}/>
