@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Manager, Reference, Popper, Arrow } from "react-popper";
+
 import "../App.css";
 import Box from './Box'
 import Stop from './Stop'
@@ -7,6 +8,7 @@ import Truck from './Truck'
 import Dropdown from './Dropdown'
 import Form from './Form'
 import Switch from './Switch'
+import Tabs from './Tabs'
 
 class Grid extends Component {
 	constructor(props) {
@@ -827,12 +829,12 @@ class Grid extends Component {
 
     }
     render() {
+        let value = 1
     	return(
             <main className="page-container">
                 <div className="grid-container">
 
                     <div className="grid">
-
 
                     {this.renderTrucks()}
 
@@ -846,7 +848,9 @@ class Grid extends Component {
                     </div>
                 </div>
                 <div className="utils-container">
+
                     <div className="driver-controls">
+                        <Tabs value={0}/>
                         <Switch
                             isActive={this.state.isActive}
                             onClick={this.handleSwitchClick.bind(this)}/>
