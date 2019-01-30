@@ -979,7 +979,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleFormChange(evt) {
-        console.log(evt.target.value)
+        console.log(evt.target.name)
         if(evt.target.name === 'x'){
             this.setState({
                 driverFormX: evt.target.value
