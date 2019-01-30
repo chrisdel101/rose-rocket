@@ -16,9 +16,11 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
+            uniqueId:0,
             legs: [],
 			stops: [],
             legToColorID:"",
+            trucks: [],
             driverFormX:"",
             driverFormY:"",
             driverLegInput:"",
@@ -44,6 +46,7 @@ class Grid extends Component {
             finalLegColorArr: [],
             finalCompletedColorsArr: [],
             finalDriverMoveObj: "",
+            finalDriverMoveArr: [],
             legStartEndCellNums: [],
             utils: {
                 driverText: "Select leg for driver",
@@ -177,7 +180,7 @@ class Grid extends Component {
         }
     }
     // set driver updates based on the legData and progress
-    setDriver(){
+    setDriver(driverDataOb){
         // get from api
         let positionData = this.state.driver
         console.log(positionData)
@@ -236,7 +239,7 @@ class Grid extends Component {
                 y: yToMove
             },
             driverLegStart: driverLegStartcoords,
-            finalDriverMoveObj: driverProgressObj
+            finalDriverMoveArr: [...this.state.finalDriverMoveArr, driverProgressObj]
         })
         // console.log(this.state.driverCoords)
     }
@@ -833,6 +836,25 @@ class Grid extends Component {
             }
         })
     }
+    _addId() {
+        this.uniqueId = this.uniqueId || 0
+        return this.uniqueId++
+    }
+    addTruck(){
+        // need new driver coords - default to 0/0
+        //
+        let newTruck = {
+            driverCoords: {x:0, y:0},
+            driver: {
+                activeLegID: "AB",
+                legProgress: "0",
+                id: this._addId()
+            }
+        }
+        return(
+            <Truck coords={this.state.finalDriverMoveArr[this._addId()] ? this.state.finalDriverMoveArr[this._addId()] : null} id={this._addId()}/>
+        )
+    }
     render() {
     	return(
             <main className="page-container">
@@ -840,7 +862,9 @@ class Grid extends Component {
 
                     <div className="grid">
 
-                    <Truck coords={this.state.finalDriverMoveObj ? this.state.finalDriverMoveObj : null}/>
+
+
+
                     <Stop coords={this.state.stopsDirsArr}/>
                     <Box
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
@@ -855,17 +879,19 @@ class Grid extends Component {
                         <Switch
                             isActive={this.state.isActive}
                             onClick={this.handleSwitchClick.bind(this)}/>
+                        {this.state.isActive.button1 ?
                         <Form
                             values={{x:this.state.driverFormX, y:this.state.driverFormY}}
                             onChange={this.handleFormChange.bind(this)}
                             onSubmit={this.handleFormSubmit.bind(this)}/>
-                        <Dropdown
+                        : <Dropdown
                             values={{x:this.state.driverFormX,y:this.state.driverFormY, driverProgressInput: this.state.driverProgressInput}}
                             type="driver"
                             utils={this.state.utils}
                             legs={this.state.legs.length ? this.state.legs : null}
                             onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSubmit}
                             />
+                        }
 
                     </div>
                 <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
