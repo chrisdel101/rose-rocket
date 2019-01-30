@@ -9,6 +9,7 @@ import Dropdown from './Dropdown'
 import Form from './Form'
 import Switch from './Switch'
 import Tabs from './Tabs'
+import Accordion from './Accordion'
 
 class Grid extends Component {
 	constructor(props) {
@@ -838,6 +839,7 @@ class Grid extends Component {
 
                     {this.renderTrucks()}
 
+                    <Accordion />
                     <Stop coords={this.state.stopsDirsArr}/>
                     <Box
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}

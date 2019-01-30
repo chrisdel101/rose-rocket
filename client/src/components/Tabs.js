@@ -25,13 +25,11 @@ class Tabs extends React.Component{
             <div className="app-bar">
                 <AppBar position="static">
                 <TabsComp value={this.props.value} name="tabs" onChange={(ev) => this.props.onClick(ev)} >
-                <Tab label="Item One" />
-                <Tab label="Item Two" />
-                <Tab label="Item Three" />
+                <Tab label="Set Driver" />
+                <Tab label="Add a Driver" />
                 </TabsComp>
             {this.props.value === 0 && <this.TabContainer>Item One</this.TabContainer>}
             {this.props.value === 1 && <this.TabContainer>Item Two</this.TabContainer>}
-            {this.props.value === 2 && <this.TabContainer>Item Three</this.TabContainer>}
                 </AppBar>
             </div>
         )
