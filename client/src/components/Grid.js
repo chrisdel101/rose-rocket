@@ -180,12 +180,13 @@ class Grid extends Component {
         }
     }
     // set driver updates based on the legData and progress
+<<<<<<< Updated upstream
     setDriver(driverDataOb){
+=======
+    setDriver(driverData){
+>>>>>>> Stashed changes
         // get from api
-        let positionData = this.state.driver
-        console.log(positionData)
-        // get leg name
-        let legName = positionData.activeLegID
+        let legName = driverData.activeLegID
         // console.log('leg name', positionData)
 
         // correlate with stops- letters to match stops needed
@@ -204,7 +205,7 @@ class Grid extends Component {
         let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
         // console.log(diffObj)
 
-        let progress = parseInt(this.state.driver.legProgress)
+        let progress = parseInt(driverData.legProgress)
         // takes number of moves and percent - returns number of moves that is
         let numToMove = this._percentToCoords(diffObj, progress)
         // console.log('num to move',numToMove)
@@ -1175,7 +1176,7 @@ class Grid extends Component {
                     that.colorGrid(stop.x, stop.y, 'all')
 
             })
-            that.setDriver()
+            that.setDriver(that.state.driver)
             that.colorCompleted(that.state.driver.activeLegID)
             console.log('state', that.state)
             // that.pleted(that.state.driverCoords.y)
