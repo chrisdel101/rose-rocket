@@ -41,7 +41,7 @@ class SimpleTabs extends React.Component {
   };
   addTab(){
       let driverNum = this.state.numberOfTabs + 1
-      console.log(driverNum)
+      // console.log(driverNum)
       this.setState({
           numberOfTabs: driverNum ,
           tabs: [...this.state.tabs, {

@@ -622,8 +622,18 @@ class Grid extends Component {
         this.state.driverFormX, this.state.driverFormY)
         let currentDriver = this.state.driversArr[this.state.currentDriverIndex]
         console.log(currentDriver)
+        // console.log(coords)
+        // copy arr
+        let driversArr = [...this.state.driversArr]
+
+        // console.log(driversArr[this.state.currentDriverIndex])
+        // update the values in the object
+        driversArr[this.state.currentDriverIndex].directions = coords.directions
+        driversArr[this.state.currentDriverIndex].pixels = coords.pixels
+        // console.log(driversArr)
+        // set new driver vals
         this.setState({
-                finalDriverMoveObj: coords
+            driversArr: driversArr
         })
         let that = this
         setTimeout(function(){
@@ -793,6 +803,8 @@ class Grid extends Component {
     // takes driver coords from state and sets new progress and leg
     updateDriverData(){
         let firstStop = this._getLegStartfromCoords()[0]
+        console.log('fired')
+        // only works with map stops!
         if(!firstStop) return 'Not a stop on map'
         let firstStopIndex = this.state.stops.indexOf(firstStop)
         let secondStop = this.state.stops[firstStopIndex+1]
@@ -808,6 +820,16 @@ class Grid extends Component {
             activeLegID: currentLeg[0].legID,
             legProgress: percent.toString()
         }
+        let driversArr = [...this.state.driversArr]
+        console.log(driversArr[this.state.currentDriverIndex])
+        // update the values in the object
+
+        driversArr[this.state.currentDriverIndex].data.activeLegID = newPositionWpercent.activeLegID
+        driversArr[this.state.currentDriverIndex].data.legProgress = newPositionWpercent.legProgress
+        console.log(driversArr)
+        this.setState({
+            driversArr: driversArr
+        })
         console.log(newPositionWpercent)
         this.setState({
             currentDriver: newPositionWpercent
@@ -891,12 +913,16 @@ class Grid extends Component {
     }
     handleClick(event){
         // set current driver on click on tab
-        let index = parseInt(event.target.innerText[event.target.innerText.length - 1]) - 1
-        let currentDriver = this.state.driversArr[index-1]
-        console.log(index)
-        this.setState({
-            currentDriverIndex: index
-        })
+        if(event.target.innerText.includes('DRIVER')){
+            console.log(event.target.innerText)
+            let index = parseInt(event.target.innerText[event.target.innerText.length - 1]) - 1
+            let currentDriver = this.state.driversArr[index-1]
+            console.log(index)
+            this.setState({
+                currentDriverIndex: index
+            })
+
+        }
 
     }
     handleSwitchClick(e){
