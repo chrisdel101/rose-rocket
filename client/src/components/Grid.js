@@ -621,7 +621,7 @@ class Grid extends Component {
         let coords = this._setStopCoords('driver',
         this.state.driverFormX, this.state.driverFormY)
         let currentDriver = this.state.driversArr[this.state.currentDriverIndex]
-        console.log(currentDriver)
+        console.log('current driver', currentDriver)
         // console.log(coords)
         // copy arr
         let driversArr = [...this.state.driversArr]
@@ -803,7 +803,6 @@ class Grid extends Component {
     // takes driver coords from state and sets new progress and leg
     updateDriverData(){
         let firstStop = this._getLegStartfromCoords()[0]
-        console.log('fired')
         // only works with map stops!
         if(!firstStop) return 'Not a stop on map'
         let firstStopIndex = this.state.stops.indexOf(firstStop)
@@ -828,12 +827,11 @@ class Grid extends Component {
         driversArr[this.state.currentDriverIndex].data.legProgress = newPositionWpercent.legProgress
         console.log(driversArr)
         this.setState({
-            driversArr: driversArr
-        })
-        console.log(newPositionWpercent)
-        this.setState({
+            driversArr: driversArr,
             currentDriver: newPositionWpercent
         })
+        console.log(newPositionWpercent)
+
         console.log('new driver state', this.state.currentDriver)
     }
     _resetTruck(){
@@ -856,8 +854,8 @@ class Grid extends Component {
     }
     // renders all truck instances
     renderTrucks(props){
-        return this.state.driversArr.map((truck,i) => {
-            return <Truck coords={this.state.finalDriverMoveObj} key={i} />
+        return this.state.driversArr.map((driverData,i) => {
+            return <Truck coords={driverData} key={i} />
         })
 
     }
@@ -962,47 +960,47 @@ class Grid extends Component {
         }
     }
     onDropdownSubmit(event) {
-        console.log('dd submit')
         event.preventDefault()
 
         if(event.target.name === 'driver-dropdown'){
-            if(this.state.driverLegInput){
-                let progress
-                if(!this.state.driverProgressInput){
-                    progress = 0
-                } else {
-                    progress = this.state.driverProgressInput
-                }
-                //update driver position in state
-                this.setState({
-                    driver:{
-                        activeLegID: this.state.driverLegInput,
-                        legProgress: progress
-                    }
-                })
-                // update driver position on API
-                fetch('/driver', {
-                    method: "PUT",
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        activeLegID: this.state.driverLegInput,
-                        legProgress: progress
-                    })
-                })
-                .then(res=>res.json())
-                .then(res => console.log('r',res));
-
-                let that = this
-                setTimeout(function(){
-                    console.log('driver func')
-                    // that.addDriver()
-                    that.colorCompleted(that.state.driver.activeLegID)
-
-                },100)
+            // user needs to choose a leg else return
+            if(!this.state.driverLegInput) return
+            let progress
+            if(!this.state.driverProgressInput){
+                progress = 0
+            } else {
+                progress = this.state.driverProgressInput
             }
+            //update driver position in state
+            this.setState({
+                currentDriver:{
+                    activeLegID: this.state.driverLegInput,
+                    legProgress: progress
+                }
+            })
+            // update driver position on API
+            fetch('/driver', {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    activeLegID: this.state.driverLegInput,
+                    legProgress: progress
+                })
+            })
+            .then(res=>res.json())
+            .then(res => console.log('r',res));
+
+            let that = this
+            setTimeout(function(){
+                console.log('driver func')
+                that.addDriver(that.state.currentDriver)
+                that.colorCompleted(that.state.currentDriver.activeLegID)
+
+            },100)
+
         } else if(event.target.name === 'color'){
             this.colorLeg(this.state.legToColorID)
             // console.log(this.state.holdingCompletedArrs)

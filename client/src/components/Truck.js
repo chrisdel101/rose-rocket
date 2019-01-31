@@ -4,7 +4,7 @@ import React from 'react'
 function Truck(props){
     if(!props.coords) return null
     let coord = props.coords
-    console.log(coord.pixels.moveX)
+    console.log(coord)
     // console.log(coord)
     let style = {
         [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
