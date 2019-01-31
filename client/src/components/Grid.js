@@ -185,13 +185,14 @@ class Grid extends Component {
             yToMove
         }
     }
-    // new add driver
-    // - add new marker to grid - this creates an object with default coords of 0 0
-    // - then set coords
-    // - on submit the data will be added
-    //get driver pos based on the legData and progress - add to array - send to child
+    // update currentDriverIndex by 1
+    _updateDriverIndex(index){
+        let newIndex = index + 1
+        return newIndex
+    }
+    // new add driver - runs on mount and when add button clicked
     addNewDriver(){
-
+        console.log('fired')
         let newDriverObj = {
             directions: {
                 xDir: "left",
@@ -204,13 +205,18 @@ class Grid extends Component {
             id: this.state.currentDriverIndex,
             name: `driver ${this.state.currentDriverIndex + 1}`
         }
+        this.state.driversArr[this.state.currentDriverIndex] = newDriverObj
+        console.log(this.state.driversArr)
+        // update to new index and add driver to drivers arr
         this.setState({
-            currentDriverIndex: this.state.currentDriverIndex + 1,
-            driversArr: [...this.state.driversArr, newDriverObj]
+            currentDriverIndex: this._updateDriverIndex(this.state.currentDriverIndex),
+            driversArr: this.state.driversArr
         })
+        console.log(this.state)
     }
+    // runs on load using pre-loaded data and when form submitted
     updateDriver(driverData){
-        // get from api
+        // get from api or form
         let legName = driverData.activeLegID
         // correlate with stops- letters to match stops needed
         let firstLetter = legName[0]
@@ -245,6 +251,7 @@ class Grid extends Component {
             id: this.state.currentDriverIndex
         }
                 //finalDriverMoveObj - cell nums of drivers leg
+                console.log(this.state.driversArr[this.state.currentDriverIndex])
         this.setState({
             // x/y of driver
             driverCoords: {
@@ -877,9 +884,14 @@ class Grid extends Component {
     }
     // renders all truck instances
     renderTrucks(props){
-        return this.state.driversArr.map((driverData,i) => {
-            return <Truck coords={driverData} key={i} />
-        })
+        if(this.state.driversArr){
+                return this.state.driversArr.map((driverData,i) => {
+                // console.log(driverData)
+                return <Truck coords={driverData} key={i} />
+            })
+        } else {
+            return null
+        }
 
     }
     render() {
@@ -1230,9 +1242,10 @@ class Grid extends Component {
                     that.colorGrid(stop.x, stop.y, 'all')
 
             })
-            that.addNewDriver()
-            that.colorCompleted(that.state.currentDriver.activeLegID)
             console.log('state', that.state)
+            that.addNewDriver()
+            // that.updateDriver(that.state.initialDriver)
+            // that.colorCompleted(that.state.initialDriver.activeLegID)
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
         },100)
@@ -1245,7 +1258,7 @@ class Grid extends Component {
         this._callDriver()
         .then(res => {
             // console.log('r', res)
-            this.setState({ currentDriver: res.driver })
+            this.setState({ initialDriver: res.driver })
         })
         .catch(err => console.log(err));
         this._callStops()

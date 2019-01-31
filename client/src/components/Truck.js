@@ -4,13 +4,13 @@ import React from 'react'
 function Truck(props){
     if(!props.coords) return null
     let coord = props.coords
-    console.log(coord)
+    // console.log(coord)
     // console.log(coord)
     let style = {
         [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
         [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px'
     }
-    // console.log(style)
+    console.log(style)
     // gets the cell nums to color
     function checkPosition(props){
         let start = props.coords[0]
