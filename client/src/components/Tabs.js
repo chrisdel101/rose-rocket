@@ -64,18 +64,23 @@ class SimpleTabs extends React.Component {
             <AddButton onClick={this.addTab.bind(this)} />
           </Tabs>
         </AppBar>
-        {value === 0 && (
-          <TabContainer>
-            <Accordion
-                onSubmit={this.props.onSubmit}
-                onChange={this.props.onChange}
-                values={this.props.values}
-                legs={this.props.legs ? this.props.legs : null}
-                texts={this.props.texts}
-            />
-          </TabContainer>
-        )}
-        {value === 1 && <TabContainer>Item Two</TabContainer>}
+        {
+            this.state.tabs.map((tab, i) => {
+                 return value === i && (
+                    <TabContainer key={i}>
+                    <Accordion
+                    onSubmit={this.props.onSubmit}
+                    onChange={this.props.onChange}
+                    values={this.props.values}
+                    legs={this.props.legs ? this.props.legs : null}
+                    texts={this.props.texts}
+                    />
+                    </TabContainer>
+                )
+
+            })
+        }
+
       </div>
     );
   }
