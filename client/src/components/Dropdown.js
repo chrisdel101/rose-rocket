@@ -8,16 +8,15 @@ class Dropdown extends React.Component{
 	}
 
     renderInput(){
-        // console.log(this.props)
         return(
             <div className="progress-input-wrapper">
-                Progress:  <input className="progress-input" name="progressInput" type="text" value={this.props.driverProgressInput} onChange={ev =>  this.props.onChange(ev)}>
+                Progress:  <input className="progress-input" name="progress-input" type="text" value={this.props.driverProgressInput} onChange={ev =>  this.props.onChange(ev)}>
                 </input>
             </div>
         )
     }
     render(){
-        // console.log(this.props)
+
         if(this.props.legs){
             return(
                 <div className="legs-container">

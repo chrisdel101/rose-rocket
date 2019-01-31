@@ -62,7 +62,7 @@ class Grid extends Component {
             }
 		};
 
-        this.handleDropdownChange = this.handleDropdownChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
 
 	}
@@ -913,12 +913,13 @@ class Grid extends Component {
                 <div className="utils-container">
 
                     <div className="driver-controls">
-                        <Tabs onChange={this.handleFormChange.bind(this)}
-                        onSubmit={this.handleFormSubmit.bind(this)}
-                        onClick={this.handleClick.bind(this)}
-                        values={{x:this.state.driverFormX, y:this.state.driverFormY}}
-                        legs={this.state.legs ? this.state.legs : null}
-                        texts={this.state.texts}
+                        <Tabs
+                            onChange={this.handleChange.bind(this)}
+                            onSubmit={this.handleFormSubmit.bind(this)}
+                            onClick={this.handleClick.bind(this)}
+                            values={{x:this.state.driverFormX, y:this.state.driverFormY}}
+                            legs={this.state.legs ? this.state.legs : null}
+                            texts={this.state.texts}
                         />
 
                         <Switch
@@ -984,6 +985,7 @@ class Grid extends Component {
         }
     }
     handleDropdownChange(e) {
+        console.log(e.target)
         if(e.target.name === 'driver-select'){
             console.log('here')
             this.setState({driverLegInput: e.target.value})
@@ -993,8 +995,6 @@ class Grid extends Component {
                 value: e.target.value,
                 legToColorID: e.target.value
             })
-        } else if(e.target.name === 'progressInput') {
-            this.setState({driverProgressInput:e.target.value})
         }
     }
     onDropdownSubmit(event) {
@@ -1057,7 +1057,7 @@ class Grid extends Component {
 
     }
     // hold vals in input until next entered
-    handleFormChange(evt) {
+    handleChange(evt) {
 
         // console.log(evt.target.name)
         if(evt.target.name === 'x'){
@@ -1074,7 +1074,11 @@ class Grid extends Component {
 
         } else if(evt.target.name === 'driver-select'){
             this.setState({driverLegInput: evt.target.value})
+        } else if(evt.target.name === 'progress-input') {
+            console.log('hi')
+            this.setState({driverProgressInput:evt.target.value})
         }
+
 
     }
     handleFormSubmit(event) {
