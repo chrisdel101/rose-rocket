@@ -10,7 +10,7 @@ function Truck(props){
         [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
         [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px'
     }
-    console.log(style)
+    // console.log(style)
     // gets the cell nums to color
     function checkPosition(props){
         let start = props.coords[0]
