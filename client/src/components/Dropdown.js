@@ -17,12 +17,12 @@ class Dropdown extends React.Component{
         )
     }
     render(){
-        console.log(this.props)
+        // console.log(this.props)
         if(this.props.legs){
             return(
                 <div className="legs-container">
 
-                <form name={this.props.type === 'driver' ? 'driver': 'color'} onSubmit={(ev) => this.props.onSubmit(ev)}>
+                <form name={this.props.type === 'driver' ? 'driver-dropdown': 'color'} onSubmit={(ev) => this.props.onSubmit(ev)}>
                     <label>
                     {this.props.type === 'driver' ? this.props.texts.driverText: this.props.texts.colorText}
                     <select name={this.props.type === 'driver' ? 'driver-select': 'color-select'} value={this.state.value} onChange={(ev) => this.props.onChange(ev)}>

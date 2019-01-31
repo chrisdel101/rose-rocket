@@ -57,7 +57,7 @@ class SimpleTabs extends React.Component {
     return (
       <div className={classes.root}>
         <AppBar position="static">
-          <Tabs value={value} onChange={this.handleChange}>
+          <Tabs name="tabs" value={value} onChange={this.handleChange} onClick={this.props.onClick}>
             {this.state.tabs.map((tab, i) => {
               return <Tab label={tab.label} key={i} />;
             })}
@@ -67,6 +67,7 @@ class SimpleTabs extends React.Component {
         {value === 0 && (
           <TabContainer>
             <Accordion
+                onSubmit={this.props.onSubmit}
                 onChange={this.props.onChange}
                 values={this.props.values}
                 legs={this.props.legs ? this.props.legs : null}

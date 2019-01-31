@@ -20,6 +20,7 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
+            currentDriverIndex:0,
             expandedPanelName: "",
             uniqueId:0,
             legs: [],
@@ -51,14 +52,14 @@ class Grid extends Component {
             finalLegColorArr: [],
             finalCompletedColorsArr: [],
             finalDriverMoveObj: "",
-            finalDriverMoveArr: [],
+            driversArr: [],
             legStartEndCellNums: [],
             texts: {
                 driverText: "Select leg for driver",
                 colorText: "Select a Leg to color"
             }
 		};
-        this.handleDropdownSubmit = this.handleDropdownSubmit.bind(this);
+
         this.handleDropdownChange = this.handleDropdownChange.bind(this);
 
 
@@ -217,16 +218,17 @@ class Grid extends Component {
                 xDir: "left",
                 yDir: "bottom"
             },
-            data: driverData
+            data: driverData,
+            id: this.state.currentDriverIndex
         }
-            //finalDriverMoveObj - cell nums of drivers leg
+                //finalDriverMoveObj - cell nums of drivers leg
         this.setState({
             // x/y of driver
             driverCoords: {
                 x: xToMove,
                 y: yToMove
             },
-            finalDriverMoveArr: [...this.state.finalDriverMoveArr, driverProgressObj]
+            driversArr: [...this.state.driversArr, driverProgressObj]
         })
     }
     // calc up to driver position to color
@@ -618,10 +620,16 @@ class Grid extends Component {
         // get pixels to new location
         let coords = this._setStopCoords('driver',
         this.state.driverFormX, this.state.driverFormY)
-
+        let currentDriver = this.state.driversArr[this.state.currentDriverIndex]
+        console.log(currentDriver)
         this.setState({
-            finalDriverMoveObj: coords
+                finalDriverMoveObj: coords
         })
+        let that = this
+        setTimeout(function(){
+            console.log(that.state)
+
+        },500)
     }
     // takes driver coords and finds the leg start
     _getLegStartfromCoords(){
@@ -631,10 +639,10 @@ class Grid extends Component {
         let firstStop = this.state.stops.filter((coord, index) => {
             let stop1 = this.state.stops[index  ]
             let stop2 = this.state.stops[index + 1]
-            console.log('stop1', stop1)
-            console.log('stop2', stop2)
-            console.log('x',coords.x)
-            console.log('y', coords.y)
+            // console.log('stop1', stop1)
+            // console.log('stop2', stop2)
+            // console.log('x',coords.x)
+            // console.log('y', coords.y)
         	if(stop2 === undefined) return
         	if( //x/y are both btw
                 (
@@ -693,23 +701,23 @@ class Grid extends Component {
         let x2 = parseInt(driverCoords.x)
         let y2 = parseInt(driverCoords.y)
         console.log(driverCoords)
-        console.log('1', x1)
-        console.log('2', y1)
-        console.log('3', x2)
-        console.log('4', y2)
+        // console.log('1', x1)
+        // console.log('2', y1)
+        // console.log('3', x2)
+        // console.log('4', y2)
         let xDiff
         let yDiff
-        console.log('xAbsDiff', xAbsDiff)
-        console.log('yAbsDiff', yAbsDiff)
+        // console.log('xAbsDiff', xAbsDiff)
+        // console.log('yAbsDiff', yAbsDiff)
         // find number moved from last stop
         if(x1 < x2){
-            console.log('run 1')
+            // console.log('run 1')
             // console.log(firstStopOfLeg[0].x)
             // console.log(lastStopOfLeg[0].x)
             xDiff = x2 - x1
             // console.log(xToMove)
         } else if(x1 > x2){
-            console.log('run 2')
+            // console.log('run 2')
             xDiff = x1 - x2
         }  else if(x1 === x2){
             xDiff = 0
@@ -727,8 +735,8 @@ class Grid extends Component {
         } else {
             console.error("error in driver movement")
         }
-        console.log('xDiff', xDiff)
-        console.log('yDiff', yDiff)
+        // console.log('xDiff', xDiff)
+        // console.log('yDiff', yDiff)
         // divide number moved so far in leg by total number in leg
         let xPercent
         let yPercent
@@ -740,16 +748,16 @@ class Grid extends Component {
             yPercent = 0
         }
         if(xDiff && xDiff !== 0){
-            console.log('xdiff', xDiff)
+            // console.log('xdiff', xDiff)
             xPercent = xDiff / xAbsDiff
         }
         if(yDiff && yDiff !== 0){
-            console.log('yDiff',yDiff)
+            // console.log('yDiff',yDiff)
             yPercent = yDiff / yAbsDiff
         }
         let finalPercent
-        console.log(xPercent)
-        console.log(yPercent)
+        // console.log(xPercent)
+        // console.log(yPercent)
         // if one val is missing use the other alone
         if(!xPercent || !yPercent){
             if(xPercent){
@@ -763,8 +771,8 @@ class Grid extends Component {
             return finalPercent = 0
         }
 
-        console.log('x%',xPercent)
-        console.log('y%',yPercent)
+        // console.log('x%',xPercent)
+        // console.log('y%',yPercent)
         //use the larger leg to updaet val - TODO: make both percents equal so driver fits back into grid
         if(xAbsDiff > yAbsDiff){
             return finalPercent = xPercent
@@ -802,13 +810,13 @@ class Grid extends Component {
         }
         console.log(newPositionWpercent)
         this.setState({
-            driver: newPositionWpercent
+            currentDriver: newPositionWpercent
         })
-        console.log('new driver state', this.state.driver)
+        console.log('new driver state', this.state.currentDriver)
     }
     _resetTruck(){
         this.setState({
-            finalDriverMoveObj: {
+                finalDriverMoveObj: {
                 directions: {
                     xDir: "left",
                     yDir: "bottom"
@@ -825,9 +833,9 @@ class Grid extends Component {
         return this.uniqueId++
     }
     // renders all truck instances
-    renderTrucks(){
-        return this.state.finalDriverMoveArr.map((truck,i) => {
-            return <Truck coords={truck} key={i} />
+    renderTrucks(props){
+        return this.state.driversArr.map((truck,i) => {
+            return <Truck coords={this.state.finalDriverMoveObj} key={i} />
         })
 
     }
@@ -839,7 +847,7 @@ class Grid extends Component {
 
                     <div className="grid">
 
-                    {this.renderTrucks()}
+                        {this.renderTrucks()}
 
 
                     <Stop coords={this.state.stopsDirsArr}/>
@@ -855,6 +863,8 @@ class Grid extends Component {
 
                     <div className="driver-controls">
                         <Tabs onChange={this.handleFormChange.bind(this)}
+                        onSubmit={this.handleFormSubmit.bind(this)}
+                        onClick={this.handleClick.bind(this)}
                         values={{x:this.state.driverFormX, y:this.state.driverFormY}}
                         legs={this.state.legs ? this.state.legs : null}
                         texts={this.state.texts}
@@ -872,12 +882,22 @@ class Grid extends Component {
                     type="color"
                     texts={this.state.texts}
                     legs={this.state.legs.length ? this.state.legs : null}
-                    onChange={this.handleDropdownChange} onSubmit={this.handleDropdownSubmit}
+                    onChange={this.handleDropdownChange} onSubmit={this.onDropdownSubmit.bind(this)}
                     />
                 </div>
 
             </main>
         )
+    }
+    handleClick(event){
+        // set current driver on click on tab
+        let index = parseInt(event.target.innerText[event.target.innerText.length - 1]) - 1
+        let currentDriver = this.state.driversArr[index-1]
+        console.log(index)
+        this.setState({
+            currentDriverIndex: index
+        })
+
     }
     handleSwitchClick(e){
         let isActive = Object.assign({}, this.state.isActive)
@@ -903,6 +923,7 @@ class Grid extends Component {
     }
     handleDropdownChange(e) {
         if(e.target.name === 'driver-select'){
+            console.log('here')
             this.setState({driverLegInput: e.target.value})
         } else if(e.target.name === 'color-select'){
             console.log('color')
@@ -914,11 +935,11 @@ class Grid extends Component {
             this.setState({driverProgressInput:e.target.value})
         }
     }
-    handleDropdownSubmit(event) {
-
+    onDropdownSubmit(event) {
+        console.log('dd submit')
         event.preventDefault()
 
-        if(event.target.name === 'driver'){
+        if(event.target.name === 'driver-dropdown'){
             if(this.state.driverLegInput){
                 let progress
                 if(!this.state.driverProgressInput){
@@ -971,7 +992,8 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleFormChange(evt) {
-        console.log(evt.target.name)
+
+        // console.log(evt.target.name)
         if(evt.target.name === 'x'){
             this.setState({
                 driverFormX: evt.target.value
@@ -984,14 +1006,20 @@ class Grid extends Component {
             })
         } else if(evt.target.name === 'position-select'){
 
+        } else if(evt.target.name === 'driver-select'){
+            this.setState({driverLegInput: evt.target.value})
         }
 
     }
     handleFormSubmit(event) {
+        console.log(event.target.name)
         event.preventDefault();
         // update coords
         //set driver to those
             //UPDATE STATE DATA
+            if(event.target.name === 'driver-dropdown'){
+                this.onDropdownSubmit(event)
+            } else if(event.target.name === 'driver-form') {
             let formData = {}
             // set to new input. If blank use the previous one
             if(this.state.driverFormX){
@@ -1013,8 +1041,10 @@ class Grid extends Component {
         setTimeout(function(){
             //UPDATE DRIVER DATA
             that.updateDriverData()
-            that.colorCompleted(that.state.driver.activeLegID)
+            that.colorCompleted(that.state.currentDriver.activeLegID)
+            console.log(that.state)
         },100)
+        }
     }
     _legIndex(input){
         let index
@@ -1129,7 +1159,7 @@ class Grid extends Component {
                 // console.log(coords)
                 // set coords to change child state
                 // that.setState({
-                //     finalDriverMoveObj: coords
+                    //     finalDriverMoveObj: coords
                 // })
 
             }
