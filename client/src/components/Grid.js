@@ -46,7 +46,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 100}, (v, i) => i),
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -200,10 +200,10 @@ class Grid extends Component {
             id: this.state.indexCounter,
             name: `driver ${this.state.indexCounter + 1}`
         }
-        console.log(newDriverObj)
+        // console.log(newDriverObj)
         // add new obj to that index
         this.state.driversArr[this.state.indexCounter] = newDriverObj
-        console.log(this.state.driversArr)
+        // console.log(this.state.driversArr)
         // update to new index and add driver to drivers arr
         this.setState({
             driversArr: this.state.driversArr
@@ -213,7 +213,7 @@ class Grid extends Component {
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        console.log(selectedDriver)
+        // console.log(selectedDriver)
         // get from api or form
         let legName = driverData.activeLegID
         // correlate with stops- letters to match stops needed
@@ -279,13 +279,14 @@ class Grid extends Component {
     }
     // calc up to driver position to color
     colorCompleted(legID){
-        let currentDriver = this.state.driversArr[this.state.indexCounter]
+        console.log(legID)
+        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
     	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
     	})
         //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
-        // console.log(holdingArrIndex)
+        console.log(holdingArrIndex)
         // index for json with legs info
         let dataIndex = this.state.legs.indexOf(arr[0])
         // console.log('holding' ,holdingArrIndex)
@@ -297,7 +298,7 @@ class Grid extends Component {
         //get current arr leg of cell nums
         var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
         console.log('previouslegs', previousLegArrs)
-        // console.log('currnt arr', currentLegArr)
+        console.log('currnt arr', currentLegArr)
         // get current and next leg json info
         let thisLeg = this.state.legs[dataIndex]
         let nextLeg = this.state.legs[dataIndex + 1]
@@ -359,7 +360,7 @@ class Grid extends Component {
         // this.state.driverCoords.x = 20
         // this.state.driverCoords.y = 13
         // console.log(this.state.driverCoords)
-        this.legStartEnd(currentDriver.driverCoords.x,currentDriver.driverCoords.y, 'partial')
+        this.legStartEnd(selectedDriver.driverCoords.x,selectedDriver.driverCoords.y, 'partial')
 
         // get start cell num
 
@@ -1039,7 +1040,7 @@ class Grid extends Component {
             setTimeout(function(){
                 // that.addNewDriver()
                 that.updateDriverwithData(selectedDriver.data)
-                // that.colorCompleted(that.state.currentDriver.activeLegID)
+                that.colorCompleted(selectedDriver.data.activeLegID)
                 console.log(that.state)
             },100)
 
@@ -1118,11 +1119,13 @@ class Grid extends Component {
         setTimeout(function(){
             //UPDATE DRIVER DATA
             that.updateDriverData()
-            // that.colorCompleted(that.state.currentDriver.activeLegID)
+            that.colorCompleted(that.state.selectedDriver.activeLegID)
+            console.log(that.state.selectedDriver.activeLegID)
             console.log(that.state)
         },100)
         }
     }
+
     _legIndex(input){
         let index
         switch(input){
