@@ -24,7 +24,7 @@ function AddButton(props) {
   const { classes } = props;
   return (
     <div>
-      <Fab size="small" color="primary" aria-label="Add" className={`button ${classes.fab}`} onClick={(ev) => props.onClick(ev)}>
+      <Fab size="small" color="primary" aria-label="Add" className={`add-button button ${classes.fab}`} onClick={(ev) => props.onClick(ev)}>
         <AddIcon/>
       </Fab>
     </div>

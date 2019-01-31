@@ -185,8 +185,31 @@ class Grid extends Component {
             yToMove
         }
     }
+    // new add driver
+    // - add new marker to grid - this creates an object with default coords of 0 0
+    // - then set coords
+    // - on submit the data will be added
     //get driver pos based on the legData and progress - add to array - send to child
-    addDriver(driverData){
+    addNewDriver(){
+
+        let newDriverObj = {
+            directions: {
+                xDir: "left",
+                yDir: "bottom"
+            },
+            pixels:{
+                moveX: 0,
+                moveY: 0
+            },
+            id: this.state.currentDriverIndex,
+            name: `driver ${this.state.currentDriverIndex + 1}`
+        }
+        this.setState({
+            currentDriverIndex: this.state.currentDriverIndex + 1,
+            driversArr: [...this.state.driversArr, newDriverObj]
+        })
+    }
+    updateDriver(driverData){
         // get from api
         let legName = driverData.activeLegID
         // correlate with stops- letters to match stops needed
@@ -910,8 +933,10 @@ class Grid extends Component {
         )
     }
     handleClick(event){
+        if(!event) return
         // set current driver on click on tab
         if(event.target.innerText.includes('DRIVER')){
+            event.stopPropagation()
             console.log(event.target.innerText)
             let index = parseInt(event.target.innerText[event.target.innerText.length - 1]) - 1
             let currentDriver = this.state.driversArr[index-1]
@@ -919,7 +944,11 @@ class Grid extends Component {
             this.setState({
                 currentDriverIndex: index
             })
+            // else if its the add button
+        } else if(event.target.classList.contains('add-button')){
+            event.stopPropagation()
 
+            //updateDriver
         }
 
     }
@@ -996,9 +1025,10 @@ class Grid extends Component {
             let that = this
             setTimeout(function(){
                 console.log('driver func')
-                that.addDriver(that.state.currentDriver)
+                that.addNewDriver()
+                // that.updateDriver(that.state.currentDriver)
                 that.colorCompleted(that.state.currentDriver.activeLegID)
-
+                // console.log(that.state)
             },100)
 
         } else if(event.target.name === 'color'){
@@ -1200,7 +1230,7 @@ class Grid extends Component {
                     that.colorGrid(stop.x, stop.y, 'all')
 
             })
-            that.addDriver(that.state.currentDriver)
+            that.addNewDriver()
             that.colorCompleted(that.state.currentDriver.activeLegID)
             console.log('state', that.state)
             // that.pleted(that.state.driverCoords.y)

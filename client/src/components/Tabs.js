@@ -49,6 +49,10 @@ class SimpleTabs extends React.Component {
           }]
       })
   }
+  handleButtonClick(){
+      this.addTab()
+      this.props.onClick()
+  }
 
   render() {
     const { classes } = this.props;
@@ -61,7 +65,7 @@ class SimpleTabs extends React.Component {
             {this.state.tabs.map((tab, i) => {
               return <Tab label={tab.label} key={i} />;
             })}
-            <AddButton onClick={this.addTab.bind(this)} />
+            <AddButton name="add-button" onClick={this.handleButtonClick.bind(this)} />
           </Tabs>
         </AppBar>
         {
