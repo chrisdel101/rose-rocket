@@ -20,7 +20,10 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
+            loadingDataArr: [],
+            // changes based on tab click
             selectedDriverIndex: 0,
+            // used to assign driver id on creation
             tempDriverId:0,
             legs: [],
 			stops: [],
@@ -197,9 +200,10 @@ class Grid extends Component {
             id: this.state.tempDriverId,
             name: `driver ${this.state.tempDriverId + 1}`
         }
-        console.log(this.state.tempDriverId)
+        console.log(newDriverObj)
         // add new obj to that index
         this.state.driversArr[this.state.tempDriverId] = newDriverObj
+        console.log(this.state.driversArr)
         // update to new index and add driver to drivers arr
         this.setState({
             driversArr: this.state.driversArr
@@ -207,7 +211,8 @@ class Grid extends Component {
         console.log(this.state)
     }
     // runs on load using pre-loaded data and when form submitted
-    updateDriver(driverData){
+    updateDriverwithData(driverData){
+        let selectedDriver = this.state.driversArr[this.state.tempDriverId]
         // get from api or form
         let legName = driverData.activeLegID
         // correlate with stops- letters to match stops needed
@@ -229,29 +234,47 @@ class Grid extends Component {
         let numToMove = this._percentToCoords(diffObj, progress)
         // takes coords for first, last and how many -returns up / down & COORDS
         let { xToMove, yToMove } = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
+        let moves = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
         // console.log(xToMove, yToMove)
         // convert the number to move to pixels
         let driverProgressinPixels = this._convertToPixels(xToMove, yToMove)
 
-        let driverProgressObj = {
-            pixels: driverProgressinPixels,
-            directions: {
-                xDir: "left",
-                yDir: "bottom"
-            },
-            data: driverData,
-            id: this.state.tempDriverId,
-            // x/y of driver
-            driverCoords: {
-                x: xToMove,
-                y: yToMove
-            }
-        }
-        // console.log(driverProgressObj)
-        this.state.driversArr[this.state.tempDriverId] = driverProgressObj
+        selectedDriver.pixels = driverProgressinPixels
+        selectedDriver.data = driverData
+        selectedDriver.id = this.state.tempDriverId
+        selectedDriver.driverCoords = moves
+        this.state.driversArr[this.state.tempDriverId] = selectedDriver
         this.setState({
             driversArr: this.state.driversArr
         })
+    }
+    // on click set driver with coords and send to child
+    updateDriverWithCoords(){
+        // reset to zero
+        this._resetTruck()
+        // get pixels to new location
+        let coords = this._setStopCoords('driver',
+        this.state.driverFormX, this.state.driverFormY)
+        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        console.log('current driver', selectedDriver)
+        // console.log(coords)
+        // copy arr
+        let driversArr = [...this.state.driversArr]
+
+        // console.log(driversArr[this.state.selectedDriver])
+        // update the values in the object
+        driversArr[this.state.selectedDriverIndex].directions = coords.directions
+        driversArr[this.state.selectedDriverIndex].pixels = coords.pixels
+        // console.log(driversArr)
+        // set new driver vals
+        this.setState({
+            driversArr: driversArr
+        })
+        let that = this
+        setTimeout(function(){
+            console.log(that.state)
+
+        },500)
     }
     // calc up to driver position to color
     colorCompleted(legID){
@@ -636,34 +659,6 @@ class Grid extends Component {
                 finalCompletedColorsArr: merged
             })
     }
-    // on click set driver with coords and send to child
-    setDriverWithCoords(){
-        // reset to zero
-        this._resetTruck()
-        // get pixels to new location
-        let coords = this._setStopCoords('driver',
-        this.state.driverFormX, this.state.driverFormY)
-        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        console.log('current driver', selectedDriver)
-        // console.log(coords)
-        // copy arr
-        let driversArr = [...this.state.driversArr]
-
-        // console.log(driversArr[this.state.selectedDriver])
-        // update the values in the object
-        driversArr[this.state.selectedDriverIndex].directions = coords.directions
-        driversArr[this.state.selectedDriverIndex].pixels = coords.pixels
-        // console.log(driversArr)
-        // set new driver vals
-        this.setState({
-            driversArr: driversArr
-        })
-        let that = this
-        setTimeout(function(){
-            console.log(that.state)
-
-        },500)
-    }
     // takes driver coords and finds the leg start
     _getLegStartfromCoords(){
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
@@ -827,6 +822,7 @@ class Grid extends Component {
     // takes driver coords from state and sets new progress and leg
     updateDriverData(){
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        console.log('selectedDriver', this.state.selectedDriverIndex)
         let firstStop = this._getLegStartfromCoords()[0]
         // only works with map stops!
         if(!firstStop) return 'Not a stop on map'
@@ -844,18 +840,22 @@ class Grid extends Component {
             activeLegID: currentLeg[0].legID,
             legProgress: percent.toString()
         }
+        console.log(newPositionWpercent)
         let driversArr = [...this.state.driversArr]
-        console.log(driversArr[this.state.selectedDriverIndex])
+        // console.log(driversArr[this.state.selectedDriverIndex])
+        console.log(selectedDriver)
         // update the values in the object
 
-        driversArr[this.state.selectedDriverIndex].data.activeLegID = newPositionWpercent.activeLegID
-        driversArr[this.state.selectedDriverIndex].data.legProgress = newPositionWpercent.legProgress
+        selectedDriver.data = newPositionWpercent
+
+        console.log(selectedDriver)
+        driversArr[this.state.selectedDriverIndex] = selectedDriver
         console.log(driversArr)
         this.setState({
             driversArr: driversArr,
             selectedDriver: newPositionWpercent
         })
-        console.log(newPositionWpercent)
+        // console.log(newPositionWpercent)
 
         console.log('new driver state', this.state.selectedDriver)
     }
@@ -942,6 +942,7 @@ class Grid extends Component {
             event.stopPropagation()
             console.log(event.target.innerText)
             let index = parseInt(event.target.innerText[event.target.innerText.length - 1]) - 1
+            console.log(index)
             // let currentDriver = this.state.driversArr[index-1]
             this.setState({
                 selectedDriverIndex: index
@@ -952,7 +953,6 @@ class Grid extends Component {
             event.stopPropagation()
             // add new driver on click
             this.addNewDriver()
-            //updateDriver
         }
 
     }
@@ -1030,7 +1030,7 @@ class Grid extends Component {
             setTimeout(function(){
                 console.log('driver func')
                 that.addNewDriver()
-                // that.updateDriver(that.state.currentDriver)
+                // that.updateDriverwithData(that.state.currentDriver)
                 // that.colorCompleted(that.state.currentDriver.activeLegID)
                 // console.log(that.state)
             },100)
@@ -1073,8 +1073,8 @@ class Grid extends Component {
         console.log(event.target.name)
         event.preventDefault();
         let currentDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        // console.log(this.state.driversArr)
-        // console.log(this.state.selectedDriverIndex)
+        console.log(this.state.driversArr)
+        console.log(this.state.selectedDriverIndex)
 
         // update coords
         //set driver to those
@@ -1095,13 +1095,13 @@ class Grid extends Component {
                 formData['y'] = currentDriver.driverCoords.y
             }
             console.log(currentDriver)
-            currentDriver.driverCoords = formData
+                currentDriver.driverCoords = formData
             console.log(this.state.driversArr)
             this.setState({
                 driverCoords: formData
             })
             //ACTUALLY MOVE DRIVER
-            this.setDriverWithCoords()
+            this.updateDriverWithCoords()
         let that = this
         setTimeout(function(){
             //UPDATE DRIVER DATA
@@ -1241,10 +1241,10 @@ class Grid extends Component {
                     that.colorGrid(stop.x, stop.y, 'all')
 
             })
-            console.log('state', that.state)
+            // call these with the default driver on mount
             that.addNewDriver()
-            that.updateDriver(that.state.initialDriver)
-            that.colorCompleted(that.state.initialDriver.activeLegID)
+            that.updateDriverwithData(that.state.loadingDataArr[0])
+            that.colorCompleted(that.state.loadingDataArr[0].activeLegID)
             that.updateDriverIndex(that.state.tempDriverId)
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
@@ -1257,8 +1257,8 @@ class Grid extends Component {
         // Call our fetch function below once the component mounts
         this._callDriver()
         .then(res => {
-            // console.log('r', res)
-            this.setState({ initialDriver: res.driver })
+            // load into ar r. Can be looped over if mutlple drivers
+            this.setState({ loadingDataArr: [...this.state.loadingDataArr, res.driver] })
         })
         .catch(err => console.log(err));
         this._callStops()
