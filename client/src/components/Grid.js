@@ -24,7 +24,7 @@ class Grid extends Component {
             // changes based on tab click
             selectedDriverIndex: 0,
             // used to assign driver id on creation
-            tempDriverId:0,
+            indexCounter:0,
             legs: [],
 			stops: [],
             legToColorID:"",
@@ -177,12 +177,12 @@ class Grid extends Component {
             yToMove
         }
     }
-    // update tempDriverId by 1
+    // update indexCounter by 1
     updateDriverIndex(index){
         let newIndex = index + 1
         console.log(index)
         this.setState({
-            tempDriverId: newIndex
+            indexCounter: newIndex
         })
     }
     // new add driver - runs on mount and when add button clicked
@@ -197,12 +197,12 @@ class Grid extends Component {
                 moveX: 0,
                 moveY: 0
             },
-            id: this.state.tempDriverId,
-            name: `driver ${this.state.tempDriverId + 1}`
+            id: this.state.indexCounter,
+            name: `driver ${this.state.indexCounter + 1}`
         }
         console.log(newDriverObj)
         // add new obj to that index
-        this.state.driversArr[this.state.tempDriverId] = newDriverObj
+        this.state.driversArr[this.state.indexCounter] = newDriverObj
         console.log(this.state.driversArr)
         // update to new index and add driver to drivers arr
         this.setState({
@@ -212,7 +212,8 @@ class Grid extends Component {
     }
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
-        let selectedDriver = this.state.driversArr[this.state.tempDriverId]
+        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        console.log(selectedDriver)
         // get from api or form
         let legName = driverData.activeLegID
         // correlate with stops- letters to match stops needed
@@ -241,9 +242,9 @@ class Grid extends Component {
 
         selectedDriver.pixels = driverProgressinPixels
         selectedDriver.data = driverData
-        selectedDriver.id = this.state.tempDriverId
+        selectedDriver.id = this.state.indexCounter
         selectedDriver.driverCoords = moves
-        this.state.driversArr[this.state.tempDriverId] = selectedDriver
+        this.state.driversArr[this.state.indexCounter] = selectedDriver
         this.setState({
             driversArr: this.state.driversArr
         })
@@ -278,7 +279,7 @@ class Grid extends Component {
     }
     // calc up to driver position to color
     colorCompleted(legID){
-        let currentDriver = this.state.driversArr[this.state.tempDriverId]
+        let currentDriver = this.state.driversArr[this.state.indexCounter]
     	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
     	})
@@ -825,7 +826,11 @@ class Grid extends Component {
         console.log('selectedDriver', this.state.selectedDriverIndex)
         let firstStop = this._getLegStartfromCoords()[0]
         // only works with map stops!
-        if(!firstStop) return 'Not a stop on map'
+        if(!firstStop){
+            console.error('Not a map stop')
+            return 'Not a stop on map'
+
+        }
         let firstStopIndex = this.state.stops.indexOf(firstStop)
         let secondStop = this.state.stops[firstStopIndex+1]
         let diff = this._absDiff(firstStop, secondStop)
@@ -993,6 +998,8 @@ class Grid extends Component {
         }
     }
     onDropdownSubmit(event) {
+        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        console.log(selectedDriver)
         event.preventDefault()
 
         if(event.target.name === 'driver-dropdown'){
@@ -1004,35 +1011,36 @@ class Grid extends Component {
             } else {
                 progress = this.state.driverProgressInput
             }
+            let updatedData = {
+                activeLegID: this.state.driverLegInput,
+                legProgress: progress
+            }
+            selectedDriver.data = updatedData
             //update driver position in state
             this.setState({
-                currentDriver:{
-                    activeLegID: this.state.driverLegInput,
-                    legProgress: progress
-                }
+                driversArr: this.state.driversArr
             })
             // update driver position on API
-            fetch('/driver', {
-                method: "PUT",
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    activeLegID: this.state.driverLegInput,
-                    legProgress: progress
-                })
-            })
-            .then(res=>res.json())
-            .then(res => console.log('r',res));
+            // fetch('/driver', {
+            //     method: "PUT",
+            //     headers: {
+            //         'Accept': 'application/json, text/plain, */*',
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         activeLegID: this.state.driverLegInput,
+            //         legProgress: progress
+            //     })
+            // })
+            // .then(res=>res.json())
+            // .then(res => console.log('r',res));
 
             let that = this
             setTimeout(function(){
-                console.log('driver func')
-                that.addNewDriver()
-                // that.updateDriverwithData(that.state.currentDriver)
+                // that.addNewDriver()
+                that.updateDriverwithData(selectedDriver.data)
                 // that.colorCompleted(that.state.currentDriver.activeLegID)
-                // console.log(that.state)
+                console.log(that.state)
             },100)
 
         } else if(event.target.name === 'color'){
@@ -1245,7 +1253,7 @@ class Grid extends Component {
             that.addNewDriver()
             that.updateDriverwithData(that.state.loadingDataArr[0])
             that.colorCompleted(that.state.loadingDataArr[0].activeLegID)
-            that.updateDriverIndex(that.state.tempDriverId)
+            that.updateDriverIndex(that.state.indexCounter)
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
         },100)
