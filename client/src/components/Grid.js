@@ -938,7 +938,7 @@ class Grid extends Component {
                     type="color"
                     texts={this.state.texts}
                     legs={this.state.legs.length ? this.state.legs : null}
-                    onChange={this.handleDropdownChange} onSubmit={this.onDropdownSubmit.bind(this)}
+                    onChange={this.handleDropdownChange.bind(this)} onSubmit={this.onDropdownSubmit.bind(this)}
                     />
                 </div>
 

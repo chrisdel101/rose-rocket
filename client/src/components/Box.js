@@ -11,15 +11,12 @@ class Box extends React.Component{
         }
 	}
     renderBoxes(i) {
-        // console.log(this.state.colored)
         if (this.props.toRender) {
             let { toRender } = this.props
           return toRender.map((obj, i) => {
               if(!this.state.colored){
-                  // console.log('top')
                   return this.boxesRemoveColorLogic(i)
               } else if(this.state.colored){
-                  // console.log('bottom')
                   return this.boxesColorLogic(i)
               }
           });
@@ -69,15 +66,14 @@ class Box extends React.Component{
         let {  stopsColor, legsColor, completeColor } = this.props;
         let hasStopColor = (() => {
           if (stopsColor && stopsColor.includes(i)) return false;
-          // return true
+
         })();
         let hasLegColor = (() => {
-               if (!legsColor || !legsColor.length || !legsColor.includes(i)) return false;
-               return true;
+               if (legsColor && legsColor.includes(i)) return false;
+
              })();
         let hasCompletionColor = (() => {
-               if (!completeColor || !completeColor.length || !completeColor.includes(i)) return false;
-               return true;
+               if (completeColor && completeColor.includes(i)) return false;
              })();
         return <this.BoxMarkup hasStopColor={hasStopColor} hasLegColor={hasLegColor} hasCompletionColor={hasCompletionColor} i={i} key={i}/>
     }
