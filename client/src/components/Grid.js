@@ -20,6 +20,7 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
+            clickCounter: 0,
             gridColored: false,
             loadingDataArr: [],
             // changes based on tab click
@@ -47,7 +48,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 10}, (v, i) => i),
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -181,7 +182,7 @@ class Grid extends Component {
     // update indexCounter by 1
     updateDriverIndex(index){
         let newIndex = index + 1
-        console.log(index)
+        // console.log(index)
         this.setState({
             indexCounter: newIndex
         })
@@ -909,6 +910,7 @@ class Grid extends Component {
                         legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
                         completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
                         colored={this.state.gridColored}
+                        count={this.state.clickCounter}
                     />
 
                     </div>
@@ -971,7 +973,11 @@ class Grid extends Component {
         } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
             this.colorAllStops()
-            this.toggleColor()
+            // console.log(this.state.clickCounter)
+            this.setState({
+                clickCounter: this.state.clickCounter + 1
+            })
+            // this.toggleColor()
         }
 
     }
