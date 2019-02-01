@@ -11,7 +11,7 @@ class Box extends React.Component{
         }
 	}
     renderBoxes(i) {
-        console.log(this.state.colored)
+        // console.log(this.state.colored)
         if (this.props.toRender) {
             let { toRender } = this.props
           return toRender.map((obj, i) => {
@@ -68,8 +68,8 @@ class Box extends React.Component{
         // console.log('uncolor')
         let {  stopsColor, legsColor, completeColor } = this.props;
         let hasStopColor = (() => {
-          if (!stopsColor || !stopsColor.length || stopsColor.includes(i)) return false;
-          return true
+          if (stopsColor && stopsColor.includes(i)) return false;
+          // return true
         })();
         let hasLegColor = (() => {
                if (!legsColor || !legsColor.length || !legsColor.includes(i)) return false;
