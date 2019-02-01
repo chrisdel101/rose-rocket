@@ -6,33 +6,48 @@ class Box extends React.Component{
     constructor(props) {
 		super(props)
         this.state = {
+            colored: false
         }
 	}
-
+    boxMarkup(hasStopColor, hasLegColor, hasCompletionColor,i){
+        return (
+            <div
+            className={`box ${hasStopColor ? "stop-color" : ""} ${hasLegColor ? " leg-color" : ""} ${hasCompletionColor ? "complete-color" : ""}`}
+            key={i}
+            />)
+    }
     renderBoxes(i) {
         if (this.props.toRender) {
-          let { toRender, stopsColor, legsColor, completeColor } = this.props;
+            let { toRender } = this.props
           return toRender.map((obj, i) => {
-            let hasStopColor = (() => {
-              if (!stopsColor || !stopsColor.length || !stopsColor.includes(i)) return false;
-              return true
-            })();
-            let hasLegColor = (() => {
-                   if (!legsColor || !legsColor.length || !legsColor.includes(i)) return false;
-                   return true;
-                 })();
-            let hasCompletionColor = (() => {
-                   if (!completeColor || !completeColor.length || !completeColor.includes(i)) return false;
-                   return true;
-                 })();
-            return (
-                <div
-                className={`box ${hasStopColor ? "stop-color" : ""} ${hasLegColor ? " leg-color" : ""} ${hasCompletionColor ? "complete-color" : ""}`}
-                key={i}
-                />)
+              if(!this.state.colored){
+                  return this.boxesWcolorLogic(i)
+              } else if(this.state.colored){
+                  return this.boxesWremoveColorLogic()
+              }
           });
         }
     }
+    boxesWcolorLogic(i){
+        let {  stopsColor, legsColor, completeColor } = this.props;
+        let hasStopColor = (() => {
+          if (!stopsColor || !stopsColor.length || !stopsColor.includes(i)) return false;
+          return true
+        })();
+        let hasLegColor = (() => {
+               if (!legsColor || !legsColor.length || !legsColor.includes(i)) return false;
+               return true;
+             })();
+        let hasCompletionColor = (() => {
+               if (!completeColor || !completeColor.length || !completeColor.includes(i)) return false;
+               return true;
+             })();
+        return this.boxMarkup(hasStopColor, hasLegColor, hasCompletionColor,i)
+    }
+    boxesWremoveColorLogic(){
+
+    }
+
     render() {
       // console.log(this.props)
         if (this.props.toRender && this.props.toRender.length) {
