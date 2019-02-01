@@ -66,8 +66,8 @@ class SimpleTabs extends React.Component {
             {this.state.tabs.map((tab, i) => {
               return <Tab label={tab.label} key={i} />;
             })}
-            <AddButton name="add-button" onClick={this.handleButtonClick.bind(this)} />
-            <SecondaryButton />
+            <AddButton onClick={this.handleButtonClick.bind(this)} />
+            <SecondaryButton  onClick={this.props.onClick}/>
           </Tabs>
         </AppBar>
         {

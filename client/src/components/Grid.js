@@ -46,7 +46,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 1}, (v, i) => i),
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -960,6 +960,9 @@ class Grid extends Component {
             event.stopPropagation()
             // add new driver on click
             this.addNewDriver()
+        } else if(event.target.classList.contains('secondary-button')){
+            event.stopPropagation()
+            this.colorAllStops()
         }
 
     }
