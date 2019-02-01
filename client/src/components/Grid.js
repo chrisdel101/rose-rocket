@@ -20,6 +20,7 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
+            gridColored: false,
             loadingDataArr: [],
             // changes based on tab click
             selectedDriverIndex: 0,
@@ -46,7 +47,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 10}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -208,7 +209,7 @@ class Grid extends Component {
         this.setState({
             driversArr: this.state.driversArr
         })
-        console.log(this.state)
+        // console.log(this.state)
     }
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
@@ -279,14 +280,14 @@ class Grid extends Component {
     }
     // calc up to driver position to color
     colorCompleted(legID){
-        console.log(legID)
+        // console.log(legID)
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
     	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
     	})
         //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
-        console.log(holdingArrIndex)
+        // console.log(holdingArrIndex)
         // index for json with legs info
         let dataIndex = this.state.legs.indexOf(arr[0])
         // console.log('holding' ,holdingArrIndex)
@@ -297,8 +298,8 @@ class Grid extends Component {
         var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
         //get current arr leg of cell nums
         var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
-        console.log('previouslegs', previousLegArrs)
-        console.log('currnt arr', currentLegArr)
+        // console.log('previouslegs', previousLegArrs)
+        // console.log('currnt arr', currentLegArr)
         // get current and next leg json info
         let thisLeg = this.state.legs[dataIndex]
         let nextLeg = this.state.legs[dataIndex + 1]
@@ -623,7 +624,7 @@ class Grid extends Component {
     }
 
     colorAllStops(){
-        console.log('fired')
+        // console.log('fired')
         // let arr = [1,2,3,4,5]
         let stops = [
             {x:20, y:10},
@@ -907,6 +908,7 @@ class Grid extends Component {
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
                         legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
                         completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
+                        colored={this.state.gridColored}
                     />
 
                     </div>
@@ -941,6 +943,13 @@ class Grid extends Component {
             </main>
         )
     }
+    toggleColor(){
+        this.state.gridColored = !this.state.gridColored
+        this.setState({
+            gridColored: this.state.gridColored
+        })
+        return
+    }
     handleClick(event){
         if(!event) return
         // set current driver on click on tab
@@ -962,6 +971,7 @@ class Grid extends Component {
         } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
             this.colorAllStops()
+            this.toggleColor()
         }
 
     }

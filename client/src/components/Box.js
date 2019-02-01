@@ -11,27 +11,43 @@ class Box extends React.Component{
 	}
     boxMarkup(hasStopColor, hasLegColor, hasCompletionColor,i){
         return (
-            <div
-            className={`box ${hasStopColor ? "stop-color" : ""} ${hasLegColor ? " leg-color" : ""} ${hasCompletionColor ? "complete-color" : ""}`}
-            key={i}
-            />)
+            <div className={`box ${hasStopColor ? "stop-color" : ""} ${hasLegColor ? " leg-color" : ""} ${hasCompletionColor ? "complete-color" : ""}`} key={i}></div>
+            )
     }
     renderBoxes(i) {
         if (this.props.toRender) {
             let { toRender } = this.props
           return toRender.map((obj, i) => {
-              if(!this.state.colored){
-                  return this.boxesWcolorLogic(i)
-              } else if(this.state.colored){
-                  return this.boxesWremoveColorLogic()
+              if(!this.props.colored){
+                  return this.boxesColorLogic(i)
+              } else if(this.props.colored){
+                  return this.boxesRemoveColorLogic()
               }
           });
-          // let opposite = !this.state.color
-          // console.log(opposite)
-          // this.setState({color:opposite})
         }
     }
-    boxesWcolorLogic(i){
+    toggleColor(){
+
+            this.state.colored = !this.state.colored
+            console.log('opposite', this.state.colored)
+            this.setState({
+                colored: this.state.colored
+            })
+            // if(this.state.colored === false){
+            //     console.log('opposite', !this.state.colored)
+            //     this.setState({
+            //         colored: true
+            //     })
+            // } else if(this.state.colored === true){
+            //     console.log('opposite', !this.state.colored)
+            //     this.setState({
+            //         colored: false
+            //     })
+            // }
+
+
+    }
+    boxesColorLogic(i){
         let {  stopsColor, legsColor, completeColor } = this.props;
         let hasStopColor = (() => {
           if (!stopsColor || !stopsColor.length || !stopsColor.includes(i)) return false;
@@ -47,12 +63,39 @@ class Box extends React.Component{
              })();
         return this.boxMarkup(hasStopColor, hasLegColor, hasCompletionColor,i)
     }
-    boxesWremoveColorLogic(){
-
+    boxesRemoveColorLogic(i){
+        // console.log(this.props.color)
+        // console.log('uncolor')
+        let {  stopsColor, legsColor, completeColor } = this.props;
+        let hasStopColor = (() => {
+          if (!stopsColor || !stopsColor.length || stopsColor.includes(i)) return false;
+          return true
+        })();
+        let hasLegColor = (() => {
+               if (!legsColor || !legsColor.length || !legsColor.includes(i)) return false;
+               return true;
+             })();
+        let hasCompletionColor = (() => {
+               if (!completeColor || !completeColor.length || !completeColor.includes(i)) return false;
+               return true;
+             })();
+        return this.boxMarkup(hasStopColor, hasLegColor, hasCompletionColor,i)
+    }
+    componentDidUpdate(prevProps,prevState){
+        // console.log('props',this.props.colored)
+        // console.log('prv props',prevProps.colored)
+        // console.log('prv state', prevState.colored)
+        if(this.props.colored !== prevProps.colored){
+            // console.log('props IN',this.props.colored)
+            // console.log('prv props IN',prevProps.colored)
+            // console.log('prv state IN', prevState.colored)
+            this.toggleColor()
+            console.log(this.state.colored)
+        }
     }
 
     render() {
-      console.log(this.props)
+      // console.log(this.props)
         if (this.props.toRender && this.props.toRender.length) {
           return <React.Fragment>{this.renderBoxes()}</React.Fragment>;
         } else {
