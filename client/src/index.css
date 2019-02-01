@@ -98,3 +98,7 @@ code {
 .button span svg {
 	pointer-events: none !important;
 }
+
+.secondary-button {
+	margin-left: auto !important;
+}

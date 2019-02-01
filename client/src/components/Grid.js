@@ -960,6 +960,9 @@ class Grid extends Component {
             event.stopPropagation()
             // add new driver on click
             this.addNewDriver()
+        } else if(event.target.classList.contains('secondary-button')){
+            event.stopPropagation()
+            this.colorAllStops()
         }
 
     }
