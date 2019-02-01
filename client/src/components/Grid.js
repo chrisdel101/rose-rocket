@@ -929,8 +929,7 @@ class Grid extends Component {
 
 
                     </div>
-                // <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
-                <button onClick={this.colorAllStops.bind(this)}>Color All</button>
+                <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
                 <Dropdown
                     type="color"
                     texts={this.state.texts}
