@@ -6,6 +6,7 @@ class Box extends React.Component{
     constructor(props) {
 		super(props)
         this.state = {
+            colored: false
         }
 	}
 
@@ -15,6 +16,9 @@ class Box extends React.Component{
           return toRender.map((obj, i) => {
             let hasStopColor = (() => {
               if (!stopsColor || !stopsColor.length || !stopsColor.includes(i)) return false;
+              this.setState({
+                  colored: true
+              })
               return true
             })();
             let hasLegColor = (() => {
