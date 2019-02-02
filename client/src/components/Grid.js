@@ -20,8 +20,6 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
-            clickCounter: 0,
-            gridColored: false,
             loadingDataArr: [],
             // changes based on tab click
             selectedDriverIndex: 0,
@@ -182,7 +180,7 @@ class Grid extends Component {
     // update indexCounter by 1
     updateDriverIndex(index){
         let newIndex = index + 1
-        // console.log(index)
+        console.log(index)
         this.setState({
             indexCounter: newIndex
         })
@@ -210,7 +208,7 @@ class Grid extends Component {
         this.setState({
             driversArr: this.state.driversArr
         })
-        // console.log(this.state)
+        console.log(this.state)
     }
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
@@ -281,14 +279,14 @@ class Grid extends Component {
     }
     // calc up to driver position to color
     colorCompleted(legID){
-        // console.log(legID)
+        console.log(legID)
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
     	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
     	})
         //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
-        // console.log(holdingArrIndex)
+        console.log(holdingArrIndex)
         // index for json with legs info
         let dataIndex = this.state.legs.indexOf(arr[0])
         // console.log('holding' ,holdingArrIndex)
@@ -296,11 +294,10 @@ class Grid extends Component {
         // var previousLegNames = this.state.legs.slice(0,index)
 
         // get arr of all previous arrs to cell nums
-        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
+        // var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
         //get current arr leg of cell nums
-        var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
+        // var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
         // console.log('previouslegs', previousLegArrs)
-        // console.log('currnt arr', currentLegArr)
         // get current and next leg json info
         let thisLeg = this.state.legs[dataIndex]
         let nextLeg = this.state.legs[dataIndex + 1]
@@ -320,7 +317,8 @@ class Grid extends Component {
             x: legLastStop[0].x,
             y: legLastStop[0].y
         }
-        // console.log(stopEndCoords)
+        console.log(stopStartCoords)
+        console.log(stopEndCoords)
         // get diff to get number of moves
         // let diffObj = this._absDiff(stopStartCoords, stopEndCoords)
         // console.log(diff)
@@ -332,7 +330,7 @@ class Grid extends Component {
         // console.log(this.state.legStartEndCellNums)
         // cell nums
         let { start, end } = this.state.legStartEndCellNums[holdingArrIndex]
-        // console.log('start/end', start, end)
+        console.log('start/end', start, end)
         // set startingCell and start x / y
 
         // this.state.startingCellNumPartial: start/end cells
@@ -361,8 +359,8 @@ class Grid extends Component {
         // inout end coords
         // this.state.driverCoords.x = 20
         // this.state.driverCoords.y = 13
-        // console.log(this.state.driverCoords)
-        this.legStartEnd(selectedDriver.driverCoords.x,selectedDriver.driverCoords.y, 'partial')
+        // console.log(selectedDriver)
+        this.legStartEnd(selectedDriver.driverCoords.xToMove,selectedDriver.driverCoords.yToMove, 'partial')
 
         // get start cell num
 
@@ -611,7 +609,7 @@ class Grid extends Component {
             // console.log('end of run x', this.state.previousLegX)
             // console.log('end of run y', this.state.previousLegY)
         } else if(type === 'partial'){
-            // console.log('cells arr',tempCellNumsArr)
+            console.log('cells arr',tempCellNumsArr)
             this.setState({
                 previousStopX: x,
                 previousStopY: y,
@@ -625,7 +623,7 @@ class Grid extends Component {
     }
 
     colorAllStops(){
-        // console.log('fired')
+        console.log('fired')
         // let arr = [1,2,3,4,5]
         let stops = [
             {x:20, y:10},
@@ -909,8 +907,6 @@ class Grid extends Component {
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
                         legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
                         completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
-                        colored={this.state.gridColored}
-                        count={this.state.clickCounter}
                     />
 
                     </div>
@@ -933,24 +929,18 @@ class Grid extends Component {
 
 
                     </div>
-                <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
+                // <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
+                <button onClick={this.colorAllStops.bind(this)}>Color All</button>
                 <Dropdown
                     type="color"
                     texts={this.state.texts}
                     legs={this.state.legs.length ? this.state.legs : null}
-                    onChange={this.handleDropdownChange.bind(this)} onSubmit={this.onDropdownSubmit.bind(this)}
+                    onChange={this.handleDropdownChange} onSubmit={this.onDropdownSubmit.bind(this)}
                     />
                 </div>
 
             </main>
         )
-    }
-    toggleColor(){
-        this.state.gridColored = !this.state.gridColored
-        this.setState({
-            gridColored: this.state.gridColored
-        })
-        return
     }
     handleClick(event){
         if(!event) return
@@ -973,11 +963,6 @@ class Grid extends Component {
         } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
             this.colorAllStops()
-            // console.log(this.state.clickCounter)
-            this.setState({
-                clickCounter: this.state.clickCounter + 1
-            })
-            // this.toggleColor()
         }
 
     }
