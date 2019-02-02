@@ -927,14 +927,10 @@ class Grid extends Component {
                         />
 
 
-                        <Switch
-                            isActive={this.state.isActive}
-                            onClick={this.handleSwitchClick.bind(this)}/>
 
 
                     </div>
-                // <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
-                <button onClick={this.colorAllStops.bind(this)}>Color All</button>
+
                 <Dropdown
                     type="color"
                     texts={this.state.texts}
@@ -948,7 +944,6 @@ class Grid extends Component {
     }
     handleClick(event){
         if(!event) return
-        console.log('click')
         // set current driver on click on tab
         if(event.target.innerText.includes('DRIVER')){
             event.stopPropagation()
@@ -966,16 +961,9 @@ class Grid extends Component {
             // add new driver on click
             this.addNewDriver()
         } else if(event.target.classList.contains('secondary-button')){
-            console.log('kjnwef')
-            // if(event.target.dataset.number === 1){
-            //     event.stopPropagation()
-            //     this.colorAllStops()
-            //     console.log('yew')
-            // } else if(event.target.dataset.number === 2){
-            //     console.log('hi')
-            // }
-        } else if(event.target.dataset.number === 2){
-            console.log('kjwenfka')
+            if(event.target.dataset.number === "2"){
+                this.colorCompletedStops()
+            }
         }
 
     }
