@@ -82,12 +82,18 @@ class Accordion extends React.Component {
 
         <ExpansionPanel expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Driver Progress Coordinates</Typography>
-            <Typography className={classes.secondaryHeading}>Highlight completed route.</Typography>
+            <Typography className={classes.heading}>Legs & Progress</Typography>
+            <Typography className={classes.secondaryHeading}>Highlight completed route and legs.</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-
-            <MaterialButton size="large" color="primary" type="secondary-button" text="Progess" buttonNumber={2} onClick={this.props.onClick}/>
+          <Dropdown
+                onChange={this.props.onChange}
+                onSubmit={this.props.onSubmit}
+                legs={this.props.legs ? this.props.legs : null}
+                type="color"
+                texts={this.props.texts}
+          />
+          <MaterialButton size="large" color="primary" type="secondary-button" text="Progess" buttonNumber={2} onClick={this.props.onClick}/>
 
             <Typography>
 

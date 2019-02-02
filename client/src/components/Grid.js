@@ -9,7 +9,6 @@ import Dropdown from './Dropdown'
 import Form from './Form'
 import Switch from './Switch'
 import Tabs from './material/Tabs'
-import MaterialSelect from './material/MaterialSelect'
 
 class Grid extends Component {
 	constructor(props) {
@@ -934,12 +933,7 @@ class Grid extends Component {
 
                     </div>
 
-                <Dropdown
-                    type="color"
-                    texts={this.state.texts}
-                    legs={this.state.legs.length ? this.state.legs : null}
-                    onChange={this.handleDropdownChange.bind(this)} onSubmit={this.onDropdownSubmit.bind(this)}
-                    />
+                
                 </div>
 
             </main>
