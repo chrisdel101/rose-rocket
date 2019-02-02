@@ -1209,6 +1209,7 @@ class Grid extends Component {
         let leg = this.state.holdAllLegColorArrs[index]
         // set state on child to change the color
         let legObj = {leg, index}
+        console.log(legObj)
         this.setState({
             finalLegColorObj: legObj,
             legColorsCounter: this.state.legColorsCounter + 1

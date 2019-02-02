@@ -10,7 +10,8 @@ class Box extends React.Component{
             legColored: false,
             completeColored: false,
             allColorsCounter: 0,
-            legColorsCounter: 0
+            legColorsCounter: 0,
+            previousLegIndex: ""
         }
 	}
     renderBoxes(i) {
@@ -26,9 +27,18 @@ class Box extends React.Component{
               if(!this.state.legColored){
                   // console.log('top')
                   result = this.legColorsRemoveLogic(i)
+                  // this.setState({
+                  //     previousLegIndex: this.props.legsColor.index
+                  // })
               } else if(this.state.legColored){
-                  // console.log('run bottom')
-                  result = this.legColorsAddLogic(i)
+                  // if it's same index, remove the color
+                  // if(this.props.legsColor.index !== this.state.previousLegIndex){
+                                      // } else {
+                      result = this.legColorsAddLogic(i)
+
+                  // this.setState({
+                  //     previousLegIndex: this.props.legsColor.index
+                  // })
               }
               return result
           });
@@ -151,24 +161,27 @@ class Box extends React.Component{
 
             console.log('update')
         }
+        // check for change - if counter diff then there is a change
         if(this.props.legColorsCounter !== prevProps.legColorsCounter){
-            // console.log(this.props.count)
-            // console.log(this.state.legColorsCounter)
-            // if state count is not yet updated
-            if(this.state.legColorsCounter !== this.props.legColorsCounter){
-                console.log('toggle leg')
-                // update by one
-                this.toggleColor('leg')
+            // if new leg, index will be diff
+            if(this.props.legsColor.index !== this.state.previousLegIndex){
+                console.log('change leg')
+                // udpate index
                 this.setState({
-                    legColorsCounter: this.props.legColorsCounter
+                    previousLegIndex: this.props.legsColor.index,
+                    legColored: true
                 })
                 setTimeout(() => {
-                    console.log(this.state.legColorsCounter)
+                    console.log(this.state)
 
                 })
+                // if same leg, index will match previous
+            } else if(this.props.legsColor.index === this.state.previousLegIndex){
+                console.log('toggle leg')
+                this.toggleColor('leg')
             } else {
-                console.log(this.state.legColorsCounter)
-                console.log(this.props.legColorsCounter)
+
+                console.error("An error in the leg index logic")
             }
 
             console.log('update')
