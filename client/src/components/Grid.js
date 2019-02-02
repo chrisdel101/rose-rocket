@@ -11,6 +11,7 @@ import Switch from './Switch'
 import Tabs from './Tabs'
 import Accordion from './Accordion'
 import AddButton from './AddButton'
+import SecondaryButton from './SecondaryButton'
 
 class Grid extends Component {
 	constructor(props) {
@@ -46,7 +47,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 100}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -925,6 +926,7 @@ class Grid extends Component {
                             texts={this.state.texts}
                         />
 
+
                         <Switch
                             isActive={this.state.isActive}
                             onClick={this.handleSwitchClick.bind(this)}/>
@@ -946,6 +948,7 @@ class Grid extends Component {
     }
     handleClick(event){
         if(!event) return
+        console.log('click')
         // set current driver on click on tab
         if(event.target.innerText.includes('DRIVER')){
             event.stopPropagation()
@@ -963,8 +966,16 @@ class Grid extends Component {
             // add new driver on click
             this.addNewDriver()
         } else if(event.target.classList.contains('secondary-button')){
-            event.stopPropagation()
-            this.colorAllStops()
+            console.log('kjnwef')
+            // if(event.target.dataset.number === 1){
+            //     event.stopPropagation()
+            //     this.colorAllStops()
+            //     console.log('yew')
+            // } else if(event.target.dataset.number === 2){
+            //     console.log('hi')
+            // }
+        } else if(event.target.dataset.number === 2){
+            console.log('kjwenfka')
         }
 
     }

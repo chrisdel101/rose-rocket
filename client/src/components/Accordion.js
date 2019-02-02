@@ -9,10 +9,12 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Form from './Form'
 import Dropdown from './Dropdown'
+import SecondaryButton from './SecondaryButton'
+
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    width: '75%',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -74,6 +76,19 @@ class Accordion extends React.Component {
                 texts={this.props.texts}
           />
             <Typography>
+            </Typography>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+
+        <ExpansionPanel expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>Driver Progress Coordinates</Typography>
+            <Typography className={classes.secondaryHeading}>Highlight completed route.</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <SecondaryButton text="Progess"/>
+            <Typography>
+
             </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>

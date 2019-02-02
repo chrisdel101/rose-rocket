@@ -15,8 +15,8 @@ const styles = theme => ({
 function SecondaryButton(props) {
   const { classes } = props;
   return (
-      <Button variant="contained" color="secondary" className={`secondary-button button ${classes.button}`}>
-        Color Stops
+      <Button variant="contained" size="small" color="secondary" className={`secondary-button button ${classes.button}`} data-number={props.buttonNumber} onClick={(ev) => props.onClick(ev)}>
+        {props.text}
       </Button>
   );
 }
