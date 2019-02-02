@@ -8,10 +8,10 @@ import Truck from './Truck'
 import Dropdown from './Dropdown'
 import Form from './Form'
 import Switch from './Switch'
-import Tabs from './Tabs'
-import Accordion from './Accordion'
-import AddButton from './AddButton'
-import SecondaryButton from './SecondaryButton'
+import Tabs from './material/Tabs'
+import Accordion from './material/Accordion'
+import AddButton from './material/AddButton'
+import SecondaryButton from './material/SecondaryButton'
 
 class Grid extends Component {
 	constructor(props) {

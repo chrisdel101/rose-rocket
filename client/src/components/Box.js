@@ -107,7 +107,6 @@ class Box extends React.Component {
   }
   completedColorsAddLogic(i) {
     let { completeColor } = this.props
-    // console.log(legsColor)
     let hasCompletionColor = (() => {
       if (!completeColor || !completeColor.length || !completeColor.includes(i))
         return false
@@ -138,9 +137,9 @@ class Box extends React.Component {
       // if state count is not yet updated
       if (this.state.allColorsCounter !== this.props.allColorsCounter) {
         console.log("toggle")
-        // update by one
         this.toggleColor("all")
         this.setState({
+            // update by one
           allColorsCounter: this.props.allColorsCounter
         })
       } else {
@@ -157,7 +156,7 @@ class Box extends React.Component {
           previousLegIndex: this.props.legsColor.index,
           legColored: true
         })
-        // if same leg, index will match previous
+        // if same leg, index will match previous then just toggle off
       } else if (this.props.legsColor.index === this.state.previousLegIndex) {
         console.log("toggle leg")
         this.toggleColor("leg")

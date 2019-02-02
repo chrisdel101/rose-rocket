@@ -7,14 +7,14 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Form from './Form'
-import Dropdown from './Dropdown'
+import Form from '../Form'
+import Dropdown from '../Dropdown'
 import SecondaryButton from './SecondaryButton'
 
 
 const styles = theme => ({
   root: {
-    width: '75%',
+    width: '100%',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
