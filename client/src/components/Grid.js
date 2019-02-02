@@ -58,7 +58,7 @@ class Grid extends Component {
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
             finalStopColorArr:[],
-            finalLegColorArr: [],
+            finalLegColorObj: [],
             finalCompletedColorsArr: [],
             finalDriverMoveObj: "",
             driversArr: [],
@@ -914,10 +914,10 @@ class Grid extends Component {
                     <Stop coords={this.state.stopsDirsArr}/>
                     <Box
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
-                        legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
+                        legsColor={(this.state.finalLegColorObj ? this.state.finalLegColorObj : null)}
                         completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
                         allColored={this.state.allColored}
-                        legColored={this.state.legColored}
+                        legColorsCounter={this.state.legColorsCounter}
                         completedColored={this.state.completedColored}
                         allColorsCounter={this.state.allColorsCounter}
                     />
@@ -979,14 +979,12 @@ class Grid extends Component {
             this.addNewDriver()
         } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
-            console.log(event.target.dataset)
             if(event.target.dataset.number === "1"){
                 this.colorAllStops()
                 // console.log(this.state.allColorsCounter)
                 this.setState({
                     allColorsCounter: this.state.allColorsCounter + 1
                 })
-
             } else if(event.target.dataset.number === "2")
             this.colorCompletedStops()
         }
@@ -1015,12 +1013,11 @@ class Grid extends Component {
         }
     }
     handleDropdownChange(e) {
-        console.log(e.target)
+        // console.log(e.target)
         if(e.target.name === 'driver-select'){
             console.log('here')
             this.setState({driverLegInput: e.target.value})
         } else if(e.target.name === 'color-select'){
-            console.log('color')
             this.setState({
                 value: e.target.value,
                 legToColorID: e.target.value
@@ -1029,7 +1026,7 @@ class Grid extends Component {
     }
     onDropdownSubmit(event) {
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        console.log(selectedDriver)
+        // console.log(selectedDriver)
         event.preventDefault()
 
         if(event.target.name === 'driver-dropdown'){
@@ -1202,6 +1199,7 @@ class Grid extends Component {
         return index
     }
     colorLeg(input){
+        // console.log(this.state.finalLegColorObj)
         let that = this
         // - get val from Dropdown-
         // change it to an index
@@ -1210,8 +1208,10 @@ class Grid extends Component {
         // get leg using index out of array
         let leg = this.state.holdAllLegColorArrs[index]
         // set state on child to change the color
+        let legObj = {leg, index}
         this.setState({
-            finalLegColorArr: leg
+            finalLegColorObj: legObj,
+            legColorsCounter: this.state.legColorsCounter + 1
         })
     }
 
