@@ -86,7 +86,9 @@ class Accordion extends React.Component {
             <Typography className={classes.secondaryHeading}>Highlight completed route.</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <SecondaryButton text="Progess"/>
+
+            <SecondaryButton text="Progess" buttonNumber={2} onClick={this.props.onClick}/>
+
             <Typography>
 
             </Typography>

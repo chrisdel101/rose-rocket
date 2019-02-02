@@ -106,3 +106,7 @@ code {
 .color-controls {
 	margin-left: 15px;
 }
+
+[data-number="2"] {
+	margin-right: auto !important;
+}

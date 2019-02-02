@@ -79,13 +79,14 @@ class SimpleTabs extends React.Component {
                      return value === i && (
                         <TabContainer key={i}>
                         <Accordion
+                            onClick={this.props.onClick}
                             onSubmit={this.props.onSubmit}
                             onChange={this.props.onChange}
                             values={this.props.values}
                             legs={this.props.legs ? this.props.legs : null}
                             texts={this.props.texts}
                         />
-                        
+
                         </TabContainer>
                     )
 
