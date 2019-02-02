@@ -11,6 +11,7 @@ import Switch from './Switch'
 import Tabs from './Tabs'
 import Accordion from './Accordion'
 import AddButton from './AddButton'
+import SecondaryButton from './SecondaryButton'
 
 class Grid extends Component {
 	constructor(props) {
@@ -296,9 +297,9 @@ class Grid extends Component {
         // var previousLegNames = this.state.legs.slice(0,index)
 
         // get arr of all previous arrs to cell nums
-        var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
+        // var previousLegArrs = this.state.holdAllLegColorArrs.slice(0, holdingArrIndex)
         //get current arr leg of cell nums
-        var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
+        // var currentLegArr = this.state.holdAllLegColorArrs[holdingArrIndex]
         // console.log('previouslegs', previousLegArrs)
         // console.log('currnt arr', currentLegArr)
         // get current and next leg json info
@@ -320,7 +321,8 @@ class Grid extends Component {
             x: legLastStop[0].x,
             y: legLastStop[0].y
         }
-        // console.log(stopEndCoords)
+        console.log(stopStartCoords)
+        console.log(stopEndCoords)
         // get diff to get number of moves
         // let diffObj = this._absDiff(stopStartCoords, stopEndCoords)
         // console.log(diff)
@@ -332,7 +334,7 @@ class Grid extends Component {
         // console.log(this.state.legStartEndCellNums)
         // cell nums
         let { start, end } = this.state.legStartEndCellNums[holdingArrIndex]
-        // console.log('start/end', start, end)
+        console.log('start/end', start, end)
         // set startingCell and start x / y
 
         // this.state.startingCellNumPartial: start/end cells
@@ -361,8 +363,9 @@ class Grid extends Component {
         // inout end coords
         // this.state.driverCoords.x = 20
         // this.state.driverCoords.y = 13
-        // console.log(this.state.driverCoords)
-        this.legStartEnd(selectedDriver.driverCoords.x,selectedDriver.driverCoords.y, 'partial')
+        console.log(selectedDriver)
+        // console.log(selectedDriver)
+        this.legStartEnd(selectedDriver.driverCoords.xToMove,selectedDriver.driverCoords.yToMove, 'partial')
 
         // get start cell num
 
@@ -611,7 +614,7 @@ class Grid extends Component {
             // console.log('end of run x', this.state.previousLegX)
             // console.log('end of run y', this.state.previousLegY)
         } else if(type === 'partial'){
-            // console.log('cells arr',tempCellNumsArr)
+            console.log('cells arr',tempCellNumsArr)
             this.setState({
                 previousStopX: x,
                 previousStopY: y,
@@ -927,13 +930,11 @@ class Grid extends Component {
                             texts={this.state.texts}
                         />
 
-                        <Switch
-                            isActive={this.state.isActive}
-                            onClick={this.handleSwitchClick.bind(this)}/>
+
 
 
                     </div>
-                <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
+
                 <Dropdown
                     type="color"
                     texts={this.state.texts}

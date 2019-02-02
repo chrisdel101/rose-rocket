@@ -54,6 +54,9 @@ class SimpleTabs extends React.Component {
       this.addTab()
       this.props.onClick()
   }
+  handleSecButtonClick(){
+      console.log('hello')
+  }
 
   render() {
     const { classes } = this.props;
@@ -67,26 +70,28 @@ class SimpleTabs extends React.Component {
               return <Tab label={tab.label} key={i} />;
             })}
             <AddButton onClick={this.handleButtonClick.bind(this)} />
-            <SecondaryButton  onClick={this.props.onClick}/>
+            <SecondaryButton  text="Color All Stops" onClick={this.props.onClick} buttonNumber={1}/>
+
           </Tabs>
         </AppBar>
-        {
-            this.state.tabs.map((tab, i) => {
-                 return value === i && (
-                    <TabContainer key={i}>
-                    <Accordion
-                        onSubmit={this.props.onSubmit}
-                        onChange={this.props.onChange}
-                        values={this.props.values}
-                        legs={this.props.legs ? this.props.legs : null}
-                        texts={this.props.texts}
-                    />
-                    </TabContainer>
-                )
+            {
+                this.state.tabs.map((tab, i) => {
+                     return value === i && (
+                        <TabContainer key={i}>
+                        <Accordion
+                            onClick={this.props.onClick}
+                            onSubmit={this.props.onSubmit}
+                            onChange={this.props.onChange}
+                            values={this.props.values}
+                            legs={this.props.legs ? this.props.legs : null}
+                            texts={this.props.texts}
+                        />
 
-            })
-        }
+                        </TabContainer>
+                    )
 
+                })
+            }
       </div>
     );
   }
