@@ -912,7 +912,7 @@ class Grid extends Component {
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
                         legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
                         completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
-                        colored={this.state.gridColored}
+                        allColor={this.state.gridColored}
                         count={this.state.clickCounter}
                     />
 
@@ -973,6 +973,7 @@ class Grid extends Component {
             this.addNewDriver()
         } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
+            console.log(event.target.dataset)
             if(event.target.dataset.number === "1"){
                 this.colorAllStops()
                 // console.log(this.state.clickCounter)

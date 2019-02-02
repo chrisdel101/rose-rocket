@@ -6,7 +6,7 @@ class Box extends React.Component{
     constructor(props) {
 		super(props)
         this.state = {
-            colored: false,
+            allColored: false,
             counter: 0
         }
 	}
@@ -14,34 +14,49 @@ class Box extends React.Component{
         if (this.props.toRender) {
             let { toRender } = this.props
           return toRender.map((obj, i) => {
-              if(!this.state.colored){
-                  return this.boxesRemoveColorLogic(i)
-              } else if(this.state.colored){
-                  return this.boxesColorLogic(i)
+              if(!this.state.allColored){
+                  return this.allColorsRemoveLogic(i)
+              } else if(this.state.allColored){
+                  return this.allColorsAddLogic(i)
               }
           });
         }
     }
     toggleColor(){
 
-            this.state.colored = !this.state.colored
-            console.log('opposite', this.state.colored)
+            this.state.allColored = !this.state.allColored
+            console.log('opposite', this.state.allColored)
             this.setState({
-                colored: this.state.colored
+                allColored: this.state.allColored
             })
-            // if(this.state.colored === false){
-            //     console.log('opposite', !this.state.colored)
+            // if(this.state.allColored === false){
+            //     console.log('opposite', !this.state.allColored)
             //     this.setState({
-            //         colored: true
+            //         allColored: true
             //     })
-            // } else if(this.state.colored === true){
-            //     console.log('opposite', !this.state.colored)
+            // } else if(this.state.allColored === true){
+            //     console.log('opposite', !this.state.allColored)
             //     this.setState({
-            //         colored: false
+            //         allColored: false
             //     })
             // }
 
 
+    }
+    allColorsAddLogic(i){
+        let { stopsColor } = this.props;
+        let hasStopColor = (() => {
+          if (!stopsColor || !stopsColor.length || !stopsColor.includes(i)) return false;
+          return true
+        })();
+        return <this.BoxMarkup hasStopColor={hasStopColor} key={i}/>
+    }
+    allColorsRemoveLogic(i){
+        let {  stopsColor } = this.props;
+        let hasStopColor = (() => {
+          if (stopsColor && stopsColor.includes(i)) return false;
+        })();
+        return <this.BoxMarkup hasStopColor={hasStopColor} key={i}/>
     }
     boxesColorLogic(i){
         // console.log('color')
@@ -83,9 +98,9 @@ class Box extends React.Component{
         )
     }
     componentDidUpdate(prevProps,prevState){
-        if(this.props.colored !== prevProps.colored){
+        if(this.props.allColored !== prevProps.allColored){
             this.toggleColor()
-            console.log(this.state.colored)
+            console.log(this.state.allColored)
         }
         // check if this props is dif than last
         if(this.props.count !== prevProps.count){
