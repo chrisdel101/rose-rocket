@@ -11,6 +11,7 @@ import Switch from './Switch'
 import Tabs from './Tabs'
 import Accordion from './Accordion'
 import AddButton from './AddButton'
+import SecondaryButton from './SecondaryButton'
 
 class Grid extends Component {
 	constructor(props) {
@@ -923,14 +924,11 @@ class Grid extends Component {
                             texts={this.state.texts}
                         />
 
-                        <Switch
-                            isActive={this.state.isActive}
-                            onClick={this.handleSwitchClick.bind(this)}/>
+
 
 
                     </div>
-                // <button onClick={this.colorCompletedStops.bind(this)}>Color Completed</button>
-                <button onClick={this.colorAllStops.bind(this)}>Color All</button>
+
                 <Dropdown
                     type="color"
                     texts={this.state.texts}
@@ -961,8 +959,9 @@ class Grid extends Component {
             // add new driver on click
             this.addNewDriver()
         } else if(event.target.classList.contains('secondary-button')){
-            event.stopPropagation()
-            this.colorAllStops()
+            if(event.target.dataset.number === "2"){
+                this.colorCompletedStops()
+            }
         }
 
     }
