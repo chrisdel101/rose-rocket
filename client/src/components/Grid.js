@@ -9,9 +9,7 @@ import Dropdown from './Dropdown'
 import Form from './Form'
 import Switch from './Switch'
 import Tabs from './material/Tabs'
-import Accordion from './material/Accordion'
-import AddButton from './material/AddButton'
-import SecondaryButton from './material/SecondaryButton'
+import MaterialSelect from './material/MaterialSelect'
 
 class Grid extends Component {
 	constructor(props) {
@@ -51,7 +49,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 1}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -934,9 +932,6 @@ class Grid extends Component {
                             texts={this.state.texts}
                         />
 
-
-
-
                     </div>
 
                 <Dropdown
@@ -994,34 +989,13 @@ class Grid extends Component {
 
     }
 }
-    handleSwitchClick(e){
-        let isActive = Object.assign({}, this.state.isActive)
-        if(e.target.name === 'coords'){
-            if(!this.state.isActive.button1){
-                isActive.button1 = true
-                isActive.button2 = false
-                this.setState({
-                    isActive: isActive
-                })
-            }
-        } else if(e.target.name === 'progress'){
-            if(!this.state.isActive.button2){
-                isActive.button1 = false
-                isActive.button2 = true
-                this.setState({
-                    isActive: isActive
-                })
-            }
-        } else {
-            console.error("error on button click")
-        }
-    }
     handleDropdownChange(e) {
-        // console.log(e.target)
+        console.log(e.target.name)
         if(e.target.name === 'driver-select'){
             console.log('here')
             this.setState({driverLegInput: e.target.value})
         } else if(e.target.name === 'color-select'){
+            console.log('he')
             this.setState({
                 value: e.target.value,
                 legToColorID: e.target.value

@@ -12,17 +12,17 @@ const styles = theme => ({
   },
 });
 
-function SecondaryButton(props) {
+function MaterialButton(props) {
   const { classes } = props;
   return (
-      <Button variant="contained" size="small" color="secondary" className={`secondary-button button ${classes.button}`} data-number={props.buttonNumber} onClick={props.onClick}>
+      <Button variant="contained" type={props.type} size={props.size} color={props.color} className={`${props.type} button ${classes.button}`} data-number={props.buttonNumber} onClick={props.onClick}>
         {props.text}
       </Button>
   );
 }
 
-SecondaryButton.propTypes = {
+MaterialButton.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SecondaryButton);
+export default withStyles(styles)(MaterialButton);

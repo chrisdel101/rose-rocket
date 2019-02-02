@@ -1,4 +1,6 @@
 import React from 'react'
+import MaterialSelect from './material/MaterialSelect'
+import MaterialButton from './material/MaterialButton'
 
 class Dropdown extends React.Component{
     constructor(props) {
@@ -18,25 +20,28 @@ class Dropdown extends React.Component{
     render(){
 
         if(this.props.legs){
+
             return(
                 <div className="legs-container">
 
                 <form name={this.props.type === 'driver' ? 'driver-dropdown': 'color'} onSubmit={(ev) => this.props.onSubmit(ev)}>
                     <label>
                     {this.props.type === 'driver' ? this.props.texts.driverText: this.props.texts.colorText}
-                    <select name={this.props.type === 'driver' ? 'driver-select': 'color-select'} value={this.state.value} onChange={(ev) => this.props.onChange(ev)}>
+                    <MaterialSelect legs={this.props.legs} value={this.state.value} onChange={this.props.onChange}>
+
                         <option></option>
                     {
                         this.props.legs.map((leg, i) => {
                             return <option key={i} value={this.state.value}>{leg.legID}</option>
                         })
                     }
-                    </select>
+                    </MaterialSelect>
                     </label>
                     {this.props.type === 'driver'?
                     this.renderInput() : null
                     }
-                    <input  type="submit" value="Submit" />
+                    <MaterialButton type="submit" value="Submit" size="large" color="primary" type="submit-button" text="Toggle Leg"/>
+
                 </form>
 
                 </div>

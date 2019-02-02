@@ -9,7 +9,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Form from '../Form'
 import Dropdown from '../Dropdown'
-import SecondaryButton from './SecondaryButton'
+import MaterialButton from './MaterialButton'
 
 
 const styles = theme => ({
@@ -87,7 +87,7 @@ class Accordion extends React.Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
 
-            <SecondaryButton text="Progess" buttonNumber={2} onClick={this.props.onClick}/>
+            <MaterialButton size="large" color="primary" type="secondary-button" text="Progess" buttonNumber={2} onClick={this.props.onClick}/>
 
             <Typography>
 
