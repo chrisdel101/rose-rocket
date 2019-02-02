@@ -11,6 +11,7 @@ class Box extends React.Component{
             completeColored: false,
             allColorsCounter: 0,
             legColorsCounter: 0,
+            completedColorsCounter: 0,
             previousLegIndex: ""
         }
 	}
@@ -19,26 +20,36 @@ class Box extends React.Component{
             let { toRender } = this.props
           return toRender.map((obj, i) => {
               let result
-              if(!this.state.allColored){
-                  result = this.allColorsRemoveLogic(i)
-              } else if(this.state.allColored){
-                  result = this.allColorsAddLogic(i)
-              }
-              if(!this.state.legColored){
-                  // console.log('top')
-                  result = this.legColorsRemoveLogic(i)
-                  // this.setState({
-                  //     previousLegIndex: this.props.legsColor.index
-                  // })
-              } else if(this.state.legColored){
-                  // if it's same index, remove the color
-                  // if(this.props.legsColor.index !== this.state.previousLegIndex){
-                                      // } else {
-                      result = this.legColorsAddLogic(i)
-
-                  // this.setState({
-                  //     previousLegIndex: this.props.legsColor.index
-                  // })
+              switch(this.props.type){
+                  case 'all':
+                  // console.log(this.props.type)
+                      if(!this.state.allColored){
+                          result = this.allColorsRemoveLogic(i)
+                      } else if(this.state.allColored){
+                          result = this.allColorsAddLogic(i)
+                      }
+                  break
+                  case 'leg':
+                  // console.log(this.props.type)
+                      if(!this.state.legColored){
+                          // console.log('top')
+                          result = this.legColorsRemoveLogic(i)
+                          // this.setState({
+                              //     previousLegIndex: this.props.legsColor.index
+                              // })
+                          } else if(this.state.legColored){
+                              // if it's same index, remove the color
+                              result = this.legColorsAddLogic(i)
+                          }
+                    break
+                    case 'complete':
+                    // console.log(this.props.type)
+                        if(!this.state.completeColored){
+                            result = this.completedColorsRemoveLogic(i)
+                        } else if(this.state.completeColored){
+                            result = this.completedColorsAddLogic(i)
+                        }
+                    break
               }
               return result
           });
@@ -59,7 +70,7 @@ class Box extends React.Component{
                     legColored: this.state.legColored
                 })
 
-            } else if(type === 'comlpete'){
+            } else if(type === 'complete'){
                 this.state.completeColored = !this.state.completeColored
                 console.log('opposite', this.state.completeColored)
                 this.setState({
@@ -108,7 +119,7 @@ class Box extends React.Component{
            if (!legsColor || !legsColor.length || !legsColor.includes(i)) return false;
            return true;
         })();
-        return <this.BoxMarkup hasStopColor={hasLegColor} key={i}/>
+        return <this.BoxMarkup hasLegColor={hasLegColor} key={i}/>
     }
     legColorsRemoveLogic(i){
         let {  legsColor } = this.props;
@@ -116,7 +127,23 @@ class Box extends React.Component{
         let hasLegColor = (() => {
               if (legsColor && legsColor.includes(i)) return false;
         })();
-        return <this.BoxMarkup hasStopColor={hasLegColor} key={i}/>
+        return <this.BoxMarkup hasLegColor={hasLegColor} key={i}/>
+    }
+    completedColorsAddLogic(i){
+        let { completeColor } = this.props;
+        // console.log(legsColor)
+        let hasCompletionColor = (() => {
+           if (!completeColor || !completeColor.length || !completeColor.includes(i)) return false;
+           return true;
+         })();
+        return <this.BoxMarkup hasCompletionColor={hasCompletionColor} key={i}/>
+    }
+    completedColorsRemoveLogic(i){
+        let {  completeColor } = this.props;
+        let hasCompletionColor = (() => {
+           if (completeColor && completeColor.includes(i)) return false;
+         })();
+        return <this.BoxMarkup hasCompletionColor={hasCompletionColor} key={i}/>
     }
 
     BoxMarkup(props){
@@ -144,8 +171,7 @@ class Box extends React.Component{
         // }
         // check if this props is dif than last - to stop it firing over and over
         if(this.props.allColorsCounter !== prevProps.allColorsCounter){
-            // console.log(this.props.count)
-            // console.log(this.state.allColorsCounter)
+
             // if state count is not yet updated
             if(this.state.allColorsCounter !== this.props.allColorsCounter){
                 console.log('toggle')
@@ -173,6 +199,7 @@ class Box extends React.Component{
                 })
                 setTimeout(() => {
                     console.log(this.state)
+                    console.log(this.props)
 
                 })
                 // if same leg, index will match previous
@@ -186,6 +213,23 @@ class Box extends React.Component{
 
             console.log('update')
         }
+        if(this.props.completedColorsCounter !== prevProps.completedColorsCounter){
+            console.log(this.props)
+            if(this.state.completedColorsCounter !== this.props.completedColorsCounter){
+                console.log('toggle')
+                // update by one
+                this.toggleColor('complete')
+                this.setState({
+                    completedColorsCounter: this.props.completedColorsCounter
+                })
+            } else {
+
+                console.error("An error in the leg index logic")
+            }
+
+            console.log('update')
+        }
+
     }
     componentDidMount(){
         // if(this.props.count >= 0){

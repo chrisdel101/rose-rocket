@@ -24,6 +24,7 @@ class Grid extends Component {
             allColorsCounter: 0,
             legColorsCounter: 0,
             completedColorsCounter: 0,
+            colorType: "",
             allColored: false,
             legsColored:false,
             completedColored: false,
@@ -917,8 +918,9 @@ class Grid extends Component {
                         legsColor={(this.state.finalLegColorObj ? this.state.finalLegColorObj : null)}
                         completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
                         allColored={this.state.allColored}
+                        type={this.state.colorType}
                         legColorsCounter={this.state.legColorsCounter}
-                        completedColored={this.state.completedColored}
+                        completedColorsCounter={this.state.completedColorsCounter}
                         allColorsCounter={this.state.allColorsCounter}
                     />
 
@@ -983,13 +985,19 @@ class Grid extends Component {
                 this.colorAllStops()
                 // console.log(this.state.allColorsCounter)
                 this.setState({
-                    allColorsCounter: this.state.allColorsCounter + 1
+                    allColorsCounter: this.state.allColorsCounter + 1,
+                    colorType: "all"
                 })
-            } else if(event.target.dataset.number === "2")
-            this.colorCompletedStops()
+            } else if(event.target.dataset.number === "2"){
+                this.colorCompletedStops()
+                this.setState({
+                    completedColorsCounter: this.state.completedColorsCounter + 1,
+                    colorType: "complete"
+                })
         }
 
     }
+}
     handleSwitchClick(e){
         let isActive = Object.assign({}, this.state.isActive)
         if(e.target.name === 'coords'){
@@ -1072,6 +1080,7 @@ class Grid extends Component {
 
         } else if(event.target.name === 'color'){
             this.colorLeg(this.state.legToColorID)
+
             // console.log(this.state.holdingCompletedArrs)
             // let merged = [].concat.apply([], this.state.holdingCompletedArrs);
             // console.log(merged)
@@ -1212,7 +1221,8 @@ class Grid extends Component {
         console.log(legObj)
         this.setState({
             finalLegColorObj: legObj,
-            legColorsCounter: this.state.legColorsCounter + 1
+            legColorsCounter: this.state.legColorsCounter + 1,
+            colorType: "leg"
         })
     }
 
