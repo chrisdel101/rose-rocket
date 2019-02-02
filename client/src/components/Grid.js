@@ -21,8 +21,12 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
-            clickCounter: 0,
-            gridColored: false,
+            allColorsCounter: 0,
+            legColorsCounter: 0,
+            completedColorsCounter: 0,
+            allColored: false,
+            legsColored:false,
+            completedColored: false,
             loadingDataArr: [],
             // changes based on tab click
             selectedDriverIndex: 0,
@@ -912,8 +916,10 @@ class Grid extends Component {
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
                         legsColor={(this.state.finalLegColorArr.length ? this.state.finalLegColorArr : null)}
                         completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
-                        allColor={this.state.gridColored}
-                        count={this.state.clickCounter}
+                        allColored={this.state.allColored}
+                        legColored={this.state.legColored}
+                        completedColored={this.state.completedColored}
+                        allColorsCounter={this.state.allColorsCounter}
                     />
 
                     </div>
@@ -947,9 +953,9 @@ class Grid extends Component {
         )
     }
     toggleColor(){
-        this.state.gridColored = !this.state.gridColored
+        this.state.allColored = !this.state.allColored
         this.setState({
-            gridColored: this.state.gridColored
+            allColored: this.state.allColored
         })
         return
     }
@@ -976,9 +982,9 @@ class Grid extends Component {
             console.log(event.target.dataset)
             if(event.target.dataset.number === "1"){
                 this.colorAllStops()
-                // console.log(this.state.clickCounter)
+                // console.log(this.state.allColorsCounter)
                 this.setState({
-                    clickCounter: this.state.clickCounter + 1
+                    allColorsCounter: this.state.allColorsCounter + 1
                 })
 
             } else if(event.target.dataset.number === "2")
