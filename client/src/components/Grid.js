@@ -25,9 +25,6 @@ class Grid extends Component {
             legColorsCounter: 0,
             completedColorsCounter: 0,
             colorType: "",
-            allColored: false,
-            legsColored:false,
-            completedColored: false,
             loadingDataArr: [],
             // changes based on tab click
             selectedDriverIndex: 0,
@@ -917,7 +914,6 @@ class Grid extends Component {
                         toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
                         legsColor={(this.state.finalLegColorObj ? this.state.finalLegColorObj : null)}
                         completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
-                        allColored={this.state.allColored}
                         type={this.state.colorType}
                         legColorsCounter={this.state.legColorsCounter}
                         completedColorsCounter={this.state.completedColorsCounter}
