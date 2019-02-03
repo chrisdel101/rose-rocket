@@ -117,7 +117,7 @@ class CustomizedSnackbars extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.props)
+    // console.log(this.props)
     return (
       <div>
         <Snackbar

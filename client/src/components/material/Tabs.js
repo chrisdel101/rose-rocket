@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Accordion from "./Accordion";
 import AddButton from "./AddButton";
 import MaterialButton from "./MaterialButton";
+import Icon from "./Icon";
 function TabContainer(props) {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -65,9 +66,9 @@ class SimpleTabs extends React.Component {
     return (
       <div className={classes.root}>
         <AppBar position="static">
-          <Tabs name="tabs" value={value} onChange={this.handleChange} onClick={this.props.onClick}>
+          <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.props.onClick}>
             {this.state.tabs.map((tab, i) => {
-              return <Tab label={tab.label} key={i} />;
+              return <Tab icon={<Icon />} label={tab.label} key={i}></Tab>
             })}
             <AddButton onClick={this.handleButtonClick.bind(this)} />
             <MaterialButton  size="small" color="secondary" text="Toggle Route" type="secondary-button" onClick={this.props.onClick} buttonNumber={1}/>
