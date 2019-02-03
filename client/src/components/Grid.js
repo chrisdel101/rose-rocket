@@ -1077,6 +1077,13 @@ class Grid extends Component {
         } else if(evt.target.name === 'progress-input') {
             console.log('hi')
             this.setState({driverProgressInput:evt.target.value})
+        } if(evt.target.name === 'driver-select'){
+            this.setState({driverLegInput: evt.target.value})
+        } else if(evt.target.name === 'color-select'){
+            this.setState({
+                value: evt.target.value,
+                legToColorID: evt.target.value
+            })
         }
 
 
@@ -1091,7 +1098,7 @@ class Grid extends Component {
         // update coords
         //set driver to those
             //UPDATE STATE DATA
-            if(event.target.name === 'driver-dropdown'){
+            if(event.target.name === 'driver-dropdown' || event.target.name === 'color'){
                 this.onDropdownSubmit(event)
             } else if(event.target.name === 'driver-form') {
             let formData = {}
