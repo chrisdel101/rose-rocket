@@ -1,6 +1,26 @@
 import React from 'react'
 import MaterialSelect from './material/MaterialSelect'
 import MaterialButton from './material/MaterialButton'
+import TextField from '@material-ui/core/TextField';
+
+
+const styles = theme => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+    },
+    dense: {
+        marginTop: 19,
+    },
+    menu: {
+        width: 200,
+    },
+})
 
 class Dropdown extends React.Component{
     constructor(props) {
@@ -12,8 +32,19 @@ class Dropdown extends React.Component{
     renderInput(){
         return(
             <div className="progress-input-wrapper">
-                Progress:  <input className="progress-input" name="progress-input" type="text" value={this.props.driverProgressInput} onChange={ev =>  this.props.onChange(ev)}>
-                </input>
+
+
+                <TextField
+                    value={this.props.driverProgressInput}
+                    id="standard-name"
+                    label="Progress"
+                    placeholder="Progres in Percent"
+                    className={`${styles.textField} progress-input`}
+                    name="progress-input"
+                    onChange={ev =>  this.props.onChange(ev)}
+                    margin="normal"
+                    name="progress-input"
+                />
             </div>
         )
     }
@@ -27,7 +58,7 @@ class Dropdown extends React.Component{
                 <form name={this.props.type === 'driver' ? 'driver-dropdown': 'color'} onSubmit={(ev) => this.props.onSubmit(ev)}>
                     <label>
                     {this.props.type === 'driver' ? this.props.texts.driverText: this.props.texts.colorText}
-                    <MaterialSelect legs={this.props.legs} value={this.state.value} onChange={this.props.onChange}>
+                    <MaterialSelect legs={this.props.legs} value={this.state.value} onChange={this.props.onChange} type={this.props.type === 'driver' ? 'driver' : 'color'}>
 
                         <option></option>
                     {

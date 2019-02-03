@@ -111,6 +111,6 @@ code {
 	margin-right: auto !important;
 }
 
-.driver-dropdown {
+[name="driver-dropdown"] {
 	display: flex;
 }

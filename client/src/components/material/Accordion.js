@@ -11,6 +11,8 @@ import Form from '../Form'
 import Dropdown from '../Dropdown'
 import MaterialButton from './MaterialButton'
 import MaterialForm from './MaterialForm'
+import TextField from '@material-ui/core/TextField';
+
 
 
 
@@ -58,11 +60,6 @@ class Accordion extends React.Component {
               onSubmit={this.props.onSubmit}
               values={this.props.values}
              />
-            <Form
-                onChange={this.props.onChange}
-                onSubmit={this.props.onSubmit}
-                values={this.props.values}
-                />
             <Typography>
 
             </Typography>

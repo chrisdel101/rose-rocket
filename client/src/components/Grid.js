@@ -1058,7 +1058,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-
+        console.log(evt.target.name )
         // console.log(evt.target.name)
         if(evt.target.name === 'x'){
             this.setState({
