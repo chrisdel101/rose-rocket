@@ -7,7 +7,6 @@ import Stop from './Stop'
 import Truck from './Truck'
 import Dropdown from './Dropdown'
 import Form from './Form'
-import Switch from './Switch'
 import Tabs from './material/Tabs'
 
 class Grid extends Component {
@@ -896,7 +895,7 @@ class Grid extends Component {
 
     }
     render() {
-        let value = 1
+    
     	return(
             <main className="page-container">
                 <div className="grid-container">
