@@ -10,6 +10,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Form from '../Form'
 import Dropdown from '../Dropdown'
 import MaterialButton from './MaterialButton'
+import MaterialForm from './MaterialForm'
+
+
 
 
 const styles = theme => ({
@@ -50,6 +53,11 @@ class Accordion extends React.Component {
             <Typography className={classes.secondaryHeading}>Set driver postion with coordinates.</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
+          <MaterialForm
+              onChange={this.props.onChange}
+              onSubmit={this.props.onSubmit}
+              values={this.props.values}
+             />
             <Form
                 onChange={this.props.onChange}
                 onSubmit={this.props.onSubmit}
