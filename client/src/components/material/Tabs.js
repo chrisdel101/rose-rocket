@@ -76,20 +76,26 @@ class SimpleTabs extends React.Component {
     console.log(relativePos)
 
   }
-   clickEvent(e) {
+   mouseEvent(e) {
     // e = Mouse click event.
     var rect = e.target.getBoundingClientRect();
     var x = e.clientX - rect.left; //x position within the element.
     var y = e.clientY - rect.top;  //y position within the element.
-    console.log(y)
-
-    if(y < 27){
-        let trigger = document.querySelector('.material-icons.MuiIcon-root-65')
-        console.log(trigger)
+    console.log(x, y)
+    let trigger = document.querySelector('.icon-wrapper')
+    let parent = document.querySelector('.MuiButtonBase-root-59')
+    if(y <= 27 && x >= 60){
+        // let trigger = document.querySelector('.material-icons.MuiIcon-root-65')
+        // trigger = document.querySelector('.close-icon')
+        // parent.style.pointerEvents = "none"
+        // console.log(parent.style.pointerEvents)
         trigger.focus()
-
+    } else {
+        trigger.blur()
+        parent.style.pointerEvents = "initial"
     }
 
+    console.log(document.activeElement.tagName)
 }
 
   render() {
@@ -98,10 +104,16 @@ class SimpleTabs extends React.Component {
 
     return (
       <div className={classes.root}>
+
+
         <AppBar position="static">
           <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.props.click}>
             {this.state.tabs.map((tab, i) => {
-              return <Tab icon={<Icon/>} onClick={this.clickEvent.bind(this)} label={tab.label} key={i}></Tab>
+              return <Tab icon={
+                  <div tabIndex="-1" className="icon-wrapper" onClick={this.handleIconClick}>
+                    <Icon />
+                  </div>
+              } onMouseMove={this.mouseEvent.bind(this)} label={tab.label} key={i}></Tab>
             })}
             <AddButton onClick={this.handleButtonClick.bind(this)} />
             <MaterialButton  size="small" color="secondary" text="Toggle Route" type="secondary-button" onClick={this.props.onClick} buttonNumber={1}/>
@@ -127,6 +139,7 @@ class SimpleTabs extends React.Component {
 
                 })
             }
+
       </div>
     );
   }
