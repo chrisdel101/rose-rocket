@@ -122,3 +122,7 @@ code {
 [name="driver-dropdown"] {
 	display: flex;
 }
+
+.minus-svg {
+	filter: invert(1);
+}

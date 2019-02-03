@@ -967,7 +967,12 @@ class Grid extends Component {
         } else if(event.target.classList.contains('add-button')){
             event.stopPropagation()
             // add new driver on click
-            this.addNewDriver()
+            if(event.target.dataset.number === "1"){
+                this.addNewDriver()
+
+            } else if(event.target.dataset.number === "2"){
+                this.subtractDriver()
+            }
         } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
             if(event.target.dataset.number === "1"){

@@ -16,16 +16,23 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
   },
 });
-// function test(){
-//     console.log('fired')
-// }
+function renderIcon(props){
+    if(props.iconType === 'add'){
+        return(<AddIcon/>)
+    } else if(props.iconType === 'minus'){
+        return(<img className="minus-svg" src="./icons/remove_24px.svg"/>)
+    }    else {
+        return null
+    }
+}
 
 function AddButton(props) {
   const { classes } = props;
   return (
     <div>
-      <Fab size="small" color="primary" aria-label="Add" className={`add-button button ${classes.fab}`} onClick={(ev) => props.onClick(ev)}>
-        <AddIcon/>
+      <Fab size="small" color="primary" aria-label="Add" className={`add-button button ${classes.fab}`} onClick={(ev) => props.onClick(ev)} data-number={props.number}>
+        {renderIcon(props)}
+
       </Fab>
     </div>
   );

@@ -50,12 +50,25 @@ class SimpleTabs extends React.Component {
           }]
       })
   }
-  handleButtonClick(){
-      this.addTab()
-      this.props.onClick()
+  subtractTab(){
+      if(this.state.numberOfTabs < 2){
+          console.log('cannot subtract single driver')
+          return
+      }
+      let driverNum = this.state.numberOfTabs - 1
+      let popped = this.state.tabs.pop()
+
+      this.setState({
+          tabs: this.state.tabs
+      })
+
+
   }
-  handleSecButtonClick(){
-      console.log('hello')
+  handleAddButtonClick(){
+      this.addTab()
+  }
+  handleMinusButtonClick(){
+      this.subtractTab()
   }
 
   render() {
@@ -69,11 +82,12 @@ class SimpleTabs extends React.Component {
             {this.state.tabs.map((tab, i) => {
               return <Tab label={tab.label} key={i} />;
             })}
-            <AddButton onClick={this.handleButtonClick.bind(this)} />
+            <AddButton onClick={this.handleAddButtonClick.bind(this)} iconType="add" number={1}/>
+            <AddButton onClick={this.handleMinusButtonClick.bind(this)} iconType="minus" number={2}/>
             <MaterialButton  size="small" color="secondary" text="Toggle Route" type="secondary-button" onClick={this.props.onClick} buttonNumber={1}/>
 
-
           </Tabs>
+
         </AppBar>
             {
                 this.state.tabs.map((tab, i) => {
