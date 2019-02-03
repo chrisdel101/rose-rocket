@@ -33,7 +33,7 @@ function Icons(props) {
   return (
     <div className={classes.root}>
 
-      <Icon className={classes.icon} color="primary">
+      <Icon className={classes.icon} color="primary" tabIndex="-1">
         close
       </Icon>
     </div>

@@ -58,6 +58,39 @@ class SimpleTabs extends React.Component {
   handleSecButtonClick(){
       console.log('hello')
   }
+  handleIconClick(){
+      console.log('click')
+  }
+  positioning(){
+    var parent = document.querySelector('.MuiButtonBase-root-59')
+    var child = document.querySelector('.material-icons.MuiIcon-root-65')
+    var parentRect = parent.getBoundingClientRect()
+    var childRect = child.getBoundingClientRect()
+    var relativePos = {};
+
+    relativePos.top = childRect.top - parentRect.top
+    relativePos.right = childRect.right - parentRect.right
+    relativePos.bottom = childRect.bottom - parentRect.bottom
+    relativePos.left = childRect.left - parentRect.left;
+
+    console.log(relativePos)
+
+  }
+   clickEvent(e) {
+    // e = Mouse click event.
+    var rect = e.target.getBoundingClientRect();
+    var x = e.clientX - rect.left; //x position within the element.
+    var y = e.clientY - rect.top;  //y position within the element.
+    console.log(y)
+
+    if(y < 27){
+        let trigger = document.querySelector('.material-icons.MuiIcon-root-65')
+        console.log(trigger)
+        trigger.focus()
+
+    }
+
+}
 
   render() {
     const { classes } = this.props;
@@ -66,9 +99,9 @@ class SimpleTabs extends React.Component {
     return (
       <div className={classes.root}>
         <AppBar position="static">
-          <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.props.onClick}>
+          <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.props.click}>
             {this.state.tabs.map((tab, i) => {
-              return <Tab icon={<Icon />} label={tab.label} key={i}></Tab>
+              return <Tab icon={<Icon/>} onClick={this.clickEvent.bind(this)} label={tab.label} key={i}></Tab>
             })}
             <AddButton onClick={this.handleButtonClick.bind(this)} />
             <MaterialButton  size="small" color="secondary" text="Toggle Route" type="secondary-button" onClick={this.props.onClick} buttonNumber={1}/>
