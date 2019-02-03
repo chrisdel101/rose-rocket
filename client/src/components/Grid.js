@@ -8,6 +8,7 @@ import Truck from './Truck'
 import Dropdown from './Dropdown'
 import Form from './Form'
 import Tabs from './material/Tabs'
+import Snackbar from './material/Snackbar'
 
 class Grid extends Component {
 	constructor(props) {
@@ -17,6 +18,7 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
+            snackbarOpen: false,
             allColorsCounter: 0,
             legColorsCounter: 0,
             completedColorsCounter: 0,
@@ -47,7 +49,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 1}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -832,7 +834,7 @@ class Grid extends Component {
         // only works with map stops!
         if(!firstStop){
             console.error('Not a map stop')
-            return 'Not a stop on map'
+            return false
 
         }
         let firstStopIndex = this.state.stops.indexOf(firstStop)
@@ -867,6 +869,7 @@ class Grid extends Component {
         // console.log(newPositionWpercent)
 
         console.log('new driver state', this.state.selectedDriver)
+        return true
     }
     _resetTruck(){
         this.setState({
@@ -895,7 +898,7 @@ class Grid extends Component {
 
     }
     render() {
-    
+
     	return(
             <main className="page-container">
                 <div className="grid-container">
@@ -929,7 +932,7 @@ class Grid extends Component {
                             legs={this.state.legs ? this.state.legs : null}
                             texts={this.state.texts}
                         />
-
+                        <Snackbar snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}/>
                     </div>
 
 
@@ -938,11 +941,13 @@ class Grid extends Component {
             </main>
         )
     }
-    toggleColor(){
-        this.state.allColored = !this.state.allColored
+
+    toggleSnackbar(){
+        this.state.snackbarOpen = !this.state.snackbarOpen
         this.setState({
-            allColored: this.state.allColored
+            snackbarOpen: this.state.snackbarOpen
         })
+        console.log(this.state.snackbarOpen)
         return
     }
     handleClick(event){
@@ -978,10 +983,17 @@ class Grid extends Component {
                     completedColorsCounter: this.state.completedColorsCounter + 1,
                     colorType: "complete"
                 })
-        }
+            }
+        } else if( event.target.classList.contains("MuiButtonBase-root-59") &&  event.target.classList.contains("MuiIconButton-root-163") ){
+            console.log(event.target.classList)
 
+                // send this to child to close
+                this.setState({
+                    snackbarOpen: false
+                })
+
+        }
     }
-}
     handleDropdownChange(e) {
         console.log(e.target.name)
         if(e.target.name === 'driver-select'){
@@ -1099,35 +1111,42 @@ class Grid extends Component {
             //UPDATE STATE DATA
             if(event.target.name === 'driver-dropdown' || event.target.name === 'color'){
                 this.onDropdownSubmit(event)
+
             } else if(event.target.name === 'driver-form') {
-            let formData = {}
-            // set to new input. If blank use the previous one
-            if(this.state.driverFormX){
-                formData['x'] = parseInt(this.state.driverFormX)
-            } else {
-                formData['x'] = currentDriver.driverCoords.x
-            }
-            if(this.state.driverFormY){
-                formData['y'] = parseInt(this.state.driverFormY)
-            } else {
-                formData['y'] = currentDriver.driverCoords.y
-            }
-            console.log(currentDriver)
-                currentDriver.driverCoords = formData
-            console.log(this.state.driversArr)
-            this.setState({
-                driverCoords: formData
-            })
+                let formData = {}
+                // set to new input. If blank use the previous one
+                if(this.state.driverFormX){
+                    formData['x'] = parseInt(this.state.driverFormX)
+                } else {
+                    formData['x'] = currentDriver.driverCoords.x
+                }
+                if(this.state.driverFormY){
+                    formData['y'] = parseInt(this.state.driverFormY)
+                } else {
+                    formData['y'] = currentDriver.driverCoords.y
+                }
+                console.log(currentDriver)
+                    currentDriver.driverCoords = formData
+                console.log(this.state.driversArr)
+                this.setState({
+                    driverCoords: formData
+                })
             //ACTUALLY MOVE DRIVER
             this.updateDriverWithCoords()
-        let that = this
-        setTimeout(function(){
-            //UPDATE DRIVER DATA
-            that.updateDriverData()
-            that.colorCompleted(that.state.selectedDriver.activeLegID)
-            console.log(that.state.selectedDriver.activeLegID)
-            console.log(that.state)
-        },100)
+            let that = this
+            setTimeout(function(){
+                //UPDATE DRIVER DATA
+                // returns false if not a stop
+                let result = that.updateDriverData()
+                if(!result){
+                    // not part of route
+                    that.toggleSnackbar()
+                    return
+                }
+                that.colorCompleted(that.state.selectedDriver.activeLegID)
+                console.log(that.state.selectedDriver.activeLegID)
+                console.log(that.state)
+            },100)
         }
     }
 

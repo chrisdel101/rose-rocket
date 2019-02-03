@@ -87,8 +87,8 @@ code {
 	color: rgba(0, 0, 0, 0.12);
 }
 
-.button-switch span {
-	pointer-events: none !important;
+.button {
+	max-height: 40px;
 }
 
 .button span {
@@ -96,6 +96,14 @@ code {
 }
 
 .button span svg {
+	pointer-events: none !important;
+}
+
+[type="button"] span {
+	pointer-events: none !important;
+}
+
+[type="button"] span svg {
 	pointer-events: none !important;
 }
 
