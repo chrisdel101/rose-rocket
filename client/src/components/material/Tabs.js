@@ -44,6 +44,7 @@ class SimpleTabs extends React.Component {
   };
   addTab(){
       let driverNum = this.state.numberOfTabs + 1
+
       // console.log(driverNum)
       this.setState({
           numberOfTabs: driverNum ,
@@ -53,27 +54,32 @@ class SimpleTabs extends React.Component {
       })
   }
   subtractTab(){
+
       if(this.state.numberOfTabs < 2){
           console.log('cannot subtract single driver')
           return
       }
       let driverNum = this.state.numberOfTabs - 1
       let popped = this.state.tabs.pop()
+      let numberOfTabs = this.state.numberOfTabs - 1
 
       this.setState({
-          tabs: this.state.tabs
+          tabs: this.state.tabs,
+          numberOfTabs: numberOfTabs
       })
 
 
   }
-  handleAddButtonClick(){
+  handleAddButtonClick(e){
+      this.props.onClick(e)
       this.addTab()
   }
-  handleRemoveButtonClick(){
+  handleRemoveButtonClick(e){
       if(!this.state.hovered){
           return
       }
-
+      this.props.onClick(`${e.target.innerText} icon-click`)
+      this.subtractTab()
   }
   positioning(){
     var parent = document.querySelector('.MuiButtonBase-root-59')
@@ -90,16 +96,22 @@ class SimpleTabs extends React.Component {
   }
    mouseEvent(e) {
     // e = Mouse click event.
-    var rect = e.target.getBoundingClientRect();
-    var x = e.clientX - rect.left; //x position within the element.
-    var y = e.clientY - rect.top;  //y position within the element.
+        var rect = e.target.getBoundingClientRect();
+        var x = e.clientX - rect.left; //x position within the element.
+        var y = e.clientY - rect.top;  //y position within the element.
 
-    if(y <= 27 && x >= 60){
-        this.setState({hovered: true})
-    } else {
-        this.setState({hovered: false})
+        if(y <= 27 && x >= 60){
+            this.setState({hovered: true})
+        } else {
+            this.setState({hovered: false})
+        }
     }
-}
+    handleTabsClick(e){
+        if(this.state.hovered){
+            return
+        }
+        this.props.onClick(e.target.innerText)
+    }
 renderIcon(){
     return(<div tabIndex="-1" className="icon-wrapper">
       <Icon />
@@ -114,12 +126,12 @@ renderIcon(){
 
 
         <AppBar position="static">
-          <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.props.click}>
+          <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.handleTabsClick.bind(this)}>
             {this.state.tabs.map((tab, i) => {
 
               return <Tab icon={this.renderIcon()} onMouseMove={this.mouseEvent.bind(this)} label={tab.label} key={i} onClick={this.handleRemoveButtonClick.bind(this)}></Tab>
             })}
-            <AddButton onClick={this.handleAddButtonClick.bind(this)} />
+            <AddButton onClick={this.handleAddButtonClick.bind(this)} iconType="add"/>
             <MaterialButton  size="small" color="secondary" text="Toggle Route" type="secondary-button" onClick={this.props.onClick} buttonNumber={1}/>
 
           </Tabs>

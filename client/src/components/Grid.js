@@ -938,14 +938,10 @@ class Grid extends Component {
 
 
                 </div>
-                    
+
 
             </main>
         )
-    }
-
-    handleIconClick(){
-        console.log('click')
     }
     toggleSnackbar(){
         this.state.snackbarOpen = !this.state.snackbarOpen
@@ -957,51 +953,68 @@ class Grid extends Component {
     }
     handleClick(event){
         if(!event) return
-        // set current driver on click on tab
-        if(event.target.innerText.includes('DRIVER')){
-            event.stopPropagation()
-            console.log(event.target.innerText)
-            let index = parseInt(event.target.innerText[event.target.innerText.length - 1]) - 1
-            console.log(index)
-            // let currentDriver = this.state.driversArr[index-1]
-            this.setState({
-                selectedDriverIndex: index
-            })
-
-            // else if its the add button
-        } else if(event.target.classList.contains('add-button')){
-            event.stopPropagation()
-            // add new driver on click
-            if(event.target.dataset.number === "1"){
-                this.addNewDriver()
-
-            } else if(event.target.dataset.number === "2"){
-                this.subtractDriver()
+        console.log(event)
+        // set current driver on click on tab - Add
+        if(typeof event === 'string'){
+            if(event.includes('icon-click') && event.includes('DRIVER')){
+                console.log('icon')
+                if(this.state.driversArr.length > 1){
+                    // minus one for zero index
+                    console.log(this.state.driversArr)
+                    let driverIndex = parseInt(event.substring(13,14)) - 0
+                    this.state.driversArr = this.state.driversArr.splice(driverIndex,1)
+                    console.log(this.state.driversArr)
+                }
+                return
+            } else if(event.includes('DRIVER') && event !== 'icon-click'){
+                // minus one for zero index
+                let driverIndex = parseInt(event[event.length - 2]) - 1
+                // console.log(driverIndex)
+                // let currentDriver = this.state.driversArr[index-1]
+                this.setState({
+                    selectedDriverIndex: driverIndex
+                })
+                console.log()
             }
-        } else if(event.target.classList.contains('secondary-button')){
+        } else {
+
+            // subtract driver
+            if(event.target.classList.contains('add-button')){
+                event.stopPropagation()
+                // add new driver on click
+                // if(event.target.dataset.number === "1"){
+                    this.addNewDriver()
+                    console.log(this.state.driversArr)
+                // }
+                // else if(event.target.dataset.number === "2"){
+                //     console.log('sub')
+                //     this.subtractDriver()
+                // }
+            } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
-            if(event.target.dataset.number === "1"){
-                this.colorAllStops()
-                // console.log(this.state.allColorsCounter)
-                this.setState({
-                    allColorsCounter: this.state.allColorsCounter + 1,
-                    colorType: "all"
-                })
-            } else if(event.target.dataset.number === "2"){
-                this.colorCompletedStops()
-                this.setState({
-                    completedColorsCounter: this.state.completedColorsCounter + 1,
-                    colorType: "complete"
-                })
+                if(event.target.dataset.number === "1"){
+                    this.colorAllStops()
+                    // console.log(this.state.allColorsCounter)
+                    this.setState({
+                        allColorsCounter: this.state.allColorsCounter + 1,
+                        colorType: "all"
+                    })
+                } else if(event.target.dataset.number === "2"){
+                    this.colorCompletedStops()
+                    this.setState({
+                        completedColorsCounter: this.state.completedColorsCounter + 1,
+                        colorType: "complete"
+                    })
+                }
+            } else if( event.target.classList.contains("MuiButtonBase-root-59") &&  event.target.classList.contains("MuiIconButton-root-163") ){
+                console.log(event.target.classList)
+
+                    // send this to child to close
+                    this.setState({
+                        snackbarOpen: false
+                    })
+
             }
-        } else if( event.target.classList.contains("MuiButtonBase-root-59") &&  event.target.classList.contains("MuiIconButton-root-163") ){
-            console.log(event.target.classList)
-
-                // send this to child to close
-                this.setState({
-                    snackbarOpen: false
-                })
-
         }
     }
     handleDropdownChange(e) {
