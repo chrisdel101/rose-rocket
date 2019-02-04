@@ -203,10 +203,11 @@ class Grid extends Component {
             id: this.state.indexCounter,
             name: `driver ${this.state.indexCounter}`
         }
+        console.log(newDriverObj)
         let arr = []
         arr.push(newDriverObj)
         let allDrivers = this.state.driversArr.concat(arr)
-        console.log(allDrivers)
+        // console.log(allDrivers)
         this.setState({
             driversArr: allDrivers
         })
@@ -250,13 +251,13 @@ class Grid extends Component {
 
 
         this.state.driversArr[this.state.selectedDriverIndex] = selectedDriver
-        console.log('update', this.state.driversArr)
+        // console.log('update', this.state.driversArr)
 
 
         this.setState({
             driversArr: this.state.driversArr
         })
-        console.log('after', this.state.driversArr)
+        // console.log('after', this.state.driversArr)
     }
     // on click set driver with coords and send to child
     updateDriverWithCoords(){
@@ -326,8 +327,8 @@ class Grid extends Component {
             x: legLastStop[0].x,
             y: legLastStop[0].y
         }
-        console.log(stopStartCoords)
-        console.log(stopEndCoords)
+        // console.log(stopStartCoords)
+        // console.log(stopEndCoords)
         // get diff to get number of moves
         // let diffObj = this._absDiff(stopStartCoords, stopEndCoords)
         // console.log(diff)
@@ -339,7 +340,7 @@ class Grid extends Component {
         // console.log(this.state.legStartEndCellNums)
         // cell nums
         let { start, end } = this.state.legStartEndCellNums[holdingArrIndex]
-        console.log('start/end', start, end)
+        // console.log('start/end', start, end)
         // set startingCell and start x / y
 
         // this.state.startingCellNumPartial: start/end cells
@@ -935,6 +936,7 @@ class Grid extends Component {
                             values={{x:this.state.driverFormX, y:this.state.driverFormY}}
                             legs={this.state.legs ? this.state.legs : null}
                             texts={this.state.texts}
+                            driversArr={this.state.driversArr.length ? this.state.driversArr : null}
                         />
                         <Snackbar snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}/>
                     </div>
@@ -956,43 +958,44 @@ class Grid extends Component {
     }
     handleClick(event){
         if(!event) return
-        console.log(event)
-        // set current driver on click on tab - Add
+        // console.log(event)
+        // For TAB clicks - sending strings back here as return vals
         if(typeof event === 'string'){
+            // to remove drivers from tabs
             if(event.includes('icon-click') && event.includes('DRIVER')){
                 console.log('icon')
                 if(this.state.driversArr.length > 1){
                     // minus one for zero index
                     console.log(this.state.driversArr)
+                    // get driver index from name
                     let driverIndex = parseInt(event.substring(13,14)) - 1
                     console.log('index', driverIndex)
-                    let x = this.state.driversArr.splice(driverIndex,1)
-                    console.log('x', x)
+                    this.state.driversArr.splice(driverIndex,1)
+
 
                 }
                 this.setState({
                     driversArr: this.state.driversArr
                 })
                 console.log(this.state.driversArr)
+                // to get index on click
             } else if(event.includes('DRIVER') && !event.includes('icon-click')){
                 // minus one for zero index
                 let driverIndex = parseInt(event[event.length - 2]) - 1
-                // console.log(driverIndex)
-                // let currentDriver = this.state.driversArr[index-1]
                 this.setState({
                     selectedDriverIndex: driverIndex
                 })
-                console.log('not icon')
+                // console.log('not icon')
             }
             // if real events
         } else {
-
             // subtract driver
             if(event.target.classList.contains('add-button')){
                 event.stopPropagation()
                 // add new driver on click
                 // if(event.target.dataset.number === "1"){
                     // console.log(this.state.  driversArr)
+                    console.log(this.state.indexCounter)
                     this.addNewDriver()
                     // console.log(this.state.driversArr)
                 // }
