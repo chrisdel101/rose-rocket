@@ -1,15 +1,12 @@
 import React, { Component } from "react";
-import { Manager, Reference, Popper, Arrow } from "react-popper";
+// import { Manager, Reference, Popper, Arrow } from "react-popper";
 
 import "../App.css";
 import Box from './Box'
 import Stop from './Stop'
 import Truck from './Truck'
-import Dropdown from './Dropdown'
-import Form from './Form'
 import Tabs from './material/Tabs'
 import Snackbar from './material/Snackbar'
-import Icon from './material/Icon'
 
 class Grid extends Component {
 	constructor(props) {
@@ -142,7 +139,7 @@ class Grid extends Component {
     _percentToCoords(diffObj, percent){
         let xNum = Math.floor((diffObj.xDiff * 0.01) * percent)
         let yNum = Math.floor((diffObj.yDiff * 0.01) * percent)
-        let newX
+
         return {xNum, yNum}
 
     }
@@ -213,16 +210,13 @@ class Grid extends Component {
         this.setState({
             driversArr: allDrivers
         })
-        // console.log(driversArr)
-        //
         this.updateDriverIndex()
-        console.log(this.state.driversArr)
-        // console.log(this.state.driversArr.length)
+
     }
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        // console.log(selectedDriver)
+        console.log(selectedDriver)
         // get from api or form
         let legName = driverData.activeLegID
         // correlate with stops- letters to match stops needed
@@ -253,11 +247,16 @@ class Grid extends Component {
         selectedDriver.data = driverData
         selectedDriver.id = this.state.indexCounter
         selectedDriver.driverCoords = moves
-        this.state.driversArr[this.state.indexCounter] = selectedDriver
+
+
+        this.state.driversArr[this.state.selectedDriverIndex] = selectedDriver
+        console.log('update', this.state.driversArr)
+
+
         this.setState({
             driversArr: this.state.driversArr
         })
-        console.log('update', this.state.driversArr)
+        console.log('after', this.state.driversArr)
     }
     // on click set driver with coords and send to child
     updateDriverWithCoords(){
@@ -311,7 +310,6 @@ class Grid extends Component {
         // console.log('currnt arr', currentLegArr)
         // get current and next leg json info
         let thisLeg = this.state.legs[dataIndex]
-        let nextLeg = this.state.legs[dataIndex + 1]
 
         let legFirstStop = this.state.stops.filter(stop => {
             return stop.name === thisLeg.startStop
@@ -393,7 +391,6 @@ class Grid extends Component {
     }
     colorGrid(x, y, type){
 
-        let that = this
         // console.log(this.state.previousStopX)
         // console.log(this.state.previousStopY)
         // calc num of units to move based on prev position
@@ -637,13 +634,13 @@ class Grid extends Component {
     colorAllStops(){
         // console.log('fired')
         // let arr = [1,2,3,4,5]
-        let stops = [
-            {x:20, y:10},
-            {x: 20, y: 20}
-            // {x: 25, y: 30},
-            // {x: 25, y: 80}
-        ]
-        let that = this
+        // let stops = [
+        //     {x:20, y:10},
+        //     {x: 20, y: 20}
+        //     // {x: 25, y: 30},
+        //     // {x: 25, y: 80}
+        // ]
+        // let that = this
         // stops.map((stop, index) => {
         //         setTimeout(function(){
         //             that.colorGrid(stop.x, stop.y)
@@ -995,9 +992,9 @@ class Grid extends Component {
                 event.stopPropagation()
                 // add new driver on click
                 // if(event.target.dataset.number === "1"){
-                    console.log(this.state.driversArr)
+                    // console.log(this.state.  driversArr)
                     this.addNewDriver()
-                    console.log(this.state.driversArr)
+                    // console.log(this.state.driversArr)
                 // }
                 // else if(event.target.dataset.number === "2"){
                 //     console.log('sub')

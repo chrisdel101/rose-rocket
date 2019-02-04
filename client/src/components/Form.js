@@ -9,7 +9,6 @@ class Form extends React.Component{
     values(){
         if(this.props.values){
             console.log('p', this.props)
-            let {values} = this.props
             return(
                 <React.Fragment>
                 X-coords: <input className="x-coord" name="x" type="text" value={this.props.values.x} onChange={this.props.onChange}>

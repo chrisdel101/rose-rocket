@@ -12,14 +12,14 @@ function Truck(props){
     }
     // console.log(style)
     // gets the cell nums to color
-    function checkPosition(props){
-        let start = props.coords[0]
-          let hasPosition = (() => {
-            if (!props || !props.coords.length || !props.coords.includes(start)) return false;
-            return true;
-          })();
-          return hasPosition
-    }
+    // function checkPosition(props){
+    //     let start = props.coords[0]
+    //       let hasPosition = (() => {
+    //         if (!props || !props.coords.length || !props.coords.includes(start)) return false;
+    //         return true;
+    //       })();
+    //       return hasPosition
+    // }
     return(
         <div className="truck" style={style}></div>
     )

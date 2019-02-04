@@ -53,14 +53,14 @@ class SimpleTabs extends React.Component {
           }]
       })
   }
-  subtractTab(){
+  // takes index to extract from array
+  subtractTab(indexToRemove){
 
       if(this.state.numberOfTabs < 2){
           console.log('cannot subtract single driver')
           return
       }
-      let driverNum = this.state.numberOfTabs - 1
-      let popped = this.state.tabs.pop()
+      this.state.tabs.splice(indexToRemove,1)
       let numberOfTabs = this.state.numberOfTabs - 1
 
       this.setState({
@@ -75,11 +75,13 @@ class SimpleTabs extends React.Component {
       this.addTab()
   }
   handleRemoveButtonClick(e){
+
       if(!this.state.hovered){
           return
       }
+      let driverIndex = parseInt(e.target.innerText.substring(13,14)) - 1
       this.props.onClick(`${e.target.innerText} icon-click`)
-      this.subtractTab()
+      this.subtractTab(driverIndex)
   }
   positioning(){
     var parent = document.querySelector('.MuiButtonBase-root-59')

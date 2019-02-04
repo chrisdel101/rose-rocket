@@ -43,7 +43,7 @@ class Dropdown extends React.Component{
                     name="progress-input"
                     onChange={ev =>  this.props.onChange(ev)}
                     margin="normal"
-                    name="progress-input"
+
                 />
             </div>
         )
@@ -71,7 +71,7 @@ class Dropdown extends React.Component{
                     {this.props.type === 'driver'?
                     this.renderInput() : null
                     }
-                    <MaterialButton type="submit" value="Submit" size="large" color="primary" type="submit-button" text="Toggle Leg"/>
+                    <MaterialButton type="submit" value="Submit" size="large" color="primary" text="Toggle Leg"/>
 
                 </form>
 
