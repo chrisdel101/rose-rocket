@@ -6,10 +6,11 @@ function Truck(props){
     let coord = props.coords
     console.log(props)
     let driverID = props.coords.id
+    console.log(driverID)
     let style = {
         [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
         [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px',
-        "--driver-color": props.colors[props.counter]
+        "--driver-color": props.colors[driverID]
     }
     console.log(style)
     // console.log(style)

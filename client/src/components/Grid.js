@@ -203,7 +203,7 @@ class Grid extends Component {
             id: this.state.createCounter,
             name: `driver ${this.state.createCounter + 1}`
         }
-        console.log(newDriverObj)
+        console.log('id',newDriverObj.id)
         let arr = []
         arr.push(newDriverObj)
         let allDrivers = this.state.driversArr.concat(arr)
@@ -262,7 +262,7 @@ class Grid extends Component {
 
         selectedDriver.pixels = driverProgressinPixels
         selectedDriver.data = driverData
-        selectedDriver.id = this.state.createCounter
+
         selectedDriver.driverCoords = moves
 
 
@@ -1346,7 +1346,7 @@ class Grid extends Component {
             // call these with the default driver on mount
             that.addNewDriver()
             that.updateDriverwithData(that.state.loadingDataArr[0])
-            that.colorCompleted(that.state.loadingDataArr[0].activeLegID)
+            // that.colorCompleted(that.state.loadingDataArr[0].activeLegID)
 
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
