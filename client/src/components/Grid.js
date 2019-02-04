@@ -201,7 +201,8 @@ class Grid extends Component {
                 moveY: 0
             },
             id: this.state.createCounter,
-            name: `driver ${this.state.createCounter + 1}`
+            name: `driver ${this.state.createCounter + 1}`,
+            color: this.state.colors[this.state.createCounter]
         }
         console.log('id',newDriverObj.id)
         let arr = []
@@ -953,6 +954,7 @@ class Grid extends Component {
                             legs={this.state.legs ? this.state.legs : null}
                             texts={this.state.texts}
                             driversArr={this.state.driversArr.length ? this.state.driversArr : null}
+                            colors={this.state.colors}
                         />
                         <Snackbar snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}/>
                     </div>

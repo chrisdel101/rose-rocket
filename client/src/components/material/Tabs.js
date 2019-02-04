@@ -21,12 +21,17 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-const styles = theme => ({
+const styles = (theme, color) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper
+    },
+    indicator: {
+        backgroundColor: color
   }
 });
+
+
 
 class SimpleTabs extends React.Component {
     constructor(props){
@@ -110,34 +115,61 @@ class SimpleTabs extends React.Component {
         }
         this.props.onClick(e.target.innerText)
     }
-renderIcon(){
-    return(<div tabIndex="-1" className="icon-wrapper">
-      <Icon />
-    </div>)
-}
+    colorTabs(index){
+        // when created, get tab of current driver index
+        let elems = document.querySelectorAll('.MuiPrivateTabIndicator-root-84')
+        let color = this.props.colors[index]
+        console.log(index)
+        let elem = elems[index]
+        console.log(elems)
+    }
+    renderIcon(){
+        return(<div tabIndex="-1" className="icon-wrapper">
+          <Icon />
+        </div>)
+    }
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-    // console.log(this.state.numberOfTabs)
     if(this.props.driversArr){
         return (
             <div className={classes.root}>
-
-
             <AppBar position="static">
-            <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.handleTabsClick.bind(this)}>
-            {this.props.driversArr.map((tab, i) => {
+                <Tabs
+                    classes={{
+                        indicator: classes.indicator
+                    }}
+                    className="tabs-element"
+                    name="tabs"
+                    value={value}
+                    onChange={this.handleChange}
+                    onClick={this.handleTabsClick.bind(this)} >
+                {this.props.driversArr.map((tab, i) => {
 
-                return <Tab icon={this.renderIcon()} onMouseMove={this.mouseEvent.bind(this)} label={tab.name} key={i} onClick={this.handleRemoveButtonClick.bind(this)}></Tab>
-            })}
-            <AddButton onClick={this.handleAddButtonClick.bind(this)} iconType="add"/>
-            <MaterialButton  size="small" color="secondary" text="Toggle Route" type="secondary-button" onClick={this.props.onClick} buttonNumber={1}/>
+                    return <Tab
+                                icon={this.renderIcon()} onMouseMove={this.mouseEvent.bind(this)}
+                                label={tab.name}
+                                key={i}
+                                onClick={this.handleRemoveButtonClick.bind(this)}>
+                           </Tab>
+                })}
+                <AddButton
+                    onClick={this.handleAddButtonClick.bind(this)}
+                    iconType="add"/>
+                <MaterialButton
+                    size="small"
+                    color="secondary"
+                    text="Toggle Route"
+                    type="secondary-button"
+                    onClick={this.props.onClick}
+                buttonNumber={1}/>
 
             </Tabs>
 
             </AppBar>
             {
-                this.state.tabs.map((tab, i) => {
+                this.props.driversArr.map((tab, i) => {
+                    this.colorTabs(parseInt(tab.id))
                     return value === i && (
                         <TabContainer key={i}>
                         <Accordion
@@ -168,4 +200,5 @@ SimpleTabs.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
+console.log(SimpleTabs)
 export default withStyles(styles)(SimpleTabs);
