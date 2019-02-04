@@ -60,7 +60,7 @@ code {
 
 .truck::before {
 	content: '\25CF';
-	color: red;
+	color: var(--driver-color);
 	font-size: 10px;
 	position: relative;
 }

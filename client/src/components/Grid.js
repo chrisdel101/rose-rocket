@@ -16,6 +16,7 @@ class Grid extends Component {
                 button1: true,
                 button2: false
             },
+            colors: ['red', 'Orange', 'DodgerBlue', 'MediumSeaGreen', 'Violet','SlateBlue', 'Tomato'],
             snackbarOpen: false,
             allColorsCounter: 0,
             legColorsCounter: 0,
@@ -25,11 +26,10 @@ class Grid extends Component {
             // changes based on tab click
             selectedDriverIndex: 0,
             // used to assign driver id on creation
-            indexCounter:1,
+            createCounter:0,
             legs: [],
 			stops: [],
             legToColorID:"",
-            trucks: [],
             driverFormX:"",
             driverFormY:"",
             driverLegInput:"",
@@ -178,15 +178,15 @@ class Grid extends Component {
             yToMove
         }
     }
-    // update indexCounter by 1
+    // update createCounter by 1
     updateDriverIndex(){
         // console.log('called')
-        this.state.indexCounter = this.state.indexCounter + 1
+        let x = this.state.createCounter + 1
         // console.log(index)
         this.setState({
-            indexCounter: this.state.indexCounter
+            createCounter: x
         })
-        // console.log('new Index', this.state.indexCounter)
+        // console.log('new Index', this.state.createCounter)
     }
     // new add driver - runs on mount and when add button clicked
     addNewDriver(){
@@ -200,8 +200,8 @@ class Grid extends Component {
                 moveX: 0,
                 moveY: 0
             },
-            id: this.state.indexCounter,
-            name: `driver ${this.state.indexCounter}`
+            id: this.state.createCounter,
+            name: `driver ${this.state.createCounter + 1}`
         }
         console.log(newDriverObj)
         let arr = []
@@ -212,6 +212,22 @@ class Grid extends Component {
             driversArr: allDrivers
         })
         this.updateDriverIndex()
+
+    }
+    removeDriver(event){
+        // get the full name of the driver
+        let driverName = event.substring(6,14)
+        // filter out driver by that name
+        let driver = this.state.driversArr.filter(obj => {
+             return (obj.name === driverName.toLowerCase() ? obj : false)
+        })
+        // find index in array
+        let index = this.state.driversArr.indexOf(driver[0])
+        // splice out of driversArr
+        this.state.driversArr.splice(index,1)
+        this.setState({
+            driversArr: this.state.driversArr
+        })
 
     }
     // runs on load using pre-loaded data and when form submitted
@@ -246,7 +262,7 @@ class Grid extends Component {
 
         selectedDriver.pixels = driverProgressinPixels
         selectedDriver.data = driverData
-        selectedDriver.id = this.state.indexCounter
+        selectedDriver.id = this.state.createCounter
         selectedDriver.driverCoords = moves
 
 
@@ -895,7 +911,7 @@ class Grid extends Component {
         if(this.state.driversArr){
                 return this.state.driversArr.map((driverData,i) => {
                 // console.log(driverData)
-                return <Truck coords={driverData} key={i} />
+                return <Truck coords={driverData} key={i} colors={this.state.colors} counter={this.state.createCounter}/>
             })
         } else {
             return null
@@ -981,21 +997,19 @@ class Grid extends Component {
         if(typeof event === 'string'){
             // to remove drivers from tabs
             if(event.includes('icon-click') && event.includes('DRIVER')){
-                console.log('icon')
+                // don't remove single driver
                 if(this.state.driversArr.length > 1){
                     this.removeDriver(event)
-
-                // to get index on click
                 }
+                // to detect which driver is selected
             } else if(event.includes('DRIVER') && !event.includes('icon-click')){
                 // minus one for zero index
                 let driverIndex = parseInt(event[event.length - 2]) - 1
                 this.setState({
                     selectedDriverIndex: driverIndex
                 })
-                // console.log('not icon')
             }
-            // if real events
+            // if events and not strings
         } else {
             // subtract driver
             if(event.target.classList.contains('add-button')){
@@ -1003,7 +1017,7 @@ class Grid extends Component {
                 // add new driver on click
                 // if(event.target.dataset.number === "1"){
                     // console.log(this.state.  driversArr)
-                    console.log(this.state.indexCounter)
+                    console.log(this.state.createCounter)
                     this.addNewDriver()
                     // console.log(this.state.driversArr)
                 // }
