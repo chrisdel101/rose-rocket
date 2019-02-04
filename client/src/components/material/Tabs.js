@@ -34,7 +34,8 @@ class SimpleTabs extends React.Component {
         this.state = {
             value: 0,
             tabs: [{ label: "Driver 1" }],
-            numberOfTabs: 1
+            numberOfTabs: 1,
+            hovered: false
         };
     }
 
@@ -51,15 +52,15 @@ class SimpleTabs extends React.Component {
           }]
       })
   }
-  handleButtonClick(){
+  handleAddButtonClick(){
       this.addTab()
       this.props.onClick()
   }
-  handleSecButtonClick(){
-      console.log('hello')
-  }
-  handleIconClick(){
-      console.log('click')
+  handleRemoveButtonClick(){
+      if(!this.state.hovered){
+          return
+      }
+
   }
   positioning(){
     var parent = document.querySelector('.MuiButtonBase-root-59')
@@ -73,31 +74,24 @@ class SimpleTabs extends React.Component {
     relativePos.bottom = childRect.bottom - parentRect.bottom
     relativePos.left = childRect.left - parentRect.left;
 
-    console.log(relativePos)
-
   }
    mouseEvent(e) {
     // e = Mouse click event.
     var rect = e.target.getBoundingClientRect();
     var x = e.clientX - rect.left; //x position within the element.
     var y = e.clientY - rect.top;  //y position within the element.
-    console.log(x, y)
-    let trigger = document.querySelector('.icon-wrapper')
-    let parent = document.querySelector('.MuiButtonBase-root-59')
+
     if(y <= 27 && x >= 60){
-        // let trigger = document.querySelector('.material-icons.MuiIcon-root-65')
-        // trigger = document.querySelector('.close-icon')
-        // parent.style.pointerEvents = "none"
-        // console.log(parent.style.pointerEvents)
-        trigger.focus()
+        this.setState({hovered: true})
     } else {
-        trigger.blur()
-        parent.style.pointerEvents = "initial"
+        this.setState({hovered: false})
     }
-
-    console.log(document.activeElement.tagName)
 }
-
+renderIcon(){
+    return(<div tabIndex="-1" className="icon-wrapper">
+      <Icon />
+    </div>)
+}
   render() {
     const { classes } = this.props;
     const { value } = this.state;
@@ -109,13 +103,10 @@ class SimpleTabs extends React.Component {
         <AppBar position="static">
           <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.props.click}>
             {this.state.tabs.map((tab, i) => {
-              return <Tab icon={
-                  <div tabIndex="-1" className="icon-wrapper" onClick={this.handleIconClick}>
-                    <Icon />
-                  </div>
-              } onMouseMove={this.mouseEvent.bind(this)} label={tab.label} key={i}></Tab>
+
+              return <Tab icon={this.renderIcon()} onMouseMove={this.mouseEvent.bind(this)} label={tab.label} key={i} onClick={this.handleRemoveButtonClick.bind(this)}></Tab>
             })}
-            <AddButton onClick={this.handleButtonClick.bind(this)} />
+            <AddButton onClick={this.handleAddButtonClick.bind(this)} />
             <MaterialButton  size="small" color="secondary" text="Toggle Route" type="secondary-button" onClick={this.props.onClick} buttonNumber={1}/>
 
 
