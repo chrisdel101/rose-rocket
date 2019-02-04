@@ -180,13 +180,13 @@ class Grid extends Component {
     }
     // update indexCounter by 1
     updateDriverIndex(){
-        console.log('called')
+        // console.log('called')
         this.state.indexCounter = this.state.indexCounter + 1
         // console.log(index)
         this.setState({
             indexCounter: this.state.indexCounter
         })
-        console.log('new Index', this.state.indexCounter)
+        // console.log('new Index', this.state.indexCounter)
     }
     // new add driver - runs on mount and when add button clicked
     addNewDriver(){
@@ -217,7 +217,7 @@ class Grid extends Component {
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        console.log(selectedDriver)
+        // console.log(selectedDriver)
         // get from api or form
         let legName = driverData.activeLegID
         // correlate with stops- letters to match stops needed
@@ -956,6 +956,24 @@ class Grid extends Component {
         console.log(this.state.snackbarOpen)
         return
     }
+    removeDriver(event){
+        // get index of drivers
+        //remove that driver from the data Array
+        let driverName = event.substring(6,14)
+        // filter out driver by that name
+        let driver = this.state.driversArr.filter(obj => {
+             return (obj.name === driverName.toLowerCase() ? obj : false)
+        })
+        console.log(driver)
+        // find index in array
+        let index = this.state.driversArr.indexOf(driver[0])
+        // splice out of driversArr
+        this.state.driversArr.splice(index,1)
+        this.setState({
+            driversArr: this.state.driversArr
+        })
+
+    }
     handleClick(event){
         if(!event) return
         // console.log(event)
@@ -965,20 +983,10 @@ class Grid extends Component {
             if(event.includes('icon-click') && event.includes('DRIVER')){
                 console.log('icon')
                 if(this.state.driversArr.length > 1){
-                    // minus one for zero index
-                    console.log(this.state.driversArr)
-                    // get driver index from name
-                    let driverIndex = parseInt(event.substring(13,14)) - 1
-                    console.log('index', driverIndex)
-                    this.state.driversArr.splice(driverIndex,1)
+                    this.removeDriver(event)
 
-
-                }
-                this.setState({
-                    driversArr: this.state.driversArr
-                })
-                console.log(this.state.driversArr)
                 // to get index on click
+                }
             } else if(event.includes('DRIVER') && !event.includes('icon-click')){
                 // minus one for zero index
                 let driverIndex = parseInt(event[event.length - 2]) - 1
