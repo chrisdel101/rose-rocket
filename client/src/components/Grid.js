@@ -191,7 +191,7 @@ class Grid extends Component {
     }
     // new add driver - runs on mount and when add button clicked
     addNewDriver(){
-        console.log()
+        console.log('called')
         let newDriverObj = {
             directions: {
                 xDir: "left",
@@ -204,15 +204,15 @@ class Grid extends Component {
             id: this.state.indexCounter,
             name: `driver ${this.state.indexCounter + 1}`
         }
-        // console.log(newDriverObj)
+        console.log(newDriverObj)
         // add new obj to that index
-        this.state.driversArr[this.state.indexCounter] = newDriverObj
-        // console.log(this.state.driversArr)
+        // this.state.driversArr[this.state.indexCounter] = newDriverObj
+        //
         // update to new index and add driver to drivers arr
-        this.setState({
+        this.state.driversArr.push(newDriverObj)
+        this.setState(prevState => ({
             driversArr: this.state.driversArr
-        })
-        // console.log(this.state)
+        }))
     }
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
@@ -364,7 +364,7 @@ class Grid extends Component {
         // inout end coords
         // this.state.driverCoords.x = 20
         // this.state.driverCoords.y = 13
-        console.log(selectedDriver)
+        // console.log(selectedDriver)
         // console.log(selectedDriver)
         this.legStartEnd(selectedDriver.driverCoords.xToMove,selectedDriver.driverCoords.yToMove, 'partial')
 
