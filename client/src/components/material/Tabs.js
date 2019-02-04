@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Accordion from "./Accordion";
 import AddButton from "./AddButton";
 import MaterialButton from "./MaterialButton";
+import Icon from "./Icon";
 function TabContainer(props) {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -33,7 +34,8 @@ class SimpleTabs extends React.Component {
         this.state = {
             value: 0,
             tabs: [{ label: "Driver 1" }],
-            numberOfTabs: 1
+            numberOfTabs: 1,
+            hovered: false
         };
     }
 
@@ -67,23 +69,57 @@ class SimpleTabs extends React.Component {
   handleAddButtonClick(){
       this.addTab()
   }
-  handleMinusButtonClick(){
-      this.subtractTab()
-  }
+  handleRemoveButtonClick(){
+      if(!this.state.hovered){
+          return
+      }
 
+  }
+  positioning(){
+    var parent = document.querySelector('.MuiButtonBase-root-59')
+    var child = document.querySelector('.material-icons.MuiIcon-root-65')
+    var parentRect = parent.getBoundingClientRect()
+    var childRect = child.getBoundingClientRect()
+    var relativePos = {};
+
+    relativePos.top = childRect.top - parentRect.top
+    relativePos.right = childRect.right - parentRect.right
+    relativePos.bottom = childRect.bottom - parentRect.bottom
+    relativePos.left = childRect.left - parentRect.left;
+
+  }
+   mouseEvent(e) {
+    // e = Mouse click event.
+    var rect = e.target.getBoundingClientRect();
+    var x = e.clientX - rect.left; //x position within the element.
+    var y = e.clientY - rect.top;  //y position within the element.
+
+    if(y <= 27 && x >= 60){
+        this.setState({hovered: true})
+    } else {
+        this.setState({hovered: false})
+    }
+}
+renderIcon(){
+    return(<div tabIndex="-1" className="icon-wrapper">
+      <Icon />
+    </div>)
+}
   render() {
     const { classes } = this.props;
     const { value } = this.state;
 
     return (
       <div className={classes.root}>
+
+
         <AppBar position="static">
-          <Tabs name="tabs" value={value} onChange={this.handleChange} onClick={this.props.onClick}>
+          <Tabs className="tabs-element" name="tabs" value={value} onChange={this.handleChange} onClick={this.props.click}>
             {this.state.tabs.map((tab, i) => {
-              return <Tab label={tab.label} key={i} />;
+
+              return <Tab icon={this.renderIcon()} onMouseMove={this.mouseEvent.bind(this)} label={tab.label} key={i} onClick={this.handleRemoveButtonClick.bind(this)}></Tab>
             })}
-            <AddButton onClick={this.handleAddButtonClick.bind(this)} iconType="add" number={1}/>
-            <AddButton onClick={this.handleMinusButtonClick.bind(this)} iconType="minus" number={2}/>
+            <AddButton onClick={this.handleAddButtonClick.bind(this)} />
             <MaterialButton  size="small" color="secondary" text="Toggle Route" type="secondary-button" onClick={this.props.onClick} buttonNumber={1}/>
 
           </Tabs>
@@ -107,6 +143,7 @@ class SimpleTabs extends React.Component {
 
                 })
             }
+
       </div>
     );
   }

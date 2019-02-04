@@ -123,6 +123,16 @@ code {
 	display: flex;
 }
 
-.minus-svg {
-	filter: invert(1);
+/* ICON position and hover */
+.MuiTabs-flexContainer-39 .MuiButtonBase-root-59.MuiTab-root-47 {
+	position: relative;
+}
+
+.MuiButtonBase-root-59.MuiTab-root-47 .material-icons.MuiIcon-root-65 {
+	transition: color 0.2s ease;
+}
+
+.MuiButtonBase-root-59.MuiTab-root-47:hover .material-icons.MuiIcon-root-65 {
+	color: #DCDCDC !important;
+	transition: color 0.5s ease;
 }

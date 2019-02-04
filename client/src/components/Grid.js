@@ -9,6 +9,7 @@ import Dropdown from './Dropdown'
 import Form from './Form'
 import Tabs from './material/Tabs'
 import Snackbar from './material/Snackbar'
+import Icon from './material/Icon'
 
 class Grid extends Component {
 	constructor(props) {
@@ -937,11 +938,15 @@ class Grid extends Component {
 
 
                 </div>
+                    
 
             </main>
         )
     }
 
+    handleIconClick(){
+        console.log('click')
+    }
     toggleSnackbar(){
         this.state.snackbarOpen = !this.state.snackbarOpen
         this.setState({
