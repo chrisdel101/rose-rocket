@@ -1313,6 +1313,7 @@ class Grid extends Component {
 
     }
     componentDidMount() {
+        let that = this
         // get start pos
         // - if x is greater then moving right
         // -when stoped get pos
@@ -1320,10 +1321,29 @@ class Grid extends Component {
         // - if y is greater left
         window.scrollTo(0,document.body.scrollHeight);
         var utils = document.querySelector('.utils-container')
+        var grid = document.querySelector('.grid-container')
+
         utils.style.position = "fixed"
         utils.style.bottom = "0px"
         utils.style.right = "0px"
         utils.style.left = "40px"
+
+        let utilsHeightStr
+        setTimeout(function(){
+            utilsHeightStr = utils.offsetHeight.toString() + 'px'
+            console.log(utilsHeightStr)
+            grid.style.bottom = utilsHeightStr
+            console.log(grid.style.bottom)
+
+        },300)
+
+        // - if top of box is more than pageYOffset - it's height
+        // - find max pageYOffset
+        // - if it gets less, while bottom of controls stays the same,
+        // - grid must ajust bottom by the amount the contrls height increases 
+        window.pageYOffset - utils.offsetHeight
+
+        var limit = Math.max( document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - window.innerHeight;
 
 
         // window.addEventListener('scroll', () => {
@@ -1335,7 +1355,6 @@ class Grid extends Component {
         // })
 
 
-        let that = this
 
         setTimeout(function(){
             // console.log(that.state.legs)
