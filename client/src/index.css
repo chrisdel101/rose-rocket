@@ -135,3 +135,11 @@ code {
 	color: #DCDCDC !important;
 	transition: color 0.5s ease;
 }
+
+.top-panel>div {
+	/* transition: none !important; */
+}
+
+.top-panel {
+	/* transition: none !important; */
+}

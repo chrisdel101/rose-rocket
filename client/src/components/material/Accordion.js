@@ -47,12 +47,13 @@ class Accordion extends React.Component {
 
     return (
       <div className={classes.root}>
-        <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
+        <ExpansionPanel className='top-panel' expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Set Driver Coordinates</Typography>
-            <Typography className={classes.secondaryHeading}>Set driver postion with coordinates.</Typography>
+            <Typography className={classes.secondaryHeading}>Set driver postion with coordinates.
+            </Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          <ExpansionPanelDetails className="test">
           <MaterialForm
               onChange={this.props.onChange}
               onSubmit={this.props.onSubmit}
@@ -63,14 +64,14 @@ class Accordion extends React.Component {
             </Typography>
           </ExpansionPanelDetails>
         </ExpansionPanel>
-        <ExpansionPanel expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
+        <ExpansionPanel className='top-panel' expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Set Driver Leg</Typography>
             <Typography className={classes.secondaryHeading}>
               Set driver position with leg and progress.
             </Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          <ExpansionPanelDetails className="test">
           <Dropdown
                 onChange={this.props.onChange}
                 onSubmit={this.props.onSubmit}
@@ -83,12 +84,12 @@ class Accordion extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
 
-        <ExpansionPanel expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
+        <ExpansionPanel className='top-panel' expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Legs & Progress</Typography>
             <Typography className={classes.secondaryHeading}>Highlight completed route and legs.</Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          <ExpansionPanelDetails className="test">
           <Dropdown
                 onChange={this.props.onChange}
                 onSubmit={this.props.onSubmit}
