@@ -204,7 +204,7 @@ class Grid extends Component {
             name: `driver ${this.state.createCounter + 1}`,
             color: this.state.colors[this.state.createCounter]
         }
-        console.log('id',newDriverObj.id)
+        // console.log('id',newDriverObj.id)
         let arr = []
         arr.push(newDriverObj)
         let allDrivers = this.state.driversArr.concat(arr)
@@ -306,11 +306,11 @@ class Grid extends Component {
     }
     // calc up to driver position to color
     colorCompleted(legID){
-        // console.log(legID)
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
     	var arr = this.state.legs.filter(leg => {
     		return leg.legID === legID
     	})
+        console.log(selectedDriver)
         //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
         // console.log(holdingArrIndex)
@@ -923,28 +923,26 @@ class Grid extends Component {
 
     	return(
             <main className="page-container">
+
                 <div className="grid-container">
-
                     <div className="grid">
-
                         {this.renderTrucks()}
 
 
-                    <Stop coords={this.state.stopsDirsArr}/>
-                    <Box
-                        toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
-                        legsColor={(this.state.finalLegColorObj ? this.state.finalLegColorObj : null)}
-                        completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
-                        type={this.state.colorType}
-                        legColorsCounter={this.state.legColorsCounter}
-                        completedColorsCounter={this.state.completedColorsCounter}
-                        allColorsCounter={this.state.allColorsCounter}
-                    />
+                        <Stop coords={this.state.stopsDirsArr}/>
+                        <Box
+                            toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
+                            legsColor={(this.state.finalLegColorObj ? this.state.finalLegColorObj : null)}
+                            completeColor={(this.state.finalCompletedColorsArr.length ? this.state.finalCompletedColorsArr : null)}
+                            type={this.state.colorType}
+                            legColorsCounter={this.state.legColorsCounter}
+                            completedColorsCounter={this.state.completedColorsCounter}
+                            allColorsCounter={this.state.allColorsCounter}
+                        />
 
                     </div>
                 </div>
                 <div className="utils-container">
-
                     <div className="driver-controls">
                         <Tabs
                             onChange={this.handleChange.bind(this)}
@@ -955,14 +953,11 @@ class Grid extends Component {
                             texts={this.state.texts}
                             driversArr={this.state.driversArr.length ? this.state.driversArr : null}
                             colors={this.state.colors}
-                        />
-                        <Snackbar snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}/>
+                            />
+                            <i className="fa fa-angle-right"></i>
+                            <Snackbar snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}/>
                     </div>
-
-
                 </div>
-
-
             </main>
         )
     }
@@ -973,24 +968,6 @@ class Grid extends Component {
         })
         console.log(this.state.snackbarOpen)
         return
-    }
-    removeDriver(event){
-        // get index of drivers
-        //remove that driver from the data Array
-        let driverName = event.substring(6,14)
-        // filter out driver by that name
-        let driver = this.state.driversArr.filter(obj => {
-             return (obj.name === driverName.toLowerCase() ? obj : false)
-        })
-        console.log(driver)
-        // find index in array
-        let index = this.state.driversArr.indexOf(driver[0])
-        // splice out of driversArr
-        this.state.driversArr.splice(index,1)
-        this.setState({
-            driversArr: this.state.driversArr
-        })
-
     }
     handleClick(event){
         if(!event) return
@@ -1129,7 +1106,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        console.log(evt.target.name )
+        // console.log(evt.target.name )
         // console.log(evt.target.name)
         if(evt.target.name === 'x'){
             this.setState({
@@ -1336,6 +1313,28 @@ class Grid extends Component {
 
     }
     componentDidMount() {
+        // get start pos
+        // - if x is greater then moving right
+        // -when stoped get pos
+        // - if x is greater, right
+        // - if y is greater left
+        window.scrollTo(0,document.body.scrollHeight);
+        var utils = document.querySelector('.utils-container')
+        utils.style.position = "fixed"
+        utils.style.bottom = "0px"
+        utils.style.right = "0px"
+        utils.style.left = "40px"
+
+
+        // window.addEventListener('scroll', () => {
+        // 	if (window.pageXOffset > utils.offsetLeft) {
+        //     	utils.style.left = window.pageXOffset.toString() + 'px'
+        //     	console.log('left',utils.style.left)
+        //         console.log('offSet', window.pageXOffset.toString() + 'px')
+        //     }
+        // })
+
+
         let that = this
 
         setTimeout(function(){
@@ -1348,7 +1347,7 @@ class Grid extends Component {
             // call these with the default driver on mount
             that.addNewDriver()
             that.updateDriverwithData(that.state.loadingDataArr[0])
-            // that.colorCompleted(that.state.loadingDataArr[0].activeLegID)
+            that.colorCompleted(that.state.loadingDataArr[0].activeLegID)
 
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)

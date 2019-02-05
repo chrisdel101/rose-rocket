@@ -115,14 +115,7 @@ class SimpleTabs extends React.Component {
         }
         this.props.onClick(e.target.innerText)
     }
-    colorTabs(index){
-        // when created, get tab of current driver index
-        let elems = document.querySelectorAll('.MuiPrivateTabIndicator-root-84')
-        let color = this.props.colors[index]
-        console.log(index)
-        let elem = elems[index]
-        console.log(elems)
-    }
+
     renderIcon(){
         return(<div tabIndex="-1" className="icon-wrapper">
           <Icon />
@@ -169,7 +162,6 @@ class SimpleTabs extends React.Component {
             </AppBar>
             {
                 this.props.driversArr.map((tab, i) => {
-                    this.colorTabs(parseInt(tab.id))
                     return value === i && (
                         <TabContainer key={i}>
                         <Accordion
@@ -200,5 +192,5 @@ SimpleTabs.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-console.log(SimpleTabs)
+
 export default withStyles(styles)(SimpleTabs);
