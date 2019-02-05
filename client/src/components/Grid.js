@@ -1319,7 +1319,7 @@ class Grid extends Component {
         // -when stoped get pos
         // - if x is greater, right
         // - if y is greater left
-        window.scrollTo(0,document.body.scrollHeight);
+
         var utils = document.querySelector('.utils-container')
         var grid = document.querySelector('.grid-container')
 
@@ -1330,20 +1330,60 @@ class Grid extends Component {
 
         let utilsHeightStr
         setTimeout(function(){
+            window.scrollTo(0,document.body.scrollHeight);
+            var limit = Math.max( document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - window.innerHeight;
+            let bottomGap = limit - window.pageYOffset
+
+            // console.log(bottomGap)
+            // var initialGridBottom = grid.getBoundingClientRect().bottom
+            //     console.log('intitial',initialGridBottom)
+
             utilsHeightStr = utils.offsetHeight.toString() + 'px'
-            console.log(utilsHeightStr)
+            // console.log(utilsHeightStr)
             grid.style.bottom = utilsHeightStr
-            console.log(grid.style.bottom)
+            // console.log(grid.style.bottom)
+            window.addEventListener('scroll', () => {
+
+                // if(grid.getBoundingClientRect().bottom > initialGridBottom){
+                //
+                // }
+
+                let bottomGap = limit - window.pageYOffset
+
+                if(limit > window.pageYOffset){
+                    // as gap increases, set grig bottom
+                    let gridBottom = parseInt(bottomGap + utils.offsetHeight).toString() + 'px'
+                    // console.log('utils height',utilsHeightStr)
+                    console.log('grid bottom',gridBottom)
+                    grid.style.bottom = gridBottom
+
+                    // console.log(limit - (window.pageYOffset + utils.offsetHeight))
+                }
+            })
+            window.addEventListener('click', () => {
+                // total page height minus current Y
+                let bottomGap = limit - window.pageYOffset
+
+                if(limit > window.pageYOffset){
+                    // as gap increases, set grig bottom
+                    let gridBottom = parseInt(bottomGap + utils.offsetHeight).toString() + 'px'
+                    // console.log('utils height',utilsHeightStr)
+                    console.log('grid bottom',gridBottom)
+                    grid.style.bottom = gridBottom
+
+                    // console.log(limit - (window.pageYOffset + utils.offsetHeight))
+                }
+            })
 
         },300)
 
         // - if top of box is more than pageYOffset - it's height
         // - find max pageYOffset
         // - if it gets less, while bottom of controls stays the same,
-        // - grid must ajust bottom by the amount the contrls height increases 
-        window.pageYOffset - utils.offsetHeight
+        // - grid must ajust bottom by the amount the contrls height increases
+        // window.pageYOffset - utils.offsetHeight
 
-        var limit = Math.max( document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - window.innerHeight;
+
 
 
         // window.addEventListener('scroll', () => {
