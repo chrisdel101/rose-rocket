@@ -49,7 +49,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 1}, (v, i) => i),
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -939,6 +939,7 @@ class Grid extends Component {
                             legColorsCounter={this.state.legColorsCounter}
                             completedColorsCounter={this.state.completedColorsCounter}
                             allColorsCounter={this.state.allColorsCounter}
+                            selectedDriver={this.state.selectedDriverIndex}
                         />
 
                     </div>
@@ -1322,122 +1323,6 @@ class Grid extends Component {
     }
     componentDidMount() {
         let that = this
-
-
-        // get start pos
-        // - if x is greater then moving right
-        // -when stoped get pos
-        // - if x is greater, right
-        // - if y is greater left
-        // 
-        // var utils = document.querySelector('.utils-container')
-        // var grid = document.querySelector('.grid-container')
-        //
-        // utils.style.position = "fixed"
-        // utils.style.bottom = "0px"
-        // utils.style.right = "0px"
-        // utils.style.left = "40px"
-
-        // let utilsHeight
-        // setTimeout(function(){
-        //     let topPanel = document.querySelector('.top-panel')
-        //     let bottomPanel = document.querySelector('.top-panel div')
-        //
-        //     // topPanel.ontransitionrun = function(){
-        //     //     console.log('HIHI')
-        //     // }
-        //     // bottomPanel.ontransitionrun = function(){
-        //     //     console.log('NON')
-        //     // }
-        //     // set to bottom of window
-        //     window.scrollTo(0,document.body.scrollHeight);
-        //     // get max scroll length
-        //     var limit = Math.max( document.body.scrollHeight, document.body.offsetHeight,
-        //         document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - window.innerHeight;
-        //         // utils hieight
-        //     utilsHeight = utils.offsetHeight
-        //     let utilsHeightStr = utilsHeight.toString() + 'px'
-        //         // position grid above utils to start
-        //     grid.style.bottom = utilsHeightStr
-        //     function setGridonScroll(){
-        //         window.addEventListener('scroll', () => {
-        //             // find gap between utils and bottom
-        //             let bottomGap = limit - window.pageYOffset
-        //             // if less than max bottom
-        //             if(limit > window.pageYOffset){
-        //                 console.log('set')
-        //                 // as gap increases, set new grid bottom - stick to top of utils
-        //                 let gridBottom = parseInt(bottomGap + utils.offsetHeight).toString() + 'px'
-        //                 grid.style.bottom = gridBottom
-        //             }
-        //         })
-        //
-        //     }
-        //     // setGridonScroll()
-        //
-        //
-        //     let utilsTopStart
-        //     let gridStartBottom
-        //     let utilsStartY
-        //     let gridStartY
-        //     utils.addEventListener('mousedown', () => {
-        //         // console.log('down')
-        //         // get starting top
-        //
-        //         utilsTopStart = window.getComputedStyle(utils).top
-        //         utilsStartY = utils.getBoundingClientRect().y
-        //         gridStartY = grid.getBoundingClientRect().y
-        //         gridStartBottom = grid.getBoundingClientRect().bottom
-        //         // console.log('down', utilsTopStart)
-        //     })
-        //     // let to = document.querySelector('.top-panel div[role=button]')
-        //     // let topPanel = document.querySelector('.top-panel')
-        //     topPanel.addEventListener('mouseup', () => {
-        //         setTimeout(function(){
-        //             console.log('uitls start Y', utilsStartY)
-        //             console.log('grid start Y', gridStartY)
-        //             console.log('start top', utilsTopStart)
-        //             // console.log('after top', utils.getBoundingClientRect().top)
-        //             // console.log('start bottom', grid.getBoundingClientRect().bottom)
-        //             // console.log('start bottom', grid.getBoundingClientRect().bottom)
-        //
-        //             let utilsTopAfter = window.getComputedStyle(utils).top
-        //             // calcNewY = calcNewY.toString() + 'px'
-        //             console.log('utils top after', utilsTopAfter)
-        //             // console.log('top', grid.getBoundingClientRect().top)
-        //             // console.log(utilsTopStr)
-        //             // grid..bottom = utilsTopStr
-        //             // grid.style.top = calcNewY
-        //
-        //
-        //         },400)
-        //
-        //
-        //         // if(utils.getBoundingClientRect().top > utilsTopStart){
-        //         //     console.log('large')
-        //         // }
-        //     })
-        //
-        // },300)
-
-        // - if top of box is more than pageYOffset - it's height
-        // - find max pageYOffset
-        // - if it gets less, while bottom of controls stays the same,
-        // - grid must ajust bottom by the amount the contrls height increases
-        // window.pageYOffset - utils.offsetHeight
-
-
-
-
-        // window.addEventListener('scroll', () => {
-        // 	if (window.pageXOffset > utils.offsetLeft) {
-        //     	utils.style.left = window.pageXOffset.toString() + 'px'
-        //     	console.log('left',utils.style.left)
-        //         console.log('offSet', window.pageXOffset.toString() + 'px')
-        //     }
-        // })
-
-
 
         setTimeout(function(){
             // console.log(that.state.legs)

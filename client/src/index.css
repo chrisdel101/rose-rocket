@@ -24,8 +24,32 @@ code {
 	background-color: white;
 }
 
-.stop-color {
-	background-color: #DCDCDC !important;
+.stop-color0, .complete-color0 {
+	background-color: #D00000 !important;
+}
+
+.stop-color1, .complete-color1 {
+	background-color: #e59400 !important;
+}
+
+.stop-color2, .complete-color2 {
+	background-color: #1b81e5 !important;
+}
+
+.stop-color3, .complete-color3 {
+	background-color: #36a165 !important;
+}
+
+.stop-color4, .complete-color4 {
+	background-color: #eb6ceb !important;
+}
+
+.stop-color5, .complete-color5 {
+	background-color: #5f51b8 !important;
+}
+
+.stop-color6, .complete-color6 {
+	background-color: #e5593f !important;
 }
 
 .complete-color {

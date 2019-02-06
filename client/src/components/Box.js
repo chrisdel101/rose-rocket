@@ -13,6 +13,7 @@ class Box extends React.Component {
       completedColorsCounter: 0,
       previousLegIndex: ""
     }
+    this.BoxMarkup = this.BoxMarkup.bind(this)
   }
   renderBoxes(i) {
     if (this.props.toRender) {
@@ -122,12 +123,12 @@ class Box extends React.Component {
     return <this.BoxMarkup hasCompletionColor={hasCompletionColor} key={i} />
   }
 
-  BoxMarkup(props) {
+  BoxMarkup(input) {
     return (
       <div
-        className={`box ${props.hasStopColor ? "stop-color" : ""} ${
-          props.hasLegColor ? " leg-color" : ""
-        } ${props.hasCompletionColor ? "complete-color" : ""}`}
+        className={`box ${input.hasStopColor ? `stop-color${this.props.selectedDriver}` : ""} ${
+          input.hasLegColor ? `leg-color${this.props.selectedDriver}` : ""
+        } ${input.hasCompletionColor ? `complete-color${this.props.selectedDriver}` : ""}`}
       />
     )
   }
@@ -183,7 +184,7 @@ class Box extends React.Component {
     }
   }
   render() {
-    // console.log(this.props)
+    // console.log(this.props.selectedDriver)
     if (this.props.toRender && this.props.toRender.length) {
       return <React.Fragment>{this.renderBoxes()}</React.Fragment>
     } else {
