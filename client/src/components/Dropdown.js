@@ -31,8 +31,7 @@ class Dropdown extends React.Component{
 
     renderInput(){
         return(
-            <div className="progress-input-wrapper">
-
+            <div className="progress-input-wrapper form-child">
 
                 <TextField
                     value={this.props.driverProgressInput}
@@ -56,7 +55,7 @@ class Dropdown extends React.Component{
                 <div className="legs-container">
 
                 <form name={this.props.type === 'driver' ? 'driver-dropdown': 'color'} onSubmit={(ev) => this.props.onSubmit(ev)}>
-                    <label>
+                    <label className="form-child">
                     {this.props.type === 'driver' ? this.props.texts.driverText: this.props.texts.colorText}
                     <MaterialSelect legs={this.props.legs} value={this.state.value} onChange={this.props.onChange} type={this.props.type === 'driver' ? 'driver' : 'color'}>
 

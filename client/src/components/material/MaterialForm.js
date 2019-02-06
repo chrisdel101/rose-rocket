@@ -43,7 +43,7 @@ class MaterialForm extends React.Component {
     //     updatedValue = undefined
     // }
     return (
-      <form className={classes.container} noValidate autoComplete="off" name="driver-form" onSubmit={(ev) => this.props.onSubmit(ev)}>
+      <form className={`${classes.container} material-form`} noValidate autoComplete="off" name="driver-form" onSubmit={(ev) => this.props.onSubmit(ev)}>
         {this.props.values ?
             <React.Fragment>
                 <TextField

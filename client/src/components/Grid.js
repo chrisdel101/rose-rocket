@@ -17,6 +17,7 @@ class Grid extends Component {
                 button2: false
             },
             colors: ['red', 'Orange', 'DodgerBlue', 'MediumSeaGreen', 'Violet','SlateBlue', 'Tomato'],
+            floatToggle: true,
             snackbarOpen: false,
             allColorsCounter: 0,
             legColorsCounter: 0,
@@ -48,7 +49,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 1}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -942,7 +943,7 @@ class Grid extends Component {
 
                     </div>
                 </div>
-                <div className="utils-container">
+                <div className={`${this.state.floatToggle? "float-toggle" :""} utils-container`}>
                     <div className="driver-controls">
                         <Tabs
                             onChange={this.handleChange.bind(this)}
@@ -1106,7 +1107,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        // console.log(evt.target.name )
+        // console.log(evt.target)
         // console.log(evt.target.name)
         if(evt.target.name === 'x'){
             this.setState({
@@ -1122,10 +1123,17 @@ class Grid extends Component {
 
         } else if(evt.target.name === 'driver-select'){
             this.setState({driverLegInput: evt.target.value})
-        } else if(evt.target.name === 'progress-input') {
+        } else if(evt.target.name === 'progress-input'){
             console.log('hi')
             this.setState({driverProgressInput:evt.target.value})
-        } if(evt.target.name === 'driver-select'){
+        } else if(evt.target.name === 'float-toggle'){
+            this.state.floatToggle = !this.state.floatToggle
+            this.setState({
+                floatToggle: this.state.floatToggle
+            })
+        }
+
+        if(evt.target.name === 'driver-select'){
             this.setState({driverLegInput: evt.target.value})
         } else if(evt.target.name === 'color-select'){
             this.setState({
@@ -1321,96 +1329,96 @@ class Grid extends Component {
         // -when stoped get pos
         // - if x is greater, right
         // - if y is greater left
+        // 
+        // var utils = document.querySelector('.utils-container')
+        // var grid = document.querySelector('.grid-container')
+        //
+        // utils.style.position = "fixed"
+        // utils.style.bottom = "0px"
+        // utils.style.right = "0px"
+        // utils.style.left = "40px"
 
-        var utils = document.querySelector('.utils-container')
-        var grid = document.querySelector('.grid-container')
-
-        utils.style.position = "fixed"
-        utils.style.bottom = "0px"
-        utils.style.right = "0px"
-        utils.style.left = "40px"
-
-        let utilsHeight
-        setTimeout(function(){
-            let topPanel = document.querySelector('.top-panel')
-            let bottomPanel = document.querySelector('.top-panel div')
-
-            // topPanel.ontransitionrun = function(){
-            //     console.log('HIHI')
-            // }
-            // bottomPanel.ontransitionrun = function(){
-            //     console.log('NON')
-            // }
-            // set to bottom of window
-            window.scrollTo(0,document.body.scrollHeight);
-            // get max scroll length
-            var limit = Math.max( document.body.scrollHeight, document.body.offsetHeight,
-                document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - window.innerHeight;
-                // utils hieight
-            utilsHeight = utils.offsetHeight
-            let utilsHeightStr = utilsHeight.toString() + 'px'
-                // position grid above utils to start
-            grid.style.bottom = utilsHeightStr
-            function setGridonScroll(){
-                window.addEventListener('scroll', () => {
-                    // find gap between utils and bottom
-                    let bottomGap = limit - window.pageYOffset
-                    // if less than max bottom
-                    if(limit > window.pageYOffset){
-                        console.log('set')
-                        // as gap increases, set new grid bottom - stick to top of utils
-                        let gridBottom = parseInt(bottomGap + utils.offsetHeight).toString() + 'px'
-                        grid.style.bottom = gridBottom
-                    }
-                })
-
-            }
-            // setGridonScroll()
-
-
-            let utilsTopStart
-            let gridStartBottom
-            let utilsStartY
-            let gridStartY
-            utils.addEventListener('mousedown', () => {
-                // console.log('down')
-                // get starting top
-
-                utilsTopStart = window.getComputedStyle(utils).top
-                utilsStartY = utils.getBoundingClientRect().y
-                gridStartY = grid.getBoundingClientRect().y
-                gridStartBottom = grid.getBoundingClientRect().bottom
-                // console.log('down', utilsTopStart)
-            })
-            // let to = document.querySelector('.top-panel div[role=button]')
-            // let topPanel = document.querySelector('.top-panel')
-            topPanel.addEventListener('mouseup', () => {
-                setTimeout(function(){
-                    console.log('uitls start Y', utilsStartY)
-                    console.log('grid start Y', gridStartY)
-                    console.log('start top', utilsTopStart)
-                    // console.log('after top', utils.getBoundingClientRect().top)
-                    // console.log('start bottom', grid.getBoundingClientRect().bottom)
-                    // console.log('start bottom', grid.getBoundingClientRect().bottom)
-
-                    let utilsTopAfter = window.getComputedStyle(utils).top
-                    // calcNewY = calcNewY.toString() + 'px'
-                    console.log('utils top after', utilsTopAfter)
-                    // console.log('top', grid.getBoundingClientRect().top)
-                    // console.log(utilsTopStr)
-                    // grid..bottom = utilsTopStr
-                    // grid.style.top = calcNewY
-
-
-                },400)
-
-
-                // if(utils.getBoundingClientRect().top > utilsTopStart){
-                //     console.log('large')
-                // }
-            })
-
-        },300)
+        // let utilsHeight
+        // setTimeout(function(){
+        //     let topPanel = document.querySelector('.top-panel')
+        //     let bottomPanel = document.querySelector('.top-panel div')
+        //
+        //     // topPanel.ontransitionrun = function(){
+        //     //     console.log('HIHI')
+        //     // }
+        //     // bottomPanel.ontransitionrun = function(){
+        //     //     console.log('NON')
+        //     // }
+        //     // set to bottom of window
+        //     window.scrollTo(0,document.body.scrollHeight);
+        //     // get max scroll length
+        //     var limit = Math.max( document.body.scrollHeight, document.body.offsetHeight,
+        //         document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - window.innerHeight;
+        //         // utils hieight
+        //     utilsHeight = utils.offsetHeight
+        //     let utilsHeightStr = utilsHeight.toString() + 'px'
+        //         // position grid above utils to start
+        //     grid.style.bottom = utilsHeightStr
+        //     function setGridonScroll(){
+        //         window.addEventListener('scroll', () => {
+        //             // find gap between utils and bottom
+        //             let bottomGap = limit - window.pageYOffset
+        //             // if less than max bottom
+        //             if(limit > window.pageYOffset){
+        //                 console.log('set')
+        //                 // as gap increases, set new grid bottom - stick to top of utils
+        //                 let gridBottom = parseInt(bottomGap + utils.offsetHeight).toString() + 'px'
+        //                 grid.style.bottom = gridBottom
+        //             }
+        //         })
+        //
+        //     }
+        //     // setGridonScroll()
+        //
+        //
+        //     let utilsTopStart
+        //     let gridStartBottom
+        //     let utilsStartY
+        //     let gridStartY
+        //     utils.addEventListener('mousedown', () => {
+        //         // console.log('down')
+        //         // get starting top
+        //
+        //         utilsTopStart = window.getComputedStyle(utils).top
+        //         utilsStartY = utils.getBoundingClientRect().y
+        //         gridStartY = grid.getBoundingClientRect().y
+        //         gridStartBottom = grid.getBoundingClientRect().bottom
+        //         // console.log('down', utilsTopStart)
+        //     })
+        //     // let to = document.querySelector('.top-panel div[role=button]')
+        //     // let topPanel = document.querySelector('.top-panel')
+        //     topPanel.addEventListener('mouseup', () => {
+        //         setTimeout(function(){
+        //             console.log('uitls start Y', utilsStartY)
+        //             console.log('grid start Y', gridStartY)
+        //             console.log('start top', utilsTopStart)
+        //             // console.log('after top', utils.getBoundingClientRect().top)
+        //             // console.log('start bottom', grid.getBoundingClientRect().bottom)
+        //             // console.log('start bottom', grid.getBoundingClientRect().bottom)
+        //
+        //             let utilsTopAfter = window.getComputedStyle(utils).top
+        //             // calcNewY = calcNewY.toString() + 'px'
+        //             console.log('utils top after', utilsTopAfter)
+        //             // console.log('top', grid.getBoundingClientRect().top)
+        //             // console.log(utilsTopStr)
+        //             // grid..bottom = utilsTopStr
+        //             // grid.style.top = calcNewY
+        //
+        //
+        //         },400)
+        //
+        //
+        //         // if(utils.getBoundingClientRect().top > utilsTopStart){
+        //         //     console.log('large')
+        //         // }
+        //     })
+        //
+        // },300)
 
         // - if top of box is more than pageYOffset - it's height
         // - find max pageYOffset

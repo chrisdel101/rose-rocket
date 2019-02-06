@@ -53,7 +53,7 @@ class Accordion extends React.Component {
             <Typography className={classes.secondaryHeading}>Set driver postion with coordinates.
             </Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails className="test">
+          <ExpansionPanelDetails>
           <MaterialForm
               onChange={this.props.onChange}
               onSubmit={this.props.onSubmit}
@@ -71,7 +71,7 @@ class Accordion extends React.Component {
               Set driver position with leg and progress.
             </Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails className="test">
+          <ExpansionPanelDetails className="second-panel">
           <Dropdown
                 onChange={this.props.onChange}
                 onSubmit={this.props.onSubmit}
@@ -89,7 +89,7 @@ class Accordion extends React.Component {
             <Typography className={classes.heading}>Legs & Progress</Typography>
             <Typography className={classes.secondaryHeading}>Highlight completed route and legs.</Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails className="test">
+          <ExpansionPanelDetails className="third-panel">
           <Dropdown
                 onChange={this.props.onChange}
                 onSubmit={this.props.onSubmit}

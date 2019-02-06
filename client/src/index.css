@@ -106,8 +106,13 @@ code {
 	pointer-events: none !important;
 }
 
-.secondary-button {
+[type="secondary-button"][data-number="1"] {
+	align-self: center;
+}
+
+.checkbox-container {
 	margin-left: auto !important;
+	display: flex;
 }
 
 .color-controls {
@@ -136,10 +141,54 @@ code {
 	transition: color 0.5s ease;
 }
 
-.top-panel>div {
-	/* transition: none !important; */
+.utils-containter {
+	position: relative;
 }
 
-.top-panel {
-	/* transition: none !important; */
+.utils-container.float-toggle {
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	left: 40px;
+}
+
+.material-form:nth-of-type(1) {
+	justify-content: space-around;
+	width: 100%;
+}
+
+.legs-container {
+	display: flex;
+}
+
+.second-panel {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+}
+
+.second-panel .form-child, .legs-container button {
+	margin: 0 65px;
+}
+
+.third-panel {
+	display: flex;
+}
+
+.third-panel {
+	display: flex;
+	align-items: center;
+}
+
+.third-panel .legs-container form {
+	display: flex;
+	align-items: center;
+}
+
+.third-panel .legs-container {
+	margin-left: 75px;
+}
+
+.third-panel .legs-container .form-child {
+	margin: 0 10px;
 }

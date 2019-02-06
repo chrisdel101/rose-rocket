@@ -9,6 +9,9 @@ import Accordion from "./Accordion";
 import AddButton from "./AddButton";
 import MaterialButton from "./MaterialButton";
 import Icon from "./Icon";
+import Checkbox from "./Checkbox";
+
+
 function TabContainer(props) {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -45,6 +48,10 @@ class SimpleTabs extends React.Component {
     }
 
   handleChange = (event, value) => {
+      if(event.target.name === "float-toggle"){
+          this.props.onChange(event)
+          return
+      }
     this.setState({ value });
   };
   addTab(){
@@ -149,6 +156,7 @@ class SimpleTabs extends React.Component {
                 <AddButton
                     onClick={this.handleAddButtonClick.bind(this)}
                     iconType="add"/>
+                    <Checkbox />
                 <MaterialButton
                     size="small"
                     color="secondary"
