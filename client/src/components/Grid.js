@@ -7,6 +7,9 @@ import Stop from './Stop'
 import Truck from './Truck'
 import Tabs from './material/Tabs'
 import Snackbar from './material/Snackbar'
+import stops from '../data/stops.json'
+import legs from '../data/legs.json'
+import driver from '../data/driver.json'
 
 class Grid extends Component {
 	constructor(props) {
@@ -25,8 +28,8 @@ class Grid extends Component {
             selectedDriverIndex: 0,
             // used to assign driver id on creation
             createCounter:0,
-            legs: [],
-			stops: [],
+            legs: legs,
+			stops: stops,
             legToColorID:"",
             driverFormX:"",
             driverFormY:"",
@@ -1365,6 +1368,9 @@ class Grid extends Component {
     componentDidMount() {
         let that = this
 
+        this.setState({
+            loadingDataArr: [...this.state.loadingDataArr, driver]
+        })
         // get start pos
         // - if x is greater then moving right
         // -when stoped get pos
@@ -1380,112 +1386,6 @@ class Grid extends Component {
                 utilsTop: utils.offsetHeight
             })
         },500)
-
-        // utils.style.position = "fixed"
-        // utils.style.bottom = "0px"
-        // utils.style.right = "0px"
-        // utils.style.left = "40px"
-
-        // let utilsHeight
-        // setTimeout(function(){
-        //     let topPanel = document.querySelector('.top-panel')
-        //     let bottomPanel = document.querySelector('.top-panel div')
-        //
-        //     // topPanel.ontransitionrun = function(){
-        //     //     console.log('HIHI')
-        //     // }
-        //     // bottomPanel.ontransitionrun = function(){
-        //     //     console.log('NON')
-        //     // }
-        //     // set to bottom of window
-
-        //     // get max scroll length
-        //     var limit = Math.max( document.body.scrollHeight, document.body.offsetHeight,
-        //         document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - window.innerHeight;
-        //         // utils hieight
-        //     utilsHeight = utils.offsetHeight
-        //     let utilsHeightStr = utilsHeight.toString() + 'px'
-        //         // position grid above utils to start
-        //     grid.style.bottom = utilsHeightStr
-        //     function setGridonScroll(){
-        //         window.addEventListener('scroll', () => {
-        //             // find gap between utils and bottom
-        //             let bottomGap = limit - window.pageYOffset
-        //             // if less than max bottom
-        //             if(limit > window.pageYOffset){
-        //                 console.log('set')
-        //                 // as gap increases, set new grid bottom - stick to top of utils
-        //                 let gridBottom = parseInt(bottomGap + utils.offsetHeight).toString() + 'px'
-        //                 grid.style.bottom = gridBottom
-        //             }
-        //         })
-        //
-        //     }
-        //     // setGridonScroll()
-        //
-        //
-        //     let utilsTopStart
-        //     let gridStartBottom
-        //     let utilsStartY
-        //     let gridStartY
-        //     utils.addEventListener('mousedown', () => {
-        //         // console.log('down')
-        //         // get starting top
-        //
-        //         utilsTopStart = window.getComputedStyle(utils).top
-        //         utilsStartY = utils.getBoundingClientRect().y
-        //         gridStartY = grid.getBoundingClientRect().y
-        //         gridStartBottom = grid.getBoundingClientRect().bottom
-        //         // console.log('down', utilsTopStart)
-        //     })
-        //     // let to = document.querySelector('.top-panel div[role=button]')
-        //     // let topPanel = document.querySelector('.top-panel')
-        //     topPanel.addEventListener('mouseup', () => {
-        //         setTimeout(function(){
-        //             console.log('uitls start Y', utilsStartY)
-        //             console.log('grid start Y', gridStartY)
-        //             console.log('start top', utilsTopStart)
-        //             // console.log('after top', utils.getBoundingClientRect().top)
-        //             // console.log('start bottom', grid.getBoundingClientRect().bottom)
-        //             // console.log('start bottom', grid.getBoundingClientRect().bottom)
-        //
-        //             let utilsTopAfter = window.getComputedStyle(utils).top
-        //             // calcNewY = calcNewY.toString() + 'px'
-        //             console.log('utils top after', utilsTopAfter)
-        //             // console.log('top', grid.getBoundingClientRect().top)
-        //             // console.log(utilsTopStr)
-        //             // grid..bottom = utilsTopStr
-        //             // grid.style.top = calcNewY
-        //
-        //
-        //         },400)
-        //
-        //
-        //         // if(utils.getBoundingClientRect().top > utilsTopStart){
-        //         //     console.log('large')
-        //         // }
-        //     })
-        //
-        // },300)
-
-        // - if top of box is more than pageYOffset - it's height
-        // - find max pageYOffset
-        // - if it gets less, while bottom of controls stays the same,
-        // - grid must ajust bottom by the amount the contrls height increases
-        // window.pageYOffset - utils.offsetHeight
-
-
-
-
-        // window.addEventListener('scroll', () => {
-        // 	if (window.pageXOffset > utils.offsetLeft) {
-        //     	utils.style.left = window.pageXOffset.toString() + 'px'
-        //     	console.log('left',utils.style.left)
-        //         console.log('offSet', window.pageXOffset.toString() + 'px')
-        //     }
-        // })
-
-
 
         setTimeout(function(){
             // console.log(that.state.legs)
@@ -1507,53 +1407,6 @@ class Grid extends Component {
 
         // call to set stops and truck
         this._setStopCoords('stop')
-        // Call our fetch function below once the component mounts
-        this._callDriver()
-        .then(res => {
-            // load into ar r. Can be looped over if mutlple drivers
-            this.setState({ loadingDataArr: [...this.state.loadingDataArr, res.driver] })
-        })
-        .catch(err => console.log(err));
-        this._callStops()
-        .then(res => {
-            // console.log(res)
-            this.setState({ stops: res.stops })
-        })
-        .catch(err => console.log(err));
-        this._callLegs()
-        .then(res => {
-            this.setState({ legs: res.legs })
-        })
-        .catch(err => console.log(err));
-
-    }
-    _callLegs = async () => {
-        const response = await fetch('/legs');
-        const body = await response.json();
-
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-        return body
-    }
-    _callStops = async () => {
-        const response = await fetch('/stops');
-        const body = await response.json();
-
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-        return body
-    }
-    _callDriver = async () => {
-        const response = await fetch('/driver');
-        const body = await response.json();
-
-        if (response.status !== 200) {
-
-            throw Error(body.message)
-        }
-        return body
     }
 }
 
