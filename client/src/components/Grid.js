@@ -996,13 +996,20 @@ class Grid extends Component {
     }
     toggleSnackbar(){
         this.state.snackbarOpen = !this.state.snackbarOpen
+        console.log(this.state.snackbarOpen)
         this.setState({
             snackbarOpen: this.state.snackbarOpen
         })
         console.log(this.state.snackbarOpen)
         return
     }
+    // https://stackoverflow.com/questions/16863917/check-if-class-exists-somewhere-in-parent-vanilla-js/19049101
+    hasParentClass(element, checkClass){
+        if (element.className.split(' ').indexOf(checkClass)>=0) return true;
+        return element.parentNode && this.hasParentClass(element.parentNode, checkClass);
+    }
     handleClick(event){
+console.log(event.target)
         if(!event) return
         // console.log(event)
         // For TAB clicks - sending strings back here as return vals
@@ -1053,9 +1060,9 @@ class Grid extends Component {
                         colorType: "complete"
                     })
                 }
-            } else if( event.target.classList.contains("MuiButtonBase-root-59") &&  event.target.classList.contains("MuiIconButton-root-163") ){
-                console.log(event.target.classList)
-
+                // if button and has parent class of snackbar
+            } else if(event.target.type === 'button' && this.hasParentClass(event.target, "snackbar") ){
+                console.log('oks')
                     // send this to child to close
                     this.setState({
                         snackbarOpen: false
