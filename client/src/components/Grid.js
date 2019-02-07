@@ -12,10 +12,7 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            isActive:{
-                button1: true,
-                button2: false
-            },
+            utilsTop: '',
             colors: ['red', 'Orange', 'DodgerBlue', 'MediumSeaGreen', 'Violet','SlateBlue', 'Tomato'],
             floatToggle: true,
             snackbarOpen: false,
@@ -49,7 +46,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 1}, (v, i) => i),
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -920,12 +917,25 @@ class Grid extends Component {
         }
 
     }
-    render() {
+    handleStyle(){
+        if(this.state.floatToggle){
+            if(this.state.utilsTop){
+                return {
+                    bottom: this.state.utilsTop.toString() + "px"
+                }
+            } else {
+                return null
+            }
+        } else {
+            return null
+        }
 
+    }
+     render() {
     	return(
             <main className="page-container">
 
-                <div className="grid-container">
+                <div className="grid-container" style={this.handleStyle.bind(this)()}>
                     <div className="grid">
                         {this.renderTrucks()}
 
@@ -1128,8 +1138,14 @@ class Grid extends Component {
             this.setState({driverProgressInput:evt.target.value})
         } else if(evt.target.name === 'float-toggle'){
             this.state.floatToggle = !this.state.floatToggle
+
             this.setState({
                 floatToggle: this.state.floatToggle
+            })
+            let that = this
+            // go to bottom on toggle
+            setTimeout(function(){
+                that.scrollToBottom()
             })
         }
 
@@ -1320,6 +1336,10 @@ class Grid extends Component {
 
 
     }
+    scrollToBottom(){
+        console.log('scroll bottom')
+        window.scrollTo(0,document.body.scrollHeight)
+    }
     componentDidMount() {
         let that = this
 
@@ -1329,10 +1349,17 @@ class Grid extends Component {
         // -when stoped get pos
         // - if x is greater, right
         // - if y is greater left
-        // 
-        // var utils = document.querySelector('.utils-container')
-        // var grid = document.querySelector('.grid-container')
         //
+        this.scrollToBottom()
+        let utils = document.querySelector('.utils-container')
+        let grid = document.querySelector('.grid-container')
+        let utilsTop
+        setTimeout(function(){
+            that.setState({
+                utilsTop: utils.offsetHeight
+            })
+        },500)
+
         // utils.style.position = "fixed"
         // utils.style.bottom = "0px"
         // utils.style.right = "0px"
@@ -1350,7 +1377,7 @@ class Grid extends Component {
         //     //     console.log('NON')
         //     // }
         //     // set to bottom of window
-        //     window.scrollTo(0,document.body.scrollHeight);
+
         //     // get max scroll length
         //     var limit = Math.max( document.body.scrollHeight, document.body.offsetHeight,
         //         document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - window.innerHeight;

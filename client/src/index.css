@@ -46,6 +46,7 @@ code {
 	display: flex;
 	flex-direction: unset;
 	position: relative;
+	bottom: 0
 }
 
 .grid {
