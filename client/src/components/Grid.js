@@ -1338,7 +1338,7 @@ class Grid extends Component {
 
     }
     scrollToBottom(){
-        console.log('scroll bottom')
+        // console.log('scroll bottom')
         window.scrollTo(0,document.body.scrollHeight)
     }
     componentDidMount() {

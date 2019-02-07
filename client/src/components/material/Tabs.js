@@ -79,6 +79,11 @@ class SimpleTabs extends React.Component {
 
   }
   handleAddButtonClick(e){
+      // TODO: remove old colors when new driver added
+      //check which tab we are on on click
+      //set the value to select the newwly created tab - new driver
+
+      console.log(e)
       this.props.onClick(e)
       this.addTab()
   }
