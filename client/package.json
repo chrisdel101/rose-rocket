@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "homepage": "http://chrisdel101.github.io/plot-n-graph",
+  "homepage": "http://chrisdel101.github.io/plot-n-graph/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
