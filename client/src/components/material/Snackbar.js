@@ -127,6 +127,7 @@ class CustomizedSnackbars extends React.Component {
           autoHideDuration={6000}
           onClose={this.handleClose}
           onClick={this.props.onClick}
+          className="snackbar"
           data-item="hello"
         >
           <MySnackbarContentWrapper

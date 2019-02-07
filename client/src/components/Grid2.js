@@ -49,7 +49,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 1}, (v, i) => i),
+            boxesToRender: Array.from({length: 40000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -1007,7 +1007,6 @@ class Grid extends Component {
     }
     // https://stackoverflow.com/questions/16863917/check-if-class-exists-somewhere-in-parent-vanilla-js/19049101
     hasParentClass(element, checkClass){
-        console.log(element,checkClass)
         if (element.className.split(' ').indexOf(checkClass)>=0) return true;
         return element.parentNode && this.hasParentClass(element.parentNode, checkClass);
     }
