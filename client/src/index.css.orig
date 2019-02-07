@@ -1,0 +1,219 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+		monospace;
+}
+
+.page-container {
+	margin-left: 40px;
+	margin-top: 40px
+}
+
+.box-container {
+	grid-gap: 1px;
+	border: 1px solid black;
+	background-color: white;
+}
+
+.stop-color0, .complete-color0 {
+	background-color: #D00000 !important;
+}
+
+.stop-color1, .complete-color1 {
+	background-color: #e59400 !important;
+}
+
+.stop-color2, .complete-color2 {
+	background-color: #1b81e5 !important;
+}
+
+.stop-color3, .complete-color3 {
+	background-color: #36a165 !important;
+}
+
+.stop-color4, .complete-color4 {
+	background-color: #eb6ceb !important;
+}
+
+.stop-color5, .complete-color5 {
+	background-color: #5f51b8 !important;
+}
+
+.stop-color6, .complete-color6 {
+	background-color: #e5593f !important;
+}
+
+.complete-color {
+	background-color: #9c0000 !important;
+}
+
+.leg-color {
+	background-color: pink !important;
+}
+
+.box {
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+}
+
+.grid-container {
+	display: flex;
+	flex-direction: unset;
+	position: relative;
+	bottom: 0
+}
+
+.grid {
+	display: grid;
+	border: 1px solid black;
+	grid-gap: 1px;
+	background-color: black;
+	grid-template-rows: repeat(200, 10px);
+	grid-template-columns: repeat(200, 10px);
+}
+
+.truck::before {
+	content: '\25CF';
+	color: var(--driver-color);
+	font-size: 10px;
+	position: relative;
+}
+
+.truck {
+	position: absolute;
+	bottom: 0;
+	z-index: 2;
+}
+
+.stop-marker:before {
+	content: '\25CF';
+	color: blue;
+	font-size: 10px;
+}
+
+.stop-marker {
+	position: absolute;
+	bottom: 0;
+}
+
+.button.disabled {
+	background-color: rgba(0, 0, 0, 0.12);
+	color: rgba(0, 0, 0, 0.12);
+}
+
+.button {
+	max-height: 40px;
+}
+
+.button span {
+	pointer-events: none !important;
+}
+
+.button span svg {
+	pointer-events: none !important;
+}
+
+[type="button"] span {
+	pointer-events: none !important;
+}
+
+[type="button"] span svg {
+	pointer-events: none !important;
+}
+
+[type="secondary-button"][data-number="1"] {
+	align-self: center;
+}
+
+.checkbox-container {
+	margin-left: auto !important;
+	display: flex;
+}
+
+.color-controls {
+	margin-left: 15px;
+}
+
+[data-number="2"] {
+	margin-right: auto !important;
+}
+
+[name="driver-dropdown"] {
+	display: flex;
+}
+
+/* ICON position and hover */
+.MuiTabs-flexContainer-39 .MuiButtonBase-root-59.MuiTab-root-47 {
+	position: relative;
+}
+
+.MuiButtonBase-root-59.MuiTab-root-47 .material-icons.MuiIcon-root-65 {
+	transition: color 0.2s ease;
+}
+
+.MuiButtonBase-root-59.MuiTab-root-47:hover .material-icons.MuiIcon-root-65 {
+	color: #DCDCDC !important;
+	transition: color 0.5s ease;
+}
+
+.utils-containter {
+	position: relative;
+}
+
+.utils-container.float-toggle {
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	left: 40px;
+}
+
+.material-form:nth-of-type(1) {
+	justify-content: space-around;
+	width: 100%;
+}
+
+.legs-container {
+	display: flex;
+}
+
+.second-panel {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+}
+
+.second-panel .form-child, .legs-container button {
+	margin: 0 65px;
+}
+
+.third-panel {
+	display: flex;
+}
+
+.third-panel {
+	display: flex;
+	align-items: center;
+}
+
+.third-panel .legs-container form {
+	display: flex;
+	align-items: center;
+}
+
+.third-panel .legs-container {
+	margin-left: 75px;
+}
+
+.third-panel .legs-container .form-child {
+	margin: 0 10px;
+}

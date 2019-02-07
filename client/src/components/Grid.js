@@ -1344,9 +1344,6 @@ class Grid extends Component {
     componentDidMount() {
         let that = this
 
-<<<<<<< HEAD
-=======
-
         // get start pos
         // - if x is greater then moving right
         // -when stoped get pos
@@ -1469,7 +1466,6 @@ class Grid extends Component {
 
 
 
->>>>>>> gridBottom
         setTimeout(function(){
             // console.log(that.state.legs)
             that.state.stops.map(stop => {
