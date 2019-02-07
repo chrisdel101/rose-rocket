@@ -46,7 +46,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 40000}, (v, i) => i),
+            boxesToRender: Array.from({length: 1}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -177,7 +177,7 @@ class Grid extends Component {
         }
     }
     // update createCounter by 1
-    updateDriverIndex(){
+    increaseDriverIdindex(){
         // console.log('called')
         let x = this.state.createCounter + 1
         // console.log(index)
@@ -210,7 +210,27 @@ class Grid extends Component {
         this.setState({
             driversArr: allDrivers
         })
-        this.updateDriverIndex()
+        this.increaseDriverIdindex()
+        this.changeDriver('new-driver', newDriverObj.id)
+
+    }
+    // make new driver the selectedDriver on add
+    changeDriver(type, driverID){
+        //set new driver to be the selectedDriver
+        if(type === 'new-driver')
+            this.setState({
+                selectedDriverIndex: driverID,
+                colorType: ""
+            })
+        else if(type === 'change-driver'){
+            this.setState({
+                selectedDriverIndex: driverID,
+            })
+        }
+
+        //update the Tab that is highlighted
+        //turn off color wit type ""
+        // reset color toggles to false
 
     }
     removeDriver(event){
@@ -888,7 +908,7 @@ class Grid extends Component {
         })
         // console.log(newPositionWpercent)
 
-        console.log('new driver state', this.state.selectedDriver)
+        // console.log('new driver state', this.state.selectedDriver)
         return true
     }
     _resetTruck(){
@@ -965,6 +985,7 @@ class Grid extends Component {
                             texts={this.state.texts}
                             driversArr={this.state.driversArr.length ? this.state.driversArr : null}
                             colors={this.state.colors}
+                            selectedDriver={this.state.selectedDriverIndex}
                             />
                             <i className="fa fa-angle-right"></i>
                             <Snackbar snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}/>
@@ -996,9 +1017,9 @@ class Grid extends Component {
             } else if(event.includes('DRIVER') && !event.includes('icon-click')){
                 // minus one for zero index
                 let driverIndex = parseInt(event[event.length - 2]) - 1
-                this.setState({
-                    selectedDriverIndex: driverIndex
-                })
+                console.log(driverIndex)
+                this.changeDriver('change-driver', driverIndex)
+
             }
             // if events and not strings
         } else {

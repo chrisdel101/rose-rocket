@@ -96,19 +96,7 @@ class SimpleTabs extends React.Component {
       this.props.onClick(`${e.target.innerText} icon-click`)
       this.subtractTab(driverIndex)
   }
-  positioning(){
-    var parent = document.querySelector('.MuiButtonBase-root-59')
-    var child = document.querySelector('.material-icons.MuiIcon-root-65')
-    var parentRect = parent.getBoundingClientRect()
-    var childRect = child.getBoundingClientRect()
-    var relativePos = {};
 
-    relativePos.top = childRect.top - parentRect.top
-    relativePos.right = childRect.right - parentRect.right
-    relativePos.bottom = childRect.bottom - parentRect.bottom
-    relativePos.left = childRect.left - parentRect.left;
-
-  }
    mouseEvent(e) {
     // e = Mouse click event.
         var rect = e.target.getBoundingClientRect();
@@ -134,6 +122,7 @@ class SimpleTabs extends React.Component {
         </div>)
     }
   render() {
+      // console.log(this.props)
     const { classes } = this.props;
     const { value } = this.state;
     if(this.props.driversArr){
@@ -146,7 +135,7 @@ class SimpleTabs extends React.Component {
                     }}
                     className="tabs-element"
                     name="tabs"
-                    value={value}
+                    value={this.props.selectedDriver}
                     onChange={this.handleChange}
                     onClick={this.handleTabsClick.bind(this)} >
                 {this.props.driversArr.map((tab, i) => {
@@ -207,3 +196,18 @@ SimpleTabs.propTypes = {
 
 
 export default withStyles(styles)(SimpleTabs);
+
+
+// positioning(){
+//   var parent = document.querySelector('.MuiButtonBase-root-59')
+//   var child = document.querySelector('.material-icons.MuiIcon-root-65')
+//   var parentRect = parent.getBoundingClientRect()
+//   var childRect = child.getBoundingClientRect()
+//   var relativePos = {};
+//
+//   relativePos.top = childRect.top - parentRect.top
+//   relativePos.right = childRect.right - parentRect.right
+//   relativePos.bottom = childRect.bottom - parentRect.bottom
+//   relativePos.left = childRect.left - parentRect.left;
+//
+// }
