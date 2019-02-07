@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/plot-n-graph/precache-manifest.61e43cee7a58e060d75a36e3478f34da.js"
+  "/plot-n-graph/precache-manifest.9d166cf241c7433e5274c5f9a982f01c.js"
 );
 
 workbox.clientsClaim();
