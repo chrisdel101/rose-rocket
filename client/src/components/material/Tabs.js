@@ -141,7 +141,7 @@ class SimpleTabs extends React.Component {
     // }
   render() {
       // console.log(this.state.value)
-      console.log(this.props.selectedDriver)
+      // console.log(this.props.selectedDriver)
     const { classes } = this.props;
     const { value } = this.state;
     if(this.props.driversArr){
@@ -157,7 +157,8 @@ class SimpleTabs extends React.Component {
                     value={this.props.selectedDriver}
                     onChange={this.handleChange}
                     onClick={this.handleTabsClick.bind(this)} >
-                {this.props.driversArr.map((tab, i) => {
+                {
+                    this.props.driversArr.map((tab, i) => {
 
                     return <Tab
                                 icon={this.renderIcon()} onMouseMove={this.mouseEvent.bind(this)}
@@ -165,7 +166,8 @@ class SimpleTabs extends React.Component {
                                 key={i}
                                 onClick={this.handleRemoveButtonClick.bind(this)}>
                            </Tab>
-                })}
+                       })
+                }
                 <AddButton
                     onClick={this.handleAddButtonClick.bind(this)}
                     iconType="add"/>
@@ -181,28 +183,26 @@ class SimpleTabs extends React.Component {
             </Tabs>
 
             </AppBar>
-            {
-                this.props.driversArr.map((tab, i) => {
 
-                    return this.props.selectedDriver === i && (
-                        <TabContainer key={i}>
-                        <Accordion
-                        onClick={this.props.onClick}
-                        onSubmit={this.props.onSubmit}
-                        onChange={this.props.onChange}
-                        values={this.props.values}
-                        legs={this.props.legs ? this.props.legs : null}
-                        texts={this.props.texts}
-                        />
+                <TabContainer>
+                <Accordion
+                onClick={this.props.onClick}
+                onSubmit={this.props.onSubmit}
+                onChange={this.props.onChange}
+                values={this.props.values}
+                legs={this.props.legs ? this.props.legs : null}
+                texts={this.props.texts}
+                />
 
-                        </TabContainer>
-                    )
+                </TabContainer>
 
-                })
+
+
+
             }
 
             </div>
-        );
+        )
 
     } else {
         return null
