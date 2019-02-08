@@ -110,12 +110,12 @@ class CustomizedSnackbars extends React.Component {
         })
       return;
     }
-    console.log(this.state)
+    // console.log(this.state)
     this.setState({ open: false });
   };
 
   render() {
-      console.log(this.props)
+      // console.log(this.props)
     return (
       <div>
         <Snackbar

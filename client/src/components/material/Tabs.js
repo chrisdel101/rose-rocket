@@ -52,7 +52,7 @@ class SimpleTabs extends React.Component {
           this.props.onChange(event)
           return
       }
-    this.setState({ value });
+    this.setState({ value: this.props.selectedDriver });
   };
   addTab(){
       let driverNum = this.state.numberOfTabs + 1
@@ -83,9 +83,11 @@ class SimpleTabs extends React.Component {
       //check which tab we are on on click
       //set the value to select the newwly created tab - new driver
 
-      console.log(e)
+      // console.log(e)
       this.props.onClick(e)
       this.addTab()
+      this.setState({value: this.props.selectedDriver})
+      console.log(this.state.value)
   }
   handleRemoveButtonClick(e){
 
@@ -121,8 +123,25 @@ class SimpleTabs extends React.Component {
           <Icon />
         </div>)
     }
+    // renderTabContainer(){
+    //     return value === i && (
+    //         <TabContainer key={i}>
+    //         <Accordion
+    //         onClick={this.props.onClick}
+    //         onSubmit={this.props.onSubmit}
+    //         onChange={this.props.onChange}
+    //         values={this.props.values}
+    //         legs={this.props.legs ? this.props.legs : null}
+    //         texts={this.props.texts}
+    //         />
+    //
+    //         </TabContainer>
+    //     )
+    //
+    // }
   render() {
-      // console.log(this.props)
+      // console.log(this.state.value)
+      console.log(this.props.selectedDriver)
     const { classes } = this.props;
     const { value } = this.state;
     if(this.props.driversArr){
@@ -164,7 +183,8 @@ class SimpleTabs extends React.Component {
             </AppBar>
             {
                 this.props.driversArr.map((tab, i) => {
-                    return value === i && (
+
+                    return this.props.selectedDriver === i && (
                         <TabContainer key={i}>
                         <Accordion
                         onClick={this.props.onClick}

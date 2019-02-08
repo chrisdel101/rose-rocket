@@ -46,7 +46,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 1}, (v, i) => i),
+            boxesToRender: Array.from({length: 2}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -227,10 +227,11 @@ class Grid extends Component {
                 selectedDriverIndex: driverID,
             })
         }
+        let that = this
+        setTimeout(function(){
+            console.log(that.state.selectedDriverIndex)
 
-        //update the Tab that is highlighted
-        //turn off color wit type ""
-        // reset color toggles to false
+        })
 
     }
     removeDriver(event){
@@ -240,13 +241,28 @@ class Grid extends Component {
         let driver = this.state.driversArr.filter(obj => {
              return (obj.name === driverName.toLowerCase() ? obj : false)
         })
-        // find index in array
-        let index = this.state.driversArr.indexOf(driver[0])
-        // splice out of driversArr
-        this.state.driversArr.splice(index,1)
-        this.setState({
-            driversArr: this.state.driversArr
+        // console.log(this.state.driversArr)
+        // change to next available one lower than the deleted one
+        for (var i = this.state.driversArr.length - 1; i >= 0; i--) {
+            if(driver[0].id > this.state.driversArr[i].id){
+                this.changeDriver('change-driver', this.state.driversArr[i].id)
+            }
+        }
+        console.log(this.state.driversArr)
+        let that = this
+        setTimeout(function(){
+
+            let index = that.state.driversArr.indexOf(driver[0])
+            // splice out of driversArr
+            that.state.driversArr.splice(index,1)
+            that.setState({
+                driversArr: that.state.driversArr
+            })
+            console.log(that.state.driversArr)
         })
+        // find index in array
+
+
 
     }
     // runs on load using pre-loaded data and when form submitted
@@ -1009,7 +1025,7 @@ class Grid extends Component {
         return element.parentNode && this.hasParentClass(element.parentNode, checkClass);
     }
     handleClick(event){
-console.log(event.target)
+// console.log(event.target)
         if(!event) return
         // console.log(event)
         // For TAB clicks - sending strings back here as return vals
