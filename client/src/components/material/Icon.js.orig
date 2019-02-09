@@ -29,12 +29,11 @@ const styles = theme => ({
 
 function Icons(props) {
   const { classes } = props;
-  console.log(props)
+  // console.log(props)
   return (
 
-          (props.type === "stop" ?
+          (props.stop ?
           <div className={classes.root}>
-          {console.log('stop')}
               <Icon ref={props.ref} className={`${classes.icon} stop-marker`} color="primary" tabIndex="-1" style={props.styles}>
               {props.strType}
             </Icon>

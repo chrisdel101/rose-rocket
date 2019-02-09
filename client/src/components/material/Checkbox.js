@@ -27,6 +27,7 @@ class CheckboxLabels extends React.Component {
   };
 
   handleChange = name => event => {
+      console.log(this)
     this.props.onChange(event)
     this.setState({ [name]: event.target.checked });
   };

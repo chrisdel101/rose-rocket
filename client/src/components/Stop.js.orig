@@ -19,7 +19,7 @@ function Stop(props){
 
               <Icon
                 str="place"
-                type="stop"
+                stop={true}
                 refs={ref}
                 styles={styles}
                 />
@@ -29,10 +29,10 @@ function Stop(props){
           {({ ref, style, placement, arrowProps }) => (
             <div
               ref={ref}
-              style={{ ...style, backgroundColor: "pink" }}
+              style={{ ...style, backgroundColor: "#F0FFFF", marginLeft: "0px" }}
               data-placement={placement}
             >
-              {`stop${i + 1}`}
+              {`stop${String.fromCharCode(65 + i)}`}
               <div ref={arrowProps.ref} style={arrowProps.style} />
             </div>
           )}
