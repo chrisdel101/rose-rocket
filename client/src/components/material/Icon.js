@@ -29,13 +29,23 @@ const styles = theme => ({
 
 function Icons(props) {
   const { classes } = props;
-
+  // console.log(props)
   return (
-    <div className={classes.root}>
-        <Icon className={`${classes.icon} close-icon`} color="primary" tabIndex="-1">
-        close
-      </Icon>
-    </div>
+
+          (props.stop ?
+          <div className={classes.root}>
+              <Icon ref={props.ref} className={`${classes.icon} stop-marker`} color="primary" tabIndex="-1" style={props.styles}>
+              {props.strType}
+            </Icon>
+          </div>
+          :
+           <div className={classes.root}>
+              <Icon className={`${classes.icon} close-icon`} color="primary" tabIndex="-1">
+              {props.strType}
+            </Icon>
+          </div>)
+
+
   );
 }
 

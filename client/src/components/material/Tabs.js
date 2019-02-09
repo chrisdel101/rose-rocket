@@ -112,7 +112,9 @@ class SimpleTabs extends React.Component {
 
     renderIcon(){
         return(<div tabIndex="-1" className="icon-wrapper">
-          <Icon />
+          <Icon
+            strType="close"
+            />
         </div>)
     }
   render() {

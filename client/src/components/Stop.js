@@ -1,6 +1,6 @@
 import React from 'react'
 import { Manager, Reference, Popper } from 'react-popper';
-
+import Icon from './material/Icon'
 
 // takes and array of directions and pixes for x and y
 function Stop(props){
@@ -12,22 +12,27 @@ function Stop(props){
             [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
             [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px'
         }
-        // console.log('styles', styles)
         return(
             <Manager key={i}>
         <Reference>
           {({ ref }) => (
-            <div ref={ref} className="stop-marker" style={styles} />
+
+              <Icon
+                str="place"
+                stop={true}
+                refs={ref}
+                styles={styles}
+                />
           )}
         </Reference>
         <Popper placement="left">
           {({ ref, style, placement, arrowProps }) => (
             <div
               ref={ref}
-              style={{ ...style, backgroundColor: "pink" }}
+              style={{ ...style, backgroundColor: "#F0FFFF", marginLeft: "0px" }}
               data-placement={placement}
             >
-              {`stop${i + 1}`}
+              {`stop${String.fromCharCode(65 + i)}`}
               <div ref={arrowProps.ref} style={arrowProps.style} />
             </div>
           )}
