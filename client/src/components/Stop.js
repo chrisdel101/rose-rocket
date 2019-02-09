@@ -15,20 +15,24 @@ function Stop(props){
         // console.log('styles', styles)
         return(
             <Manager key={i}>
-            <Reference>
-            {({ ref }) => (
-                <div className="stop-marker" style={styles}></div>
-            )}
-            </Reference>
-            <Popper placement="right">
-            {({ ref, style, placement, arrowProps }) => (
-                <div ref={ref} style={style} data-placement={placement}>
-                Popper element
-                <div ref={arrowProps.ref} style={arrowProps.style} />
-                </div>
-            )}
-            </Popper>
-            </Manager>
+        <Reference>
+          {({ ref }) => (
+            <div ref={ref} className="stop-marker" style={styles} />
+          )}
+        </Reference>
+        <Popper placement="left">
+          {({ ref, style, placement, arrowProps }) => (
+            <div
+              ref={ref}
+              style={{ ...style, backgroundColor: "pink" }}
+              data-placement={placement}
+            >
+              {`stop${i + 1}`}
+              <div ref={arrowProps.ref} style={arrowProps.style} />
+            </div>
+          )}
+        </Popper>
+      </Manager>
         )
     })
 }

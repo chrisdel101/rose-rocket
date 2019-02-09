@@ -26,7 +26,7 @@ function renderIcon(props){
 function AddButton(props) {
   const { classes } = props;
   return (
-    <div>
+    <div className="add-button-container">
       <Fab size="small" color="primary" aria-label="Add" className={`add-button button ${classes.fab}`} onClick={(ev) => props.onClick(ev)} data-number={props.number}>
         {renderIcon(props)}
 

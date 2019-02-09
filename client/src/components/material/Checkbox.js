@@ -22,7 +22,8 @@ const styles = {
 
 class CheckboxLabels extends React.Component {
   state = {
-    checkedA: true
+    checkedA: true,
+    checkedB: false
   };
 
   handleChange = name => event => {
@@ -32,19 +33,20 @@ class CheckboxLabels extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    console.log(this.props)
     return (
       <FormGroup row  className='checkbox-container'>
         <FormControlLabel
           control={
             <Checkbox
-              checked={this.state.checkedA}
-              onChange={this.handleChange('checkedA')}
-              value="checkedA"
-              name="float-toggle"
+              checked={this.props.checked}
+              onChange={this.handleChange(this.props.value)}
+              value={this.props.value}
+              name={this.props.name}
+
             />
           }
-          label="Floating Controls"
+          label={this.props.label}
         />
 
       </FormGroup>

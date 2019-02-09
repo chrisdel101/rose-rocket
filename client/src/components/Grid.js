@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import { Manager, Reference, Popper, Arrow } from "react-popper";
+import { Manager, Reference, Popper, Arrow } from "react-popper";
 
 import "../App.css";
 import Box from './Box'
@@ -1004,7 +1004,9 @@ class Grid extends Component {
                             selectedDriver={this.state.selectedDriverIndex}
                             />
                             <i className="fa fa-angle-right"></i>
-                            <Snackbar snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}/>
+                            <Snackbar
+                                snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}
+                            />
                     </div>
                 </div>
             </main>

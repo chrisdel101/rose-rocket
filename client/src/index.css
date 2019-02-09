@@ -135,9 +135,15 @@ code {
 	align-self: center;
 }
 
-.checkbox-container {
+.checkboxes {
 	margin-left: auto !important;
 	display: flex;
+	flex-direction: column;
+}
+
+.add-button-container {
+	display: flex;
+	align-items: center;
 }
 
 .color-controls {
@@ -153,7 +159,7 @@ code {
 }
 
 /* ICON position and hover */
-.MuiTabs-flexContainer-39 .MuiButtonBase-root-59.MuiTab-root-47 {
+/* .MuiTabs-flexContainer-39 .MuiButtonBase-root-59.MuiTab-root-47 {
 	position: relative;
 }
 
@@ -164,8 +170,7 @@ code {
 .MuiButtonBase-root-59.MuiTab-root-47:hover .material-icons.MuiIcon-root-65 {
 	color: #DCDCDC !important;
 	transition: color 0.5s ease;
-}
-
+} */
 .utils-containter {
 	position: relative;
 }
