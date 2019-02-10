@@ -27,9 +27,16 @@ function AddButton(props) {
   const { classes } = props;
   return (
     <div className="add-button-container">
+<<<<<<< Updated upstream
         <Fab size="small" color="primary" aria-label="Add" className={`add-button button ${classes.fab}`} onClick={(ev) => props.onClick(ev)} data-number={props.number}>
           {renderIcon(props)}
         </Fab>
+=======
+      <Fab size="small" color="primary" aria-label="Add" className={`add-button button ${classes.fab}`} onClick={(ev) => props.onClick(ev)} data-number={props.number}>
+        {renderIcon(props)}
+
+      </Fab>
+>>>>>>> Stashed changes
     </div>
   );
 }

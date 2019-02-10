@@ -32,9 +32,7 @@ const styles = (theme, color) => ({
     indicator: {
         backgroundColor: color
   }
-});
-
-
+})
 
 class SimpleTabs extends React.Component {
     constructor(props){
@@ -56,7 +54,6 @@ class SimpleTabs extends React.Component {
   };
   addTab(){
       let driverNum = this.state.numberOfTabs + 1
-
       // console.log(driverNum)
       this.setState({
           numberOfTabs: driverNum
@@ -69,7 +66,6 @@ class SimpleTabs extends React.Component {
           console.log('cannot subtract single driver')
           return
       }
-
       let numberOfTabs = this.state.numberOfTabs - 1
 
       this.setState({
@@ -79,10 +75,6 @@ class SimpleTabs extends React.Component {
 
   }
   handleAddButtonClick(e){
-      // TODO: remove old colors when new driver added
-      //check which tab we are on on click
-      //set the value to select the newwly created tab - new driver
-
       // console.log(e)
       this.props.onClick(e)
       this.addTab()
@@ -123,22 +115,6 @@ class SimpleTabs extends React.Component {
           <Icon />
         </div>)
     }
-    // renderTabContainer(){
-    //     return value === i && (
-    //         <TabContainer key={i}>
-    //         <Accordion
-    //         onClick={this.props.onClick}
-    //         onSubmit={this.props.onSubmit}
-    //         onChange={this.props.onChange}
-    //         values={this.props.values}
-    //         legs={this.props.legs ? this.props.legs : null}
-    //         texts={this.props.texts}
-    //         />
-    //
-    //         </TabContainer>
-    //     )
-    //
-    // }
   render() {
       // console.log(this.state.value)
       // console.log(this.props.selectedDriver)
@@ -171,14 +147,22 @@ class SimpleTabs extends React.Component {
                 <AddButton
                     onClick={this.handleAddButtonClick.bind(this)}
                     iconType="add"/>
-                    <Checkbox />
+                    <Checkbox
+                    checked={true}
+                    value="CheckedA"
+                    name="float-toggle"
+                    label="Floating Controls"/>
+                    <Checkbox
+                       value="checkedB"
+                       name="stop-name-toggle"
+                       label="Show Stop Names"/>
                 <MaterialButton
                     size="small"
                     color="secondary"
                     text="Toggle Route"
                     type="secondary-button"
                     onClick={this.props.onClick}
-                buttonNumber={1}/>
+                    buttonNumber={1}/>
 
             </Tabs>
 
@@ -186,14 +170,13 @@ class SimpleTabs extends React.Component {
 
                 <TabContainer>
                 <Accordion
-                onClick={this.props.onClick}
-                onSubmit={this.props.onSubmit}
-                onChange={this.props.onChange}
-                values={this.props.values}
-                legs={this.props.legs ? this.props.legs : null}
-                texts={this.props.texts}
-                />
+                    onClick={this.props.onClick}
+                    onSubmit={this.props.onSubmit}
+                    onChange={this.props.onChange}
 
+                    legs={this.props.legs ? this.props.legs : null}
+                    texts={this.props.texts}
+                    />
                 </TabContainer>
 
 
@@ -203,7 +186,6 @@ class SimpleTabs extends React.Component {
 
             </div>
         )
-
     } else {
         return null
     }
@@ -216,18 +198,3 @@ SimpleTabs.propTypes = {
 
 
 export default withStyles(styles)(SimpleTabs);
-
-
-// positioning(){
-//   var parent = document.querySelector('.MuiButtonBase-root-59')
-//   var child = document.querySelector('.material-icons.MuiIcon-root-65')
-//   var parentRect = parent.getBoundingClientRect()
-//   var childRect = child.getBoundingClientRect()
-//   var relativePos = {};
-//
-//   relativePos.top = childRect.top - parentRect.top
-//   relativePos.right = childRect.right - parentRect.right
-//   relativePos.bottom = childRect.bottom - parentRect.bottom
-//   relativePos.left = childRect.left - parentRect.left;
-//
-// }
