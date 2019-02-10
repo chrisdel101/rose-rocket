@@ -312,23 +312,39 @@ class Grid extends Component {
         // console.log('after', this.state.driversArr)
     }
     // on click set driver with coords and send to child
-    updateDriverWithCoords(){
+    updateDriverWithCoords(coords, type){
         // reset to zero
         this._resetTruck()
         // get pixels to new location
-        let coords = this._setStopCoords('driver',
-        this.state.driverFormX, this.state.driverFormY)
+        // coords.directions =  {
+        //     xDir: "left",
+        //     yDir: "bottom"
+        // }
+        // coords.pixels = {
+        //     moveX: coords.x,
+        //     moveY: coords.y
+        // }
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
         console.log('current driver', selectedDriver)
         // console.log(coords)
         // copy arr
         let driversArr = [...this.state.driversArr]
 
+        if(type === "form"){
+            coords = this._setStopCoords('driver',
+            this.state.driverFormX, this.state.driverFormY)
+        } else if(type === "slider"){
+            coords = this._setStopCoords('driver',
+            coords.x, coords.y)
+            // subtract for icon positionSelect
+        }
+        coords.pixels.moveX = coords.pixels.moveX - 30
         // console.log(driversArr[this.state.selectedDriver])
+        console.log(coords)
         // update the values in the object
         driversArr[this.state.selectedDriverIndex].directions = coords.directions
         driversArr[this.state.selectedDriverIndex].pixels = coords.pixels
-        // console.log(driversArr)
+        console.log(driversArr)
         // set new driver vals
         this.setState({
             driversArr: driversArr
@@ -968,6 +984,9 @@ class Grid extends Component {
         }
 
     }
+    testMove(){
+        this.updateDriverWithCoords({x: "20", y: "10"}, "slider")
+    }
      render() {
     	return(
             <main className="page-container">
@@ -995,6 +1014,7 @@ class Grid extends Component {
                 </div>
                 <div className={`${this.state.floatToggle? "float-toggle" :""} utils-container`}>
                     <div className="driver-controls">
+                    <button onClick={this.testMove.bind(this)}>Click</button>
                         <Tabs
                             onChange={this.handleChange.bind(this)}
                             onSubmit={this.handleFormSubmit.bind(this)}
@@ -1219,7 +1239,7 @@ class Grid extends Component {
                     driverCoords: formData
                 })
             //ACTUALLY MOVE DRIVER
-            this.updateDriverWithCoords()
+            this.updateDriverWithCoords("", "form")
             let that = this
             setTimeout(function(){
                 //UPDATE DRIVER DATA

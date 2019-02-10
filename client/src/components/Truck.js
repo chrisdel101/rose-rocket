@@ -14,11 +14,11 @@ function Truck(props){
         "--driver-color": props.colors[driverID]
     }
     return(
-        <div className="truck icon-wrapper" style={style}>
-        <Icon
-             className="truck"
-             strType="place"
-         />
+        <div className="truck-wrapper icon-wrapper" style={style}>
+            <Icon
+                 className="truck"
+                 strType="place"
+                 />
         </div>
     )
 }

@@ -82,19 +82,20 @@ code {
 	grid-template-columns: repeat(200, 10px);
 }
 
-.truck::before {
+.truck {
 	/* content: '\25CF'; */
 	/* color: var(--driver-color);
 	font-size: 10px;
 	position: relative; */
+	font-size: 30px !important;
+	color: var(--driver-color) !important;
+	position: relative !important;
 }
 
-.truck {
-	font-size: 30px !important;
+.truck-wrapper {
 	position: absolute;
 	bottom: 0;
 	z-index: 2;
-	color: var(--driver-color) !important;
 	left: 0;
 }
 
