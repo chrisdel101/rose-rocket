@@ -1,4 +1,5 @@
 import React from 'react'
+import Icon from './material/Icon'
 
 // takes and array of directions and pixes for x and y
 function Truck(props){
@@ -13,7 +14,12 @@ function Truck(props){
         "--driver-color": props.colors[driverID]
     }
     return(
-        <div className="truck" style={style}></div>
+        <div className="truck icon-wrapper" style={style}>
+        <Icon
+             className="truck"
+             strType="place"
+         />
+        </div>
     )
 }
 

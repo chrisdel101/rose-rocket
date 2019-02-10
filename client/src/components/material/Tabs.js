@@ -113,6 +113,7 @@ class SimpleTabs extends React.Component {
     renderIcon(){
         return(<div tabIndex="-1" className="icon-wrapper">
           <Icon
+            className="close-icon"
             strType="close"
             />
         </div>)
@@ -148,8 +149,7 @@ class SimpleTabs extends React.Component {
                 }
                 <AddButton
                     onClick={this.handleAddButtonClick.bind(this)}
-                    iconType="add"/>
-<<<<<<< HEAD
+                    />
                     <div className="checkboxes">
                         <Checkbox
                         checked={true}
@@ -162,17 +162,7 @@ class SimpleTabs extends React.Component {
                         name="stop-name-toggle"
                         label="Show Stop Names"/>
                     </div>
-=======
-                    <Checkbox
-                    checked={true}
-                    value="CheckedA"
-                    name="float-toggle"
-                    label="Floating Controls"/>
-                    <Checkbox
-                       value="checkedB"
-                       name="stop-name-toggle"
-                       label="Show Stop Names"/>
->>>>>>> checkbox
+
                 <MaterialButton
                     size="small"
                     color="secondary"
@@ -190,11 +180,9 @@ class SimpleTabs extends React.Component {
                     onClick={this.props.onClick}
                     onSubmit={this.props.onSubmit}
                     onChange={this.props.onChange}
-<<<<<<< HEAD
-                    values={this.props.values}
-=======
 
->>>>>>> checkbox
+                    values={this.props.values}
+
                     legs={this.props.legs ? this.props.legs : null}
                     texts={this.props.texts}
                     />

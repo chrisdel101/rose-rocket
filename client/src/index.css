@@ -83,16 +83,18 @@ code {
 }
 
 .truck::before {
-	content: '\25CF';
-	color: var(--driver-color);
+	/* content: '\25CF'; */
+	/* color: var(--driver-color);
 	font-size: 10px;
-	position: relative;
+	position: relative; */
 }
 
 .truck {
+	font-size: 30px !important;
 	position: absolute;
 	bottom: 0;
 	z-index: 2;
+	color: var(--driver-color) !important;
 }
 
 .stop-marker:before {

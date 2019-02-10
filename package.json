@@ -12,6 +12,7 @@
     "nodemon": "^1.18.9"
   },
   "dependencies": {
+    "@material-ui/core": "^3.9.2",
     "express": "^4.16.4",
     "react": "^16.0.0",
     "react-foundation": "^0.9.6",

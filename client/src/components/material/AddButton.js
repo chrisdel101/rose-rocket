@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Fab from '@materil-ui/core/Fab';
+import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+
 
 const styles = theme => ({
   fab: {
@@ -29,7 +30,7 @@ function AddButton(props) {
     <div className="add-button-container">
       <Fab size="small" color="primary" aria-label="Add" className={`add-button button ${classes.fab}`} onClick={(ev) => props.onClick(ev)} data-number={props.number}>
         {renderIcon(props)}
-
+        <AddIcon />
       </Fab>
     </div>
   );

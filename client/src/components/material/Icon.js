@@ -35,13 +35,20 @@ function Icons(props) {
           (props.type === "stop" ?
           <div className={classes.root}>
           {console.log('stop')}
-              <Icon ref={props.ref} className={`${classes.icon} stop-marker`} color="primary" tabIndex="-1" style={props.styles}>
+              <Icon
+                ref={props.ref} className={`${classes.icon} stop-marker`} color="primary"
+                tabIndex="-1"
+                style={props.styles}>
               {props.strType}
             </Icon>
           </div>
           :
            <div className={classes.root}>
-              <Icon className={`${classes.icon} close-icon`} color="primary" tabIndex="-1">
+              <Icon
+              className={`${classes.icon} ${props.className}`}
+              color="primary"
+              tabIndex="-1"
+              style={props.style}>
               {props.strType}
             </Icon>
           </div>)
