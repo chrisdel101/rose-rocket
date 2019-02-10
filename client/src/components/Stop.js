@@ -16,13 +16,7 @@ function Stop(props){
             <Manager key={i}>
         <Reference>
           {({ ref }) => (
-
-              <Icon
-                str="place"
-                type="stop"
-                refs={ref}
-                styles={styles}
-                />
+            <div ref={ref} className="stop-marker" style={styles} />
           )}
         </Reference>
         <Popper placement="left">
