@@ -29,7 +29,7 @@ const styles = theme => ({
 
 function Icons(props) {
   const { classes } = props;
-  console.log(props)
+  // console.log(props)
   return (
 
           (props.type === "stop" ?

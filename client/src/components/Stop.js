@@ -11,9 +11,13 @@ function Stop(props){
         let styles = {
             [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
             [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px',
-            backgroundColor: "rgba(0,0,0,0.5)",
-            color: "#white",
-            borderRadius: "5px",
+        }
+        function toggleStopNames(props){
+            if(props.toggleStopNames){
+                return "block"
+            } else {
+                return "none"
+            }
         }
         return(
             <Manager key={i}>
@@ -30,7 +34,9 @@ function Stop(props){
                   backgroundColor: "rgba(0,0,0,0.5)",
                   color: "#fff",
                   borderRadius: "5px",
-                  marginLeft: "10px"
+                  marginLeft: "10px",
+                  display: toggleStopNames(props),
+                  marginLeft: "-10px"
               }}
               data-placement={placement}
             >

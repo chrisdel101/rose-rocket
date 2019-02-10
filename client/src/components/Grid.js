@@ -15,6 +15,7 @@ class Grid extends Component {
             utilsTop: '',
             colors: ['red', 'Orange', 'DodgerBlue', 'MediumSeaGreen', 'Violet','SlateBlue', 'Tomato'],
             floatToggle: true,
+            showStopNames: false,
             snackbarOpen: false,
             allColorsCounter: 0,
             legColorsCounter: 0,
@@ -46,7 +47,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 41}, (v, i) => i),
+            boxesToRender: Array.from({length: 1}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -976,7 +977,9 @@ class Grid extends Component {
                         {this.renderTrucks()}
 
 
-                        <Stop coords={this.state.stopsDirsArr}/>
+                        <Stop
+                            coords={this.state.stopsDirsArr}
+                            toggleStopNames={this.state.showStopNames}/>
                         <Box
                             toRender={this.state.boxesToRender} stopsColor={(this.state.finalStopColorArr.length ? this.state.finalStopColorArr  : null)}
                             legsColor={(this.state.finalLegColorObj ? this.state.finalLegColorObj : null)}
@@ -1152,6 +1155,7 @@ class Grid extends Component {
         } else if(evt.target.name === 'progress-input'){
             console.log('hi')
             this.setState({driverProgressInput:evt.target.value})
+            // comes from names on checkboxes
         } else if(evt.target.name === 'float-toggle'){
             this.state.floatToggle = !this.state.floatToggle
 
@@ -1162,6 +1166,12 @@ class Grid extends Component {
             // go to bottom on toggle
             setTimeout(function(){
                 that.scrollToBottom()
+            })
+        } else if(evt.target.name === "stop-name-toggle"){
+            this.state.showStopNames = !this.state.showStopNames
+
+            this.setState({
+                showStopNames: this.state.showStopNames
             })
         }
 

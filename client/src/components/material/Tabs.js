@@ -46,9 +46,16 @@ class SimpleTabs extends React.Component {
             checkedB: false
         };
     }
-
+// handle check boxes
   handleChange = (event, value) => {
       if(event.target.name === "float-toggle"){
+          this.props.onChange(event)
+          return
+      }
+      if(event.target.name === "toggle"){
+          this.props.onChange(event)
+          return
+      } else if(event.target.name === "stop-name-toggle"){
           this.props.onChange(event)
           return
       }
