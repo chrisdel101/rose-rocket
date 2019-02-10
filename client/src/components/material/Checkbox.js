@@ -27,24 +27,29 @@ class CheckboxLabels extends React.Component {
   };
 
   handleChange = name => event => {
-    this.props.onChange(this.props.value)
-    this.setState({ [name]: event.target.checked });
-  };
-
+   this.setState({ [name]: event.target.checked });
+ };
+ checkedState(){
+     if(this.props.value === "checkedA"){
+         return this.state.checkedA
+     } else if(this.props.value === "checkedB"){
+         return this.state.checkedB
+     }
+ }
   render() {
     const { classes } = this.props;
-    // console.log(this.props)
+    console.log(this.checkedState())
     return (
       <FormGroup row  className='checkbox-container'>
         <FormControlLabel
           control={
             <Checkbox
-              checked={this.props.checked}
-              onChange={this.handleChange}
+              checked={this.checkedState()}
+              onChange={this.handleChange(this.props.value)}
               value={this.props.value}
               name={this.props.name}
-
             />
+
           }
           label={this.props.label}
         />

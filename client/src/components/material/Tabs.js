@@ -41,7 +41,9 @@ class SimpleTabs extends React.Component {
             value: 0,
             tabs: [{ label: "Driver 1" }],
             numberOfTabs: 1,
-            hovered: false
+            hovered: false,
+            checkedA: true,
+            checkedB: false
         };
     }
 
@@ -111,12 +113,13 @@ class SimpleTabs extends React.Component {
     }
 
     renderIcon(){
-        return(<div tabIndex="-1" className="icon-wrapper">
-          <Icon
-            className="close-icon"
-            strType="close"
-            />
-        </div>)
+        return(
+            <div tabIndex="-1" className="icon-wrapper">
+              <Icon
+                className="close-icon"
+                strType="close"
+                />
+            </div>)
     }
   render() {
       // console.log(this.state.value)
@@ -152,15 +155,14 @@ class SimpleTabs extends React.Component {
                     />
                     <div className="checkboxes">
                         <Checkbox
-                        checked={true}
-                        value="checkedA"
-                        name="float-toggle"
-                        label="Floating Controls"/>
+                            checkedProps={this.state.checkedA}
+                            value="checkedA"
+                            name="float-toggle"
+                            label="Floating Controls"/>
                         <Checkbox
-                        checked={false}
-                        value="checkedB"
-                        name="stop-name-toggle"
-                        label="Show Stop Names"/>
+                            value="checkedB"
+                            name="stop-name-toggle"
+                            label="Show Stop Names"/>
                     </div>
 
                 <MaterialButton
