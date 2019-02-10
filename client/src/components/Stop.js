@@ -10,7 +10,10 @@ function Stop(props){
     return coordsArr.map((coord, i) => {
         let styles = {
             [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
-            [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px'
+            [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px',
+            backgroundColor: "rgba(0,0,0,0.5)",
+            color: "#white",
+            borderRadius: "5px",
         }
         return(
             <Manager key={i}>
@@ -23,7 +26,12 @@ function Stop(props){
           {({ ref, style, placement, arrowProps }) => (
             <div
               ref={ref}
-              style={{ ...style, backgroundColor: "pink" }}
+              style={{ ...style,
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  color: "#fff",
+                  borderRadius: "5px",
+                  marginLeft: "10px"
+              }}
               data-placement={placement}
             >
               {`stop${i + 1}`}
