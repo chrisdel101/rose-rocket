@@ -264,10 +264,6 @@ class Grid extends Component {
             })
             console.log(that.state.driversArr)
         })
-        // find index in array
-
-
-
     }
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
@@ -1271,8 +1267,66 @@ class Grid extends Component {
             this.setState({ legs: res.legs })
         })
         .catch(err => console.log(err));
+        this.makeCoordsArrs()
     }
-    makeMoveArr(){
+    // loop stops though calcs
+    makeSliderCoords(){
+        let stops = [{
+            "name": "A",
+            "x": 20,
+            "y": 10
+            },
+            {
+            "name": "B",
+            "x": 20,
+            "y": 20
+            },
+            {
+            "name": "C",
+            "x": 25,
+            "y": 30
+            },
+            {
+            "name": "D",
+            "x": 25,
+            "y": 80
+        }]
+        let arr = stops.map(stop => {
+            console.log(this.sliderCoordsCalc())
+        })
+    }
+    // take json and divide into arrs of stop/start
+    makeCoordsArrs(){
+        let stops = [{
+            "name": "A",
+            "x": 20,
+            "y": 10
+            },
+            {
+            "name": "B",
+            "x": 20,
+            "y": 20
+            },
+            {
+            "name": "C",
+            "x": 25,
+            "y": 30
+            },
+            {
+            "name": "D",
+            "x": 25,
+            "y": 80
+        }]
+        let arr = []
+        this.stops.map((stop,i) => {
+            if(!stops[i + 1]) return
+            let start = stops[i]
+            let end = stops[i + 1]
+            console.log(start, end)
+        })
+    }
+    // takes start/end returns all coords between 2 points
+    sliderCoordsCalc(){
         let storeArr = []
         let xArr = this.state.xSlideCoord
         let yArr = this.state.ySlideCoord
@@ -1297,15 +1351,13 @@ class Grid extends Component {
         // console.log('short',shorterArr)
         // console.log('long',longerArr)
         let obj
+        // j runs on all small loop
+        let j = 0
         for (var i = 0; i < longerArr.length; i++) {
-            let adjust = i / 2
-            // find the muliples of smallInLarge and insert val
-            // console.log('i',i)
-            // console.log('adjust', adjust)
             // if is a mutplie of smallInLarge
             if(i % smallInLarge === 0){
-
                 // console.log('div', longerArr[i])
+                // on zero, both get a val
                 if(i === 0){
                     obj = {
                         [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
@@ -1313,27 +1365,23 @@ class Grid extends Component {
                     }
                     // console.log('upper', obj)
                 } else {
-                    // if(!shorterArr[i - adjust][0] || !longerArr[i][0]){
-                    //     // console.log(shorterArr[i])
-                    //     // console.log(storeArr)
-                    //     return
-                    // }
-                    console.log([i - adjust])
+                    // console.log(shorterArr[i - ])
                     obj = {
                         [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
-                        [Object.keys(shorterArr[i - adjust])[0]]: Object.values(shorterArr[i - adjust])[0]
+                        [Object.keys(shorterArr[j ])[0]]: Object.values(shorterArr[j])[0]
                     }
-                    // console.log('lower', obj)
                 }
+            // increase inner loop
+            j++
             } else {
                 obj = {
-                [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0]
+                    [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0]
                 }
             }
             console.log('obj',obj)
             storeArr.push(obj)
         }
-        console.log(storeArr)
+        return storeArr
     }
     createCoordObj(startObj, endObj){
         let yArr = []
