@@ -1206,6 +1206,72 @@ class Grid extends Component {
         }
     }
     }
+    componentDidMount() {
+
+        this.createCoordObj({
+            "name": "A",
+            "x": 10,
+            "y": 28
+        },
+        {
+            "name": "B",
+            "x": 30,
+            "y": 30
+        })
+        let that = this
+
+        //
+        this.scrollToBottom()
+        let utils = document.querySelector('.utils-container')
+        let grid = document.querySelector('.grid-container')
+        let utilsTop
+        setTimeout(function(){
+            that.setState({
+                utilsTop: utils.offsetHeight
+            })
+        },500)
+
+
+
+        setTimeout(function(){
+            // console.log(that.state.legs)
+            that.state.stops.map(stop => {
+                    that.legStartEnd(stop.x, stop.y,'all')
+                    that.colorGrid(stop.x, stop.y, 'all')
+
+            })
+            // call these with the default driver on mount
+            that.addNewDriver()
+            that.updateDriverwithData(that.state.loadingDataArr[0])
+            that.colorCompleted(that.state.loadingDataArr[0].activeLegID)
+
+            // that.pleted(that.state.driverCoords.y)
+            // console.log('state',that.state)
+        },100)
+
+
+
+        // call to set stops and truck
+        this._setStopCoords('stop')
+        // Call our fetch function below once the component mounts
+        this._callDriver()
+        .then(res => {
+            // load into ar r. Can be looped over if mutlple drivers
+            this.setState({ loadingDataArr: [...this.state.loadingDataArr, res.driver] })
+        })
+        .catch(err => console.log(err));
+        this._callStops()
+        .then(res => {
+            // console.log(res)
+            this.setState({ stops: res.stops })
+        })
+        .catch(err => console.log(err));
+        this._callLegs()
+        .then(res => {
+            this.setState({ legs: res.legs })
+        })
+        .catch(err => console.log(err));
+    }
     makeMoveArr(){
         let storeArr = []
         let xArr = this.state.xSlideCoord
@@ -1221,25 +1287,25 @@ class Grid extends Component {
         } else if(yArr.length === xArr.length){
             avg = xArr.length
         }
-
-        // console.log('per', smallInLarge)
-        // console.log('xLen', xArr.length)
-        // console.log('yLen', yArr.length)
+        smallInLarge = Math.ceil(smallInLarge)
+        console.log('per', smallInLarge)
+        console.log('xLen', xArr.length)
+        console.log('yLen', yArr.length)
         let longerArr = (xArr.length >= yArr.length ? xArr : yArr)
         let shorterArr = (xArr.length <= yArr.length ? xArr : yArr)
-        let adjust = smallInLarge * 0.5
         // console.log('avg',avg)
-        console.log('short',shorterArr)
-        console.log('long',longerArr)
+        // console.log('short',shorterArr)
+        // console.log('long',longerArr)
         let obj
         for (var i = 0; i < longerArr.length; i++) {
+            let adjust = i / 2
             // find the muliples of smallInLarge and insert val
             // console.log('i',i)
             // console.log('adjust', adjust)
             // if is a mutplie of smallInLarge
             if(i % smallInLarge === 0){
 
-                console.log('div', longerArr[i])
+                // console.log('div', longerArr[i])
                 if(i === 0){
                     obj = {
                         [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
@@ -1247,11 +1313,12 @@ class Grid extends Component {
                     }
                     // console.log('upper', obj)
                 } else {
-                    if(!shorterArr[i - adjust] || !longerArr[i]){
-                        console.log(shorterArr[i - adjust])
-                        console.log(storeArr)
-                        return
-                    }
+                    // if(!shorterArr[i - adjust][0] || !longerArr[i][0]){
+                    //     // console.log(shorterArr[i])
+                    //     // console.log(storeArr)
+                    //     return
+                    // }
+                    console.log([i - adjust])
                     obj = {
                         [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
                         [Object.keys(shorterArr[i - adjust])[0]]: Object.values(shorterArr[i - adjust])[0]
@@ -1263,7 +1330,7 @@ class Grid extends Component {
                 [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0]
                 }
             }
-
+            console.log('obj',obj)
             storeArr.push(obj)
         }
         console.log(storeArr)
@@ -1498,73 +1565,7 @@ class Grid extends Component {
         // console.log('scroll bottom')
         window.scrollTo(0,document.body.scrollHeight)
     }
-    componentDidMount() {
 
-        this.createCoordObj({
-            "name": "A",
-            "x": 30,
-            "y": 20
-        },
-        {
-            "name": "B",
-            "x": 25,
-            "y": 10
-        })
-        let that = this
-
-        //
-        this.scrollToBottom()
-        let utils = document.querySelector('.utils-container')
-        let grid = document.querySelector('.grid-container')
-        let utilsTop
-        setTimeout(function(){
-            that.setState({
-                utilsTop: utils.offsetHeight
-            })
-        },500)
-
-
-
-        setTimeout(function(){
-            // console.log(that.state.legs)
-            that.state.stops.map(stop => {
-                    that.legStartEnd(stop.x, stop.y,'all')
-                    that.colorGrid(stop.x, stop.y, 'all')
-
-            })
-            // call these with the default driver on mount
-            that.addNewDriver()
-            that.updateDriverwithData(that.state.loadingDataArr[0])
-            that.colorCompleted(that.state.loadingDataArr[0].activeLegID)
-
-            // that.pleted(that.state.driverCoords.y)
-            // console.log('state',that.state)
-        },100)
-
-
-
-        // call to set stops and truck
-        this._setStopCoords('stop')
-        // Call our fetch function below once the component mounts
-        this._callDriver()
-        .then(res => {
-            // load into ar r. Can be looped over if mutlple drivers
-            this.setState({ loadingDataArr: [...this.state.loadingDataArr, res.driver] })
-        })
-        .catch(err => console.log(err));
-        this._callStops()
-        .then(res => {
-            // console.log(res)
-            this.setState({ stops: res.stops })
-        })
-        .catch(err => console.log(err));
-        this._callLegs()
-        .then(res => {
-            this.setState({ legs: res.legs })
-        })
-        .catch(err => console.log(err));
-
-    }
     _callLegs = async () => {
         const response = await fetch('/legs');
         const body = await response.json();
