@@ -13,6 +13,8 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+            xSlideCoord: [],
+            ySlideCoord: [],
             utilsTop: '',
             colors: ['red', 'Orange', 'DodgerBlue', 'MediumSeaGreen', 'Violet','SlateBlue', 'Tomato'],
             floatToggle: true,
@@ -1010,7 +1012,6 @@ class Grid extends Component {
                 </div>
                 <div className={`${this.state.floatToggle? "float-toggle" :""} utils-container`}>
                     <div className="driver-controls">
-                    <button onClick={this.testMove.bind(this)}>Click</button>
                     <Slider
                         label="Driver Position"
                         onChange={this.handleChange.bind(this)}/>
@@ -1201,80 +1202,113 @@ class Grid extends Component {
         } else {
             // if slider
             if(evt.event.target.type === "button" && this.hasParentClass(evt.event.target, "slider")){
-
-                // this.updateDriverWithCoords({x: "20", y: "10"}, "slider")
-
-                // this.testMove()
-                // get current x/y
-                // create that many sets of coords
-                //take current x/y and add the range one at a time
-                this.createCoordObj({
-                    "name": "A",
-                    "x": 20,
-                    "y": 20
-                },
-                {
-                    "name": "B",
-                    "x": 20,
-                    "y": 10
-                })
+                this.makeMoveArr()
         }
     }
     }
+    makeMoveArr(){
+        let storeArr = []
+        let xArr = this.state.xSlideCoord
+        let yArr = this.state.ySlideCoord
+        let avg
+        let smallInLarge
+        if(xArr.length > yArr.length){
+            avg = (yArr.length / xArr.length) * 10
+            smallInLarge = xArr.length / yArr.length
+        } else if(xArr.length < yArr.length){
+            avg = (xArr.length / yArr.length) * 10
+            smallInLarge = yArr.length / xArr.length
+        } else if(yArr.length === xArr.length){
+            avg = xArr.length
+        }
+
+        // console.log('per', smallInLarge)
+        // console.log('xLen', xArr.length)
+        // console.log('yLen', yArr.length)
+        let longerArr = (xArr.length >= yArr.length ? xArr : yArr)
+        let shorterArr = (xArr.length <= yArr.length ? xArr : yArr)
+        let adjust = smallInLarge * 0.5
+        // console.log('avg',avg)
+        console.log('short',shorterArr)
+        console.log('long',longerArr)
+        let obj
+        for (var i = 0; i < longerArr.length; i++) {
+            // find the muliples of smallInLarge and insert val
+            // console.log('i',i)
+            // console.log('adjust', adjust)
+            // if is a mutplie of smallInLarge
+            if(i % smallInLarge === 0){
+
+                console.log('div', longerArr[i])
+                if(i === 0){
+                    obj = {
+                        [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
+                        [Object.keys(shorterArr[i])[0]]: Object.values(shorterArr[i])[0]
+                    }
+                    // console.log('upper', obj)
+                } else {
+                    if(!shorterArr[i - adjust] || !longerArr[i]){
+                        console.log(shorterArr[i - adjust])
+                        console.log(storeArr)
+                        return
+                    }
+                    obj = {
+                        [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
+                        [Object.keys(shorterArr[i - adjust])[0]]: Object.values(shorterArr[i - adjust])[0]
+                    }
+                    // console.log('lower', obj)
+                }
+            } else {
+                obj = {
+                [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0]
+                }
+            }
+
+            storeArr.push(obj)
+        }
+        console.log(storeArr)
+    }
     createCoordObj(startObj, endObj){
-        let arr = []
+        let yArr = []
+        let xArr = []
         let x1 = startObj.x
         let x2 = endObj.x
         let y1 = startObj.y
         let y2 = endObj.y
-        let { xToMove, yToMove } = this.numBetweenStops(startObj, endObj)
+        let { xToMove, yToMove } = this._numBetweenStops(startObj, endObj)
         console.log("x", xToMove)
         console.log("y", yToMove)
+        // find if pos of neg
         let xIsInteger = (xToMove < 0 ? false : true)
         let yIsInteger = (yToMove < 0 ? false : true)
+        // make arr of x/y stops
             for (var i = 0; i < Math.abs(yToMove); i++) {
                 if(yIsInteger){
                     let obj = {y: y1 + (i + 1)}
-                    arr.push(obj)
+                    yArr.push(obj)
                 } else {
                     let obj = {y: y1 - (i + 1)}
-                    arr.push(obj)
+                    yArr.push(obj)
                 }
             }
-        // } else {
-        //     for (var i = 0; i < yToMove; i++) {
-        //         let obj = {y: y1 + (i + 1)}
-        //         arr.push(obj)
-        //     }
-        // }
-        console.log(arr)
-
+            for (var i = 0; i < Math.abs(xToMove); i++) {
+                if(xIsInteger){
+                    let obj = {x: x1 + (i + 1)}
+                    xArr.push(obj)
+                } else {
+                    let obj = {x: y1 - (i + 1)}
+                    xArr.push(obj)
+                }
+            }
+        console.log(xArr)
+        console.log(yArr)
+        // push to state
+        this.setState({
+            xSlideCoord: xArr,
+            ySlideCoord: yArr
+        })
     }
-    // takes 2 objs
-    testMove(){
-        let moveBtw = [{
-            "name": "A",
-            "x": 20,
-            "y": 10
-        },
-        {
-            "name": "B",
-            "x": 20,
-            "y": 20
-        },
-        {
-            "name": "B",
-            "x": 15,
-            "y": 15
-        }
-    ]
-        // this.updateDriverWithCoords({x: "20", y: "10"}, "slider")
-        // - loop through the array of stops
-        // - move one by one, increasing x/y wth slider increase
-        // - calc each range between stops, run and down this
-        console.log(this.numBetweenStops(moveBtw[1], moveBtw[2]))
-    }
-    numBetweenStops(stop1, stop2){
+    _numBetweenStops(stop1, stop2){
         let x1 = stop1.x
         let x2 = stop2.x
         let y1 = stop1.y
@@ -1465,6 +1499,17 @@ class Grid extends Component {
         window.scrollTo(0,document.body.scrollHeight)
     }
     componentDidMount() {
+
+        this.createCoordObj({
+            "name": "A",
+            "x": 30,
+            "y": 20
+        },
+        {
+            "name": "B",
+            "x": 25,
+            "y": 10
+        })
         let that = this
 
         //
