@@ -7,6 +7,7 @@ import Stop from './Stop'
 import Truck from './Truck'
 import Tabs from './material/Tabs'
 import Snackbar from './material/Snackbar'
+import Slider from './material/Slider'
 
 class Grid extends Component {
 	constructor(props) {
@@ -331,13 +332,15 @@ class Grid extends Component {
         let driversArr = [...this.state.driversArr]
 
         if(type === "form"){
+            // from form
             coords = this._setStopCoords('driver',
             this.state.driverFormX, this.state.driverFormY)
         } else if(type === "slider"){
+            // from params
             coords = this._setStopCoords('driver',
             coords.x, coords.y)
-            // subtract for icon positionSelect
         }
+        // subtract for icon positionSelect
         coords.pixels.moveX = coords.pixels.moveX - 30
         // console.log(driversArr[this.state.selectedDriver])
         console.log(coords)
@@ -349,11 +352,6 @@ class Grid extends Component {
         this.setState({
             driversArr: driversArr
         })
-        let that = this
-        setTimeout(function(){
-            console.log(that.state)
-
-        },500)
     }
     // calc up to driver position to color
     colorCompleted(legID){
@@ -746,7 +744,7 @@ class Grid extends Component {
         console.log('driver coords', coords)
         // if x & y is between the stops
         let firstStop = this.state.stops.filter((coord, index) => {
-            let stop1 = this.state.stops[index  ]
+            let stop1 = this.state.stops[index]
             let stop2 = this.state.stops[index + 1]
             // console.log('stop1', stop1)
             // console.log('stop2', stop2)
@@ -984,9 +982,7 @@ class Grid extends Component {
         }
 
     }
-    testMove(){
-        this.updateDriverWithCoords({x: "20", y: "10"}, "slider")
-    }
+
      render() {
     	return(
             <main className="page-container">
@@ -1015,6 +1011,9 @@ class Grid extends Component {
                 <div className={`${this.state.floatToggle? "float-toggle" :""} utils-container`}>
                     <div className="driver-controls">
                     <button onClick={this.testMove.bind(this)}>Click</button>
+                    <Slider
+                        label="Driver Position"
+                        onChange={this.handleChange.bind(this)}/>
                         <Tabs
                             onChange={this.handleChange.bind(this)}
                             onSubmit={this.handleFormSubmit.bind(this)}
@@ -1026,7 +1025,7 @@ class Grid extends Component {
                             colors={this.state.colors}
                             selectedDriver={this.state.selectedDriverIndex}
                             />
-                            <i className="fa fa-angle-right"></i>
+
                             <Snackbar
                                 snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}
                             />
@@ -1156,54 +1155,146 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        // console.log(evt.target)
-        // console.log(evt.target.name)
-        if(evt.target.name === 'x'){
-            this.setState({
-                driverFormX: evt.target.value
-            })
+        // to filter out undefined errors
+        if(!evt.event){
+            if(evt.target.name === 'x'){
+                this.setState({
+                    driverFormX: evt.target.value
+                })
 
-        } else if(evt.target.name === 'y'){
-            this.setState({
-                driverFormY: evt.target.value,
+            } else if(evt.target.name === 'y'){
+                this.setState({
+                    driverFormY: evt.target.value,
 
-            })
-        } else if(evt.target.name === 'position-select'){
+                })
+            } else if(evt.target.name === 'position-select'){
 
-        } else if(evt.target.name === 'driver-select'){
-            this.setState({driverLegInput: evt.target.value})
-        } else if(evt.target.name === 'progress-input'){
-            console.log('hi')
-            this.setState({driverProgressInput:evt.target.value})
-            // comes from names on checkboxes
-        } else if(evt.target.name === 'float-toggle'){
-            this.state.floatToggle = !this.state.floatToggle
+            } else if(evt.target.name === 'driver-select'){
+                this.setState({driverLegInput: evt.target.value})
+            } else if(evt.target.name === 'progress-input'){
+                console.log('hi')
+                this.setState({driverProgressInput:evt.target.value})
+                // comes from names on checkboxes
+            } else if(evt.target.name === 'float-toggle'){
+                this.state.floatToggle = !this.state.floatToggle
 
-            this.setState({
-                floatToggle: this.state.floatToggle
-            })
-            let that = this
-            // go to bottom on toggle
-            setTimeout(function(){
-                that.scrollToBottom()
-            })
-        } else if(evt.target.name === "stop-name-toggle"){
-            this.state.showStopNames = !this.state.showStopNames
+                this.setState({
+                    floatToggle: this.state.floatToggle
+                })
+                let that = this
+                // go to bottom on toggle
+                setTimeout(function(){
+                    that.scrollToBottom()
+                })
+            } else if(evt.target.name === "stop-name-toggle"){
+                this.state.showStopNames = !this.state.showStopNames
 
-            this.setState({
-                showStopNames: this.state.showStopNames
-            })
+                this.setState({
+                    showStopNames: this.state.showStopNames
+                })
+            } else if(evt.target.name === 'color-select'){
+                this.setState({
+                    value: evt.target.value,
+                    legToColorID: evt.target.value
+                })
+            }
+        } else {
+            // if slider
+            if(evt.event.target.type === "button" && this.hasParentClass(evt.event.target, "slider")){
+
+                // this.updateDriverWithCoords({x: "20", y: "10"}, "slider")
+
+                // this.testMove()
+                // get current x/y
+                // create that many sets of coords
+                //take current x/y and add the range one at a time
+                this.createCoordObj({
+                    "name": "A",
+                    "x": 20,
+                    "y": 20
+                },
+                {
+                    "name": "B",
+                    "x": 20,
+                    "y": 10
+                })
+        }
+    }
+    }
+    createCoordObj(startObj, endObj){
+        let arr = []
+        let x1 = startObj.x
+        let x2 = endObj.x
+        let y1 = startObj.y
+        let y2 = endObj.y
+        let { xToMove, yToMove } = this.numBetweenStops(startObj, endObj)
+        console.log("x", xToMove)
+        console.log("y", yToMove)
+        let xIsInteger = (xToMove < 0 ? false : true)
+        let yIsInteger = (yToMove < 0 ? false : true)
+            for (var i = 0; i < Math.abs(yToMove); i++) {
+                if(yIsInteger){
+                    let obj = {y: y1 + (i + 1)}
+                    arr.push(obj)
+                } else {
+                    let obj = {y: y1 - (i + 1)}
+                    arr.push(obj)
+                }
+            }
+        // } else {
+        //     for (var i = 0; i < yToMove; i++) {
+        //         let obj = {y: y1 + (i + 1)}
+        //         arr.push(obj)
+        //     }
+        // }
+        console.log(arr)
+
+    }
+    // takes 2 objs
+    testMove(){
+        let moveBtw = [{
+            "name": "A",
+            "x": 20,
+            "y": 10
+        },
+        {
+            "name": "B",
+            "x": 20,
+            "y": 20
+        },
+        {
+            "name": "B",
+            "x": 15,
+            "y": 15
+        }
+    ]
+        // this.updateDriverWithCoords({x: "20", y: "10"}, "slider")
+        // - loop through the array of stops
+        // - move one by one, increasing x/y wth slider increase
+        // - calc each range between stops, run and down this
+        console.log(this.numBetweenStops(moveBtw[1], moveBtw[2]))
+    }
+    numBetweenStops(stop1, stop2){
+        let x1 = stop1.x
+        let x2 = stop2.x
+        let y1 = stop1.y
+        let y2 = stop2.y
+        let xToMove
+        let yToMove
+        if(x1 > x2){
+            xToMove = x1 - x2
+            xToMove = -Math.abs(xToMove)
+        } else {
+            xToMove = x2 - x1
         }
 
-        if(evt.target.name === 'driver-select'){
-            this.setState({driverLegInput: evt.target.value})
-        } else if(evt.target.name === 'color-select'){
-            this.setState({
-                value: evt.target.value,
-                legToColorID: evt.target.value
-            })
+        if(y1 > y2){
+            yToMove = y1 - y2
+            yToMove = -Math.abs(yToMove)
+        } else {
+            yToMove = y2 - y1
         }
-
+        return {xToMove, yToMove}
 
     }
     handleFormSubmit(event) {
