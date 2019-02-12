@@ -1204,16 +1204,7 @@ class Grid extends Component {
     }
     componentDidMount() {
 
-        this.createCoordObj({
-            "name": "A",
-            "x": 10,
-            "y": 28
-        },
-        {
-            "name": "B",
-            "x": 30,
-            "y": 30
-        })
+
         let that = this
 
         //
@@ -1267,89 +1258,102 @@ class Grid extends Component {
             this.setState({ legs: res.legs })
         })
         .catch(err => console.log(err));
-        this.makeCoordsArrs()
+        let stops = [{
+            "name": "A",
+            "x": 20,
+            "y": 10
+            },
+            {
+            "name": "B",
+            "x": 20,
+            "y": 20
+            },
+            {
+            "name": "C",
+            "x": 25,
+            "y": 30
+            },
+            {
+            "name": "D",
+            "x": 25,
+            "y": 80
+        }]
+    // 1 slider ranges
+    // 2 sliderCoordsCalc
+    // 3 makeCoordsArrs TODO
+    // 4  makeSliderCoords
+    this.slideRange(stops[0], stops[1])
+    setTimeout(function(){
+        that.sliderCoordsCalc()
+
+    })
+    // console.log(this.makeSliderCoords())
     }
     // loop stops though calcs
     makeSliderCoords(){
-        let stops = [{
-            "name": "A",
-            "x": 20,
-            "y": 10
-            },
-            {
-            "name": "B",
-            "x": 20,
-            "y": 20
-            },
-            {
-            "name": "C",
-            "x": 25,
-            "y": 30
-            },
-            {
-            "name": "D",
-            "x": 25,
-            "y": 80
-        }]
-        let arr = stops.map(stop => {
-            console.log(this.sliderCoordsCalc())
-        })
-    }
-    // take json and divide into arrs of stop/start
-    makeCoordsArrs(){
-        let stops = [{
-            "name": "A",
-            "x": 20,
-            "y": 10
-            },
-            {
-            "name": "B",
-            "x": 20,
-            "y": 20
-            },
-            {
-            "name": "C",
-            "x": 25,
-            "y": 30
-            },
-            {
-            "name": "D",
-            "x": 25,
-            "y": 80
-        }]
-        let arr = []
-        this.stops.map((stop,i) => {
-            if(!stops[i + 1]) return
-            let start = stops[i]
-            let end = stops[i + 1]
-            console.log(start, end)
-        })
+        // let stops = [{
+        //     "name": "A",
+        //     "x": 20,
+        //     "y": 10
+        //     },
+        //     {
+        //     "name": "B",
+        //     "x": 20,
+        //     "y": 20
+        //     },
+        //     {
+        //     "name": "C",
+        //     "x": 25,
+        //     "y": 30
+        //     },
+        //     {
+        //     "name": "D",
+        //     "x": 25,
+        //     "y": 80
+        // }]
+        // let arr = stops.map(stop => {
+            this.sliderCoordsCalc()
+        // })
     }
     // takes start/end returns all coords between 2 points
+    // calcs where smaller axis points coords should be placed with larger
     sliderCoordsCalc(){
+        console.log(this.state.xSlideCoord)
         let storeArr = []
         let xArr = this.state.xSlideCoord
         let yArr = this.state.ySlideCoord
         let avg
         let smallInLarge
+        console.log(xArr.length)
+        console.log(yArr.length)
         if(xArr.length > yArr.length){
             avg = (yArr.length / xArr.length) * 10
-            smallInLarge = xArr.length / yArr.length
+            if(yArr.length === 0){
+                smallInLarge = 0
+            }
+            // console.log('smallXX', smallInLarge)
         } else if(xArr.length < yArr.length){
             avg = (xArr.length / yArr.length) * 10
-            smallInLarge = yArr.length / xArr.length
+            if(xArr.length === 0){
+                smallInLarge = 0
+            }
+            console.log('small', smallInLarge)
+            console.log('small', )
         } else if(yArr.length === xArr.length){
             avg = xArr.length
+            console.log('equal')
+            smallInLarge = 1
         }
         smallInLarge = Math.ceil(smallInLarge)
         console.log('per', smallInLarge)
         console.log('xLen', xArr.length)
         console.log('yLen', yArr.length)
+        // if x OR equal return xArr
         let longerArr = (xArr.length >= yArr.length ? xArr : yArr)
-        let shorterArr = (xArr.length <= yArr.length ? xArr : yArr)
-        // console.log('avg',avg)
-        // console.log('short',shorterArr)
-        // console.log('long',longerArr)
+        let shorterArr = (xArr.length < yArr.length ? yArr : xArr)
+        console.log('avg',avg)
+        console.log('short',shorterArr)
+        console.log('long',longerArr)
         let obj
         // j runs on all small loop
         let j = 0
@@ -1383,7 +1387,11 @@ class Grid extends Component {
         }
         return storeArr
     }
-    createCoordObj(startObj, endObj){
+
+    // creates two rangeArr each x/y  start - stop
+    // this sets state for sliderCals
+    slideRange(startObj, endObj){
+        // console.log(startObj)
         let yArr = []
         let xArr = []
         let x1 = startObj.x
@@ -1391,8 +1399,8 @@ class Grid extends Component {
         let y1 = startObj.y
         let y2 = endObj.y
         let { xToMove, yToMove } = this._numBetweenStops(startObj, endObj)
-        console.log("x", xToMove)
-        console.log("y", yToMove)
+        // console.log("x", xToMove)
+        // console.log("y", yToMove)
         // find if pos of neg
         let xIsInteger = (xToMove < 0 ? false : true)
         let yIsInteger = (yToMove < 0 ? false : true)
@@ -1421,6 +1429,36 @@ class Grid extends Component {
         this.setState({
             xSlideCoord: xArr,
             ySlideCoord: yArr
+        })
+    }
+    // take json and divide into arrs of stop/start
+    makeCoordsArrs(){
+        let stops = [{
+            "name": "A",
+            "x": 20,
+            "y": 10
+            },
+            {
+            "name": "B",
+            "x": 20,
+            "y": 20
+            },
+            {
+            "name": "C",
+            "x": 25,
+            "y": 30
+            },
+            {
+            "name": "D",
+            "x": 25,
+            "y": 80
+        }]
+        let arr = []
+        stops.map((stop,i) => {
+            if(!stops[i + 1]) return
+            let start = stops[i]
+            let end = stops[i + 1]
+            console.log(start, end)
         })
     }
     _numBetweenStops(stop1, stop2){
