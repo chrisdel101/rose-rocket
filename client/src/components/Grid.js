@@ -1265,28 +1265,35 @@ class Grid extends Component {
             },
             {
             "name": "B",
-            "x": 20,
+            "x": 35,
             "y": 20
-            },
-            {
-            "name": "C",
-            "x": 25,
-            "y": 30
-            },
-            {
-            "name": "D",
-            "x": 25,
-            "y": 80
-        }]
+            }
+            // {
+            // "name": "C",
+            // "x": 25,
+            // "y": 30
+            // },
+            // {
+            // "name": "D",
+            // "x": 25,
+            // "y": 80
+        // }
+    ]
     // 1 slider ranges
     // 2 sliderCoordsCalc
     // 3 makeCoordsArrs TODO
     // 4  makeSliderCoords
-    this.slideRange(stops[0], stops[1])
     setTimeout(function(){
-        that.sliderCoordsCalc()
+        stops.map((stop, index) => {
+            if(!stops[index + 1]) return
+            // console.log(stop)
+            console.log(stops[index + 1])
+            let { xSlideCoord, ySlideCoord } = that.slideRange(stop, stops[index + 1])
+            that.sliderCoordsCalc(xSlideCoord, ySlideCoord)
 
-    })
+        })
+    },500)
+
     // console.log(this.makeSliderCoords())
     }
     // loop stops though calcs
@@ -1317,11 +1324,11 @@ class Grid extends Component {
     }
     // takes start/end returns all coords between 2 points
     // calcs where smaller axis points coords should be placed with larger
-    sliderCoordsCalc(){
-        console.log(this.state.xSlideCoord)
+    sliderCoordsCalc(xSlideCoord, ySlideCoord){
+        console.log('INSIDE', this.state.xSlideCoord)
         let storeArr = []
-        let xArr = this.state.xSlideCoord
-        let yArr = this.state.ySlideCoord
+        let xArr = xSlideCoord
+        let yArr = ySlideCoord
         let avg
         let smallInLarge
         console.log(xArr.length)
@@ -1330,15 +1337,16 @@ class Grid extends Component {
             avg = (yArr.length / xArr.length) * 10
             if(yArr.length === 0){
                 smallInLarge = 0
+                avg = xArr.length
             }
             // console.log('smallXX', smallInLarge)
         } else if(xArr.length < yArr.length){
             avg = (xArr.length / yArr.length) * 10
             if(xArr.length === 0){
                 smallInLarge = 0
+                avg = yArr.length
             }
-            console.log('small', smallInLarge)
-            console.log('small', )
+            // console.log('small', smallInLarge)
         } else if(yArr.length === xArr.length){
             avg = xArr.length
             console.log('equal')
@@ -1352,8 +1360,8 @@ class Grid extends Component {
         let longerArr = (xArr.length >= yArr.length ? xArr : yArr)
         let shorterArr = (xArr.length < yArr.length ? yArr : xArr)
         console.log('avg',avg)
-        console.log('short',shorterArr)
-        console.log('long',longerArr)
+        // console.log('short',shorterArr)
+        // console.log('long',longerArr)
         let obj
         // j runs on all small loop
         let j = 0
@@ -1385,6 +1393,7 @@ class Grid extends Component {
             console.log('obj',obj)
             storeArr.push(obj)
         }
+        console.log(storeArr)
         return storeArr
     }
 
@@ -1423,13 +1432,13 @@ class Grid extends Component {
                     xArr.push(obj)
                 }
             }
-        console.log(xArr)
-        console.log(yArr)
+        // console.log(xArr)
+        // console.log(yArr)
         // push to state
-        this.setState({
+        return {
             xSlideCoord: xArr,
             ySlideCoord: yArr
-        })
+        }
     }
     // take json and divide into arrs of stop/start
     makeCoordsArrs(){
