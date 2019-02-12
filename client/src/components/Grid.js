@@ -1289,7 +1289,7 @@ class Grid extends Component {
             // console.log(stop)
             console.log(stops[index + 1])
             let { xSlideCoord, ySlideCoord } = that.slideRange(stop, stops[index + 1])
-            that.sliderCoordsCalc(xSlideCoord, ySlideCoord)
+            that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "tester")
 
         })
     },500)
@@ -1324,50 +1324,46 @@ class Grid extends Component {
     }
     // takes start/end returns all coords between 2 points
     // calcs where smaller axis points coords should be placed with larger
-    sliderCoordsCalc(xSlideCoord, ySlideCoord){
+    sliderCoordsCalc(xSlideCoord, ySlideCoord, type){
         console.log('INSIDE', this.state.xSlideCoord)
         let storeArr = []
         let xArr = xSlideCoord
         let yArr = ySlideCoord
         let avg
-        let smallInLarge
+        let distributeSmaller
         console.log(xArr.length)
         console.log(yArr.length)
         if(xArr.length > yArr.length){
-            avg = (yArr.length / xArr.length) * 10
+            distributeSmaller = xArr.length / yArr.length
             if(yArr.length === 0){
-                smallInLarge = 0
-                avg = xArr.length
+                distributeSmaller = 0
             }
-            // console.log('smallXX', smallInLarge)
+            // console.log('smallXX', distributeSmaller)
         } else if(xArr.length < yArr.length){
-            avg = (xArr.length / yArr.length) * 10
+            distributeSmaller = xArr.length / xArr.length
             if(xArr.length === 0){
-                smallInLarge = 0
-                avg = yArr.length
+                distributeSmaller = 0
             }
-            // console.log('small', smallInLarge)
+            // console.log('small', distributeSmaller)
         } else if(yArr.length === xArr.length){
-            avg = xArr.length
             console.log('equal')
-            smallInLarge = 1
+            distributeSmaller = 1
         }
-        smallInLarge = Math.ceil(smallInLarge)
-        console.log('per', smallInLarge)
+        distributeSmaller = Math.ceil(distributeSmaller)
+        console.log('per', distributeSmaller)
         console.log('xLen', xArr.length)
         console.log('yLen', yArr.length)
         // if x OR equal return xArr
         let longerArr = (xArr.length >= yArr.length ? xArr : yArr)
-        let shorterArr = (xArr.length < yArr.length ? yArr : xArr)
-        console.log('avg',avg)
-        // console.log('short',shorterArr)
-        // console.log('long',longerArr)
+        let shorterArr = (xArr.length <= yArr.length ? xArr : yArr)
+        console.log('short',shorterArr)
+        console.log('long',longerArr)
         let obj
         // j runs on all small loop
         let j = 0
         for (var i = 0; i < longerArr.length; i++) {
-            // if is a mutplie of smallInLarge
-            if(i % smallInLarge === 0){
+            // if is a mutplie of distributeSmaller
+            if(i % distributeSmaller === 0){
                 // console.log('div', longerArr[i])
                 // on zero, both get a val
                 if(i === 0){
@@ -1392,6 +1388,12 @@ class Grid extends Component {
             }
             console.log('obj',obj)
             storeArr.push(obj)
+        }
+        // if small array not used up properly - false on test run
+        if(type === "tester" && j !== shorterArr.length){
+            return false
+        } else if(type === "tester"){
+            return true
         }
         console.log(storeArr)
         return storeArr
