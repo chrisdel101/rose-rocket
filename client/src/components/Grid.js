@@ -1267,135 +1267,79 @@ class Grid extends Component {
             "name": "B",
             "x": 35,
             "y": 20
-            }
-            // {
-            // "name": "C",
-            // "x": 25,
-            // "y": 30
-            // },
-            // {
-            // "name": "D",
-            // "x": 25,
-            // "y": 80
-        // }
+            },
+            {
+            "name": "C",
+            "x": 25,
+            "y": 30
+            },
+            {
+            "name": "D",
+            "x": 25,
+            "y": 80
+        }
     ]
     // 1 slider ranges
     // 2 sliderCoordsCalc
     // 3 makeCoordsArrs TODO
     // 4  makeSliderCoords
     setTimeout(function(){
-        stops.map((stop, index) => {
-            if(!stops[index + 1]) return
-            // console.log(stop)
-            console.log(stops[index + 1])
-            let { xSlideCoord, ySlideCoord } = that.slideRange(stop, stops[index + 1])
-            that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "tester")
+        console.log(that.state.stops)
+        that.state.stops.map((stop, index) => {
+            console.log(stop)
+            // console.log(index)
+            // console.log(stops[index])
+            if(!that.state.stops[index + 1]) return
+            // console.log(that.state.stops[index + 1])
+            let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stops[index + 1])
+            that.sliderCoordsCalc(xSlideCoord, ySlideCoord)
 
         })
     },500)
 
     // console.log(this.makeSliderCoords())
     }
-    // loop stops though calcs
-    makeSliderCoords(){
-        // let stops = [{
-        //     "name": "A",
-        //     "x": 20,
-        //     "y": 10
-        //     },
-        //     {
-        //     "name": "B",
-        //     "x": 20,
-        //     "y": 20
-        //     },
-        //     {
-        //     "name": "C",
-        //     "x": 25,
-        //     "y": 30
-        //     },
-        //     {
-        //     "name": "D",
-        //     "x": 25,
-        //     "y": 80
-        // }]
-        // let arr = stops.map(stop => {
-            this.sliderCoordsCalc()
-        // })
-    }
+
     // takes start/end returns all coords between 2 points
     // calcs where smaller axis points coords should be placed with larger
     sliderCoordsCalc(xSlideCoord, ySlideCoord, type){
-        console.log('INSIDE', this.state.xSlideCoord)
+        // console.log(xSlideCoord)
+        // console.log(ySlideCoord)
         let storeArr = []
         let xArr = xSlideCoord
         let yArr = ySlideCoord
-        let avg
-        let distributeSmaller
-        console.log(xArr.length)
-        console.log(yArr.length)
-        if(xArr.length > yArr.length){
-            distributeSmaller = xArr.length / yArr.length
-            if(yArr.length === 0){
-                distributeSmaller = 0
-            }
-            // console.log('smallXX', distributeSmaller)
-        } else if(xArr.length < yArr.length){
-            distributeSmaller = xArr.length / xArr.length
-            if(xArr.length === 0){
-                distributeSmaller = 0
-            }
-            // console.log('small', distributeSmaller)
-        } else if(yArr.length === xArr.length){
-            console.log('equal')
-            distributeSmaller = 1
+        // console.log(xArr.length)
+        // console.log(yArr.length)
+        let longerArr
+        let shorterArr
+        if(xArr.length >= yArr.length){
+            longerArr = xArr
+            shorterArr = yArr
+        } else {
+            longerArr = yArr
+            shorterArr = xArr
         }
-        distributeSmaller = Math.ceil(distributeSmaller)
-        console.log('per', distributeSmaller)
-        console.log('xLen', xArr.length)
-        console.log('yLen', yArr.length)
-        // if x OR equal return xArr
-        let longerArr = (xArr.length >= yArr.length ? xArr : yArr)
-        let shorterArr = (xArr.length <= yArr.length ? xArr : yArr)
-        console.log('short',shorterArr)
-        console.log('long',longerArr)
+        // console.log('short',shorterArr)
+        // console.log('long',longerArr)
         let obj
         // j runs on all small loop
         let j = 0
         for (var i = 0; i < longerArr.length; i++) {
-            // if is a mutplie of distributeSmaller
-            if(i % distributeSmaller === 0){
-                // console.log('div', longerArr[i])
-                // on zero, both get a val
-                if(i === 0){
+            if(j < shorterArr.length){
                     obj = {
                         [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
                         [Object.keys(shorterArr[i])[0]]: Object.values(shorterArr[i])[0]
                     }
-                    // console.log('upper', obj)
-                } else {
-                    // console.log(shorterArr[i - ])
-                    obj = {
-                        [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
-                        [Object.keys(shorterArr[j ])[0]]: Object.values(shorterArr[j])[0]
-                    }
-                }
             // increase inner loop
-            j++
+                j++
             } else {
                 obj = {
                     [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0]
                 }
             }
-            console.log('obj',obj)
+            // console.log('obj',obj)
             storeArr.push(obj)
         }
-        // if small array not used up properly - false on test run
-        if(type === "tester" && j !== shorterArr.length){
-            return false
-        } else if(type === "tester"){
-            return true
-        }
-        console.log(storeArr)
         return storeArr
     }
 
