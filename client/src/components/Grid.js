@@ -312,6 +312,7 @@ class Grid extends Component {
     }
     // on click set driver with coords and send to child
     updateDriverWithCoords(coords, type){
+        console.log('C', coords)
         // reset to zero
         this._resetTruck()
         // get pixels to new location
@@ -337,7 +338,7 @@ class Grid extends Component {
             this.state.driverFormX, this.state.driverFormY)
         } else if(type === "slider"){
             // reset to zero
-            this._resetTruck()
+            // this._resetTruck()
             // from params
 
             coords = this._setStopCoords('driver',
@@ -1216,25 +1217,39 @@ class Grid extends Component {
                 //make giant array of all coords
                 //for every slider increment move ten
                 let sliderVal  = evt.value
+                let that = this
                 let currentIndex = 0
                 let xVal = 0
                 let yVal = 0
                 // this.state.finalSliderCoords.map(coord => {
                     if(sliderVal > 50){
                         let j = sliderVal - 50
-                        while(j){
-                            for (var i = 0; i < 10; i++) {
-                                this.updateDriverWithCoords(this.state.finalSliderCoords[currentIndex].x, this.state.finalSliderCoords[currentIndex].y)
+                        // while(j){
+                            function timeout() {
+                                if(currentIndex === 20) return
+                                setTimeout(function () {
+                                    that.updateDriverWithCoords({
+                                        x:that.state.finalSliderCoords[currentIndex].x, y:that.state.finalSliderCoords[currentIndex].y
+                                    }, "slider")
+                                    timeout();
+                                }, 50);
                                 currentIndex++
                             }
+                            timeout()
+                            // for (var i = 0; i < 10; i++) {
+                            //     console.log(this.state.finalSliderCoords[currentIndex].x)
+                            //     this.updateDriverWithCoords({
+                            //         x:this.state.finalSliderCoords[currentIndex].x, y:this.state.finalSliderCoords[currentIndex].y
+                            //     }, "slider")
+                            // }
+                            // j--
                         }
-                        j--
                     }
                 // })
 
         }
     }
-    }
+
     componentDidMount() {
 
 
@@ -1291,15 +1306,26 @@ class Grid extends Component {
         .then(res => {
             this.setState({ legs: res.legs })
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err))
+
+        let stops = [{
+        "name": "A",
+        "x": 0,
+        "y": 0
+        },
+        {
+        "name": "B",
+        "x": 20,
+        "y": 20
+        }]
     // 1 slider ranges
     // 2 sliderCoordsCalc
     // 3 makeCoordsArrs TODO
     // 4  makeSliderCoords
         setTimeout(function(){
-            that.state.stops.map((stop, index) => {
-                if(!that.state.stops[index + 1]) return
-                let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stops[index + 1])
+            stops.map((stop, index) => {
+                if(!stops[index + 1]) return
+                let { xSlideCoord, ySlideCoord } = that.slideRange(stop, stops[index + 1])
                 that.sliderCoordsCalc(xSlideCoord, ySlideCoord)
             })
             that.setState({
