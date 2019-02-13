@@ -5,7 +5,7 @@ import Icon from './material/Icon'
 function Truck(props){
     if(!props.coords) return null
     let coord = props.coords
-    // console.log(props)
+    // console.log(props)  
     let driverID = props.coords.id
     // console.log(driverID)
     let style = {

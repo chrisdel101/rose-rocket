@@ -13,6 +13,8 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+            sliderIndex:0,
+            initialSliderChange: true,
             sliderCoordsArrs: [],
             utilsTop: '',
             colors: ['red', 'Orange', 'DodgerBlue', 'MediumSeaGreen', 'Violet','SlateBlue', 'Tomato'],
@@ -313,24 +315,14 @@ class Grid extends Component {
     // on click set driver with coords and send to child
     updateDriverWithCoords(coords, type){
         console.log('C', coords)
-        // reset to zero
-        this._resetTruck()
-        // get pixels to new location
-        // coords.directions =  {
-        //     xDir: "left",
-        //     yDir: "bottom"
-        // }
-        // coords.pixels = {
-        //     moveX: coords.x,
-        //     moveY: coords.y
-        // }
-        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        console.log('current driver', selectedDriver)
-        // console.log(coords)
-        // copy arr
-        let driversArr = [...this.state.driversArr]
 
-        if(type === "form"){
+        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        let driversArr = [...this.state.driversArr]
+        if(type === "slider"){
+            this._resetTruck()
+            this._setStopCoords(coords)
+
+        } else if(type === "form"){
             // reset to zero
             this._resetTruck()
             // from form
@@ -349,14 +341,14 @@ class Grid extends Component {
             coords = this._setStopCoords('driver', coords.x, coords.y)
             driversArr[this.state.selectedDriverIndex].driverCoords = {xToMove: 0, yToMove: 0}
         }
-        console.log(coords)
+        // console.log(coords)
         // subtract for icon positionSelect
         coords.pixels.moveX = coords.pixels.moveX - 30
         // console.log(driversArr[this.state.selectedDriver])
         // update the values in the object
         driversArr[this.state.selectedDriverIndex].directions = coords.directions
         driversArr[this.state.selectedDriverIndex].pixels = coords.pixels
-        console.log(driversArr)
+        // console.log(driversArr)
         // set new driver vals
         this.setState({
             driversArr: driversArr
@@ -1216,36 +1208,68 @@ class Grid extends Component {
                 //manage by leg
                 //make giant array of all coords
                 //for every slider increment move ten
-                let sliderVal  = evt.value
                 let that = this
-                let currentIndex = 0
-                let xVal = 0
-                let yVal = 0
-                // this.state.finalSliderCoords.map(coord => {
-                    if(sliderVal > 50){
-                        let j = sliderVal - 50
-                        // while(j){
-                            function timeout() {
-                                if(currentIndex === 20) return
-                                setTimeout(function () {
-                                    that.updateDriverWithCoords({
-                                        x:that.state.finalSliderCoords[currentIndex].x, y:that.state.finalSliderCoords[currentIndex].y
-                                    }, "slider")
-                                    timeout();
-                                }, 50);
-                                currentIndex++
-                            }
-                            timeout()
-                            // for (var i = 0; i < 10; i++) {
-                            //     console.log(this.state.finalSliderCoords[currentIndex].x)
-                            //     this.updateDriverWithCoords({
-                            //         x:this.state.finalSliderCoords[currentIndex].x, y:this.state.finalSliderCoords[currentIndex].y
-                            //     }, "slider")
-                            // }
-                            // j--
-                        }
+                function getPreviousSliderState(){
+                     let previousState
+                    	if(that.state.initialSliderChange){
+                    	    previousState = 50
+                    		that.setState({
+                                initialSliderChange: false,
+                                previousState: previousState
+                                })
+                    	  } else {
+                        	previousState = that.state.currentState
+                              that.setState({
+                                  previousState: previousState
+                              })
+                    	  }
+                    	let currentState = evt.value
+                        that.setState({
+                            currentState: currentState
+                        })
+
                     }
-                // })
+                function sliderDiff(){
+                    let diff
+                    if(that.state.currentState > that.state.previousState){
+                        diff = Math.abs(that.state.currentState - that.state.previousState)
+                    } else if(that.state.currentState < that.state.previousState){
+                        diff = Math.abs( that.state.previousState - that.state.currentState)
+                    } else if(that.state.previousState === that.state.currentState){
+                        diff = 0
+                    }
+                    return diff
+                }
+                let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
+                let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
+                let directions = {
+                    xDir: "left",
+                    yDir: "bottom"
+                }
+                let driverObj = { pixels, directions }
+                //
+                console.log(driverObj)
+
+                this.updateDriverWithCoords(driverObj, "slider")
+                
+                //
+                // console.log(currentDriver)
+                // that.setState({
+                    //     driversArr: [...that.state.driversArr, currentDriver ]
+                    // })
+
+                    // console.log(that.state.driversArr[that.state.selectedDriverIndex].driverCoords)
+                    // [that.state.driversArr[that.state.selectedDriverIndex].driverCoords]:that.state.finalSliderCoords[that.state.sliderIndex]
+
+
+                        that.setState({
+                            sliderIndex: that.state.sliderIndex + 1
+                        })
+                        getPreviousSliderState()
+                        sliderDiff()
+            }
+
+
 
         }
     }
@@ -1592,7 +1616,7 @@ class Grid extends Component {
 
     // set coords in pxs of plots
     _setStopCoords(type,x,y){
-        // console.log(type)
+        // console.log(x,y)
         let that = this
         let coordsArr = []
 
@@ -1631,6 +1655,7 @@ class Grid extends Component {
                         yDir: "bottom"
                     }
                 }
+                console.log(coords)
                 return coords
 
             }
