@@ -1240,33 +1240,27 @@ class Grid extends Component {
                     }
                     return diff
                 }
-                let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
-                let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
-                let directions = {
-                    xDir: "left",
-                    yDir: "bottom"
-                }
-                let driverObj = { pixels, directions }
-                //
-                console.log(driverObj)
+                // for (var i = 0; i < 5; i++) {
+                    let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
+                    let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
+                    let directions = {
+                        xDir: "left",
+                        yDir: "bottom"
+                    }
+                    let driverObj = { pixels, directions }
+                    //
+                    // console.log(driverObj)
 
-                this.updateDriverWithCoords(driverObj, "slider")
-                
-                //
-                // console.log(currentDriver)
-                // that.setState({
-                    //     driversArr: [...that.state.driversArr, currentDriver ]
-                    // })
-
-                    // console.log(that.state.driversArr[that.state.selectedDriverIndex].driverCoords)
-                    // [that.state.driversArr[that.state.selectedDriverIndex].driverCoords]:that.state.finalSliderCoords[that.state.sliderIndex]
+                    this.updateDriverWithCoords(driverObj, "slider")
 
 
-                        that.setState({
-                            sliderIndex: that.state.sliderIndex + 1
-                        })
-                        getPreviousSliderState()
-                        sliderDiff()
+                    that.setState({
+                        sliderIndex: that.state.sliderIndex + 1
+                    })
+
+                // }
+                getPreviousSliderState()
+                sliderDiff()
             }
 
 
