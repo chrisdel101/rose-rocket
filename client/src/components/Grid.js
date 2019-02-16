@@ -73,6 +73,8 @@ class Grid extends Component {
 	}
     // takes and x/y and returns px to move
     _convertToPixels(x,y){
+        console.log('x', x)
+        console.log('y', y)
         let totalX
         let totalY
         // first 10 cells = 100px
@@ -235,7 +237,7 @@ class Grid extends Component {
         }
         let that = this
         setTimeout(function(){
-            console.log(that.state.selectedDriverIndex)
+            // console.log(that.state.selectedDriverIndex)
 
         })
 
@@ -1038,6 +1040,84 @@ class Grid extends Component {
             </main>
         )
     }
+    handleInput(evt){
+        console.log(evt)
+
+        //manage by leg
+        //make giant array of all coords
+        //for every slider increment move ten
+        let that = this
+        function getPreviousSliderState(){
+             let previousState
+                if(that.state.initialSliderChange){
+                    previousState = 50
+                    that.setState({
+                        initialSliderChange: false,
+                        previousState: previousState
+                        })
+                  } else {
+                    previousState = that.state.currentState
+                      that.setState({
+                          previousState: previousState
+                      })
+                  }
+                let currentState = evt.value
+                that.setState({
+                    currentState: currentState
+                })
+
+            }
+            getPreviousSliderState()
+
+        function sliderDiff(){
+            let diff
+            // if first move, previous will be null
+            if(!that.state.previousState){
+                diff = that.state.currentState - 50
+            } else {
+                diff = that.state.currentState - that.state.previousState
+            }
+
+            return diff
+        }
+        // console.log('diff', sliderDiff())
+        // console.log(driverObj)
+        if(sliderDiff() > 0){
+            that.setState({
+                sliderIndex: that.state.sliderIndex + 1
+            })
+        } else if(sliderDiff() < 0){
+            that.setState({
+                sliderIndex: that.state.sliderIndex - 1
+            })
+        }
+        // console.log('slide index', that.state.sliderIndex)
+        // if zero cannot movebackwards
+        if(!that.state.slideIndex){
+            // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+            // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+            if((!this.state.finalSliderCoords[this.state.sliderIndex]) && (!this.state.finalSliderCoords[this.state.sliderIndex] )){
+                console.error("Cannot move backwards past beginning of graph.")
+                return
+            }
+        }
+        // for (var i = 0; i < 5; i++) {
+            let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
+            let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
+            let directions = {
+                xDir: "left",
+                yDir: "bottom"
+            }
+            let driverObj = { pixels, directions }
+            //
+
+            this.updateDriverWithCoords(driverObj, "slider")
+
+
+
+        // }
+        sliderDiff()
+    }
     toggleSnackbar(){
         this.state.snackbarOpen = !this.state.snackbarOpen
         console.log(this.state.snackbarOpen)
@@ -1159,6 +1239,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
+        console.log(evt)
         // to filter out undefined errors
         if(!evt.event){
             if(evt.target.name === 'x'){
@@ -1205,6 +1286,8 @@ class Grid extends Component {
         } else {
             // if slider
             if(evt.event.target.type === "button" && this.hasParentClass(evt.event.target, "slider")){
+                console.log(evt)
+
                 //manage by leg
                 //make giant array of all coords
                 //for every slider increment move ten
@@ -1229,16 +1312,39 @@ class Grid extends Component {
                         })
 
                     }
+                    getPreviousSliderState()
+
                 function sliderDiff(){
                     let diff
-                    if(that.state.currentState > that.state.previousState){
-                        diff = Math.abs(that.state.currentState - that.state.previousState)
-                    } else if(that.state.currentState < that.state.previousState){
-                        diff = Math.abs( that.state.previousState - that.state.currentState)
-                    } else if(that.state.previousState === that.state.currentState){
-                        diff = 0
+                    // if first move, previous will be null
+                    if(!that.state.previousState){
+                        diff = that.state.currentState - 50
+                    } else {
+                        diff = that.state.currentState - that.state.previousState
                     }
+
                     return diff
+                }
+                // console.log('diff', sliderDiff())
+                // console.log(driverObj)
+                if(sliderDiff() > 0){
+                    that.setState({
+                        sliderIndex: that.state.sliderIndex + 1
+                    })
+                } else if(sliderDiff() < 0){
+                    that.setState({
+                        sliderIndex: that.state.sliderIndex - 1
+                    })
+                }
+                // console.log('slide index', that.state.sliderIndex)
+                // if zero cannot movebackwards
+                if(!that.state.slideIndex){
+                    // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+                    // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+                    if((!this.state.finalSliderCoords[this.state.sliderIndex]) && (!this.state.finalSliderCoords[this.state.sliderIndex] )){
+                        console.error("Cannot move backwards past beginning of graph.")
+                        return
+                    }
                 }
                 // for (var i = 0; i < 5; i++) {
                     let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
@@ -1249,17 +1355,12 @@ class Grid extends Component {
                     }
                     let driverObj = { pixels, directions }
                     //
-                    // console.log(driverObj)
 
                     this.updateDriverWithCoords(driverObj, "slider")
 
 
-                    that.setState({
-                        sliderIndex: that.state.sliderIndex + 1
-                    })
 
                 // }
-                getPreviousSliderState()
                 sliderDiff()
             }
 
