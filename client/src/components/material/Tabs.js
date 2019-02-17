@@ -43,7 +43,8 @@ class SimpleTabs extends React.Component {
             numberOfTabs: 1,
             hovered: false,
             checkedA: true,
-            checkedB: false
+            checkedB: false,
+            checkedC: false
         };
     }
 // handle check boxes

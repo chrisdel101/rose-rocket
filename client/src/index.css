@@ -83,10 +83,6 @@ code {
 }
 
 .truck {
-	/* content: '\25CF'; */
-	/* color: var(--driver-color);
-	font-size: 10px;
-	position: relative; */
 	font-size: 30px !important;
 	color: var(--driver-color) !important;
 	position: relative !important;
@@ -162,19 +158,6 @@ code {
 	display: flex;
 }
 
-/* ICON position and hover */
-/* .MuiTabs-flexContainer-39 .MuiButtonBase-root-59.MuiTab-root-47 {
-	position: relative;
-}
-
-.MuiButtonBase-root-59.MuiTab-root-47 .material-icons.MuiIcon-root-65 {
-	transition: color 0.2s ease;
-}
-
-.MuiButtonBase-root-59.MuiTab-root-47:hover .material-icons.MuiIcon-root-65 {
-	color: #DCDCDC !important;
-	transition: color 0.5s ease;
-} */
 .utils-containter {
 	position: relative;
 }
@@ -184,6 +167,10 @@ code {
 	bottom: 0px;
 	right: 0px;
 	left: 40px;
+}
+
+.upper-controls {
+	display: flex;
 }
 
 .material-form:nth-of-type(1) {

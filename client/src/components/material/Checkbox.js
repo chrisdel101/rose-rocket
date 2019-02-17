@@ -23,29 +23,35 @@ const styles = {
 class CheckboxLabels extends React.Component {
   state = {
     checkedA: true,
-    checkedB: false
+    checkedB: false,
+    checkedC: false
   };
 
-  handleChange = name => event => {
-   this.setState({ [name]: event.target.checked });
+  handleChange = () => event => {
+    let name  = this.props.value
+    if(this.props.onChange){
+        this.props.onChange(event)
+    }
+    this.setState({ [name]: event.target.checked });
  };
  checkedState(){
      if(this.props.value === "checkedA"){
          return this.state.checkedA
      } else if(this.props.value === "checkedB"){
          return this.state.checkedB
+     } else if(this.props.value === "checkedC"){
+         return this.state.checkedC
      }
  }
   render() {
     const { classes } = this.props;
-    // console.log(this.checkedState())
     return (
       <FormGroup row  className='checkbox-container'>
         <FormControlLabel
           control={
             <Checkbox
               checked={this.checkedState()}
-              onChange={this.handleChange(this.props.value)}
+              onChange={this.handleChange()}
               value={this.props.value}
               name={this.props.name}
             />
