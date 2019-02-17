@@ -73,8 +73,8 @@ class Grid extends Component {
 	}
     // takes and x/y and returns px to move
     _convertToPixels(x,y){
-        console.log('x', x)
-        console.log('y', y)
+        // console.log('x', x)
+        // console.log('y', y)
         let totalX
         let totalY
         // first 10 cells = 100px
@@ -1019,7 +1019,7 @@ class Grid extends Component {
                     <div className="driver-controls">
                     <Slider
                         label="Driver Position"
-                        onChange={this.handleChange.bind(this)}/>
+                        onChange={this.handleSliderChange.bind(this)}/>
                         <Tabs
                             onChange={this.handleChange.bind(this)}
                             onSubmit={this.handleFormSubmit.bind(this)}
@@ -1040,84 +1040,151 @@ class Grid extends Component {
             </main>
         )
     }
-    handleInput(evt){
-        console.log(evt)
-
-        //manage by leg
-        //make giant array of all coords
-        //for every slider increment move ten
+    handleSliderChange(evt){
         let that = this
-        function getPreviousSliderState(){
-             let previousState
-                if(that.state.initialSliderChange){
-                    previousState = 50
+        // console.log(evt.value)
+
+        // if slider
+        if(evt.value){
+            // console.log(evt)
+            //manage by leg
+            //make giant array of all coords
+            //for every slider increment move ten
+            let that = this
+            function getPreviousSliderState(){
+                 let previousState
+                    if(that.state.initialSliderChange){
+                        previousState = 50
+                        that.setState({
+                            initialSliderChange: false,
+                            previousState: previousState
+                            })
+                      } else {
+                        previousState = that.state.currentState
+                          that.setState({
+                              previousState: previousState
+                          })
+                      }
+                    let currentState = evt.value
                     that.setState({
-                        initialSliderChange: false,
-                        previousState: previousState
-                        })
-                  } else {
-                    previousState = that.state.currentState
-                      that.setState({
-                          previousState: previousState
-                      })
-                  }
-                let currentState = evt.value
-                that.setState({
-                    currentState: currentState
-                })
+                        currentState: currentState
+                    })
 
-            }
-            getPreviousSliderState()
+                }
+                getPreviousSliderState()
 
-        function sliderDiff(){
-            let diff
-            // if first move, previous will be null
-            if(!that.state.previousState){
-                diff = that.state.currentState - 50
-            } else {
-                diff = that.state.currentState - that.state.previousState
+            function sliderDiff(){
+                let diff
+                // if first move, previous will be null
+                if(!that.state.previousState){
+                    diff = that.state.currentState - 50
+                } else {
+                    diff = that.state.currentState - that.state.previousState
+                }
+                return diff
             }
+            setTimeout(function(){
+                console.log('val', that.state.currentState)
+                console.log('diff', sliderDiff())
 
-            return diff
-        }
-        // console.log('diff', sliderDiff())
-        // console.log(driverObj)
-        if(sliderDiff() > 0){
-            that.setState({
-                sliderIndex: that.state.sliderIndex + 1
-            })
-        } else if(sliderDiff() < 0){
-            that.setState({
-                sliderIndex: that.state.sliderIndex - 1
-            })
-        }
-        // console.log('slide index', that.state.sliderIndex)
-        // if zero cannot movebackwards
-        if(!that.state.slideIndex){
-            // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
-            // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
-            if((!this.state.finalSliderCoords[this.state.sliderIndex]) && (!this.state.finalSliderCoords[this.state.sliderIndex] )){
-                console.error("Cannot move backwards past beginning of graph.")
-                return
-            }
-        }
-        // for (var i = 0; i < 5; i++) {
-            let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
-            let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
-            let directions = {
-                xDir: "left",
-                yDir: "bottom"
-            }
-            let driverObj = { pixels, directions }
+            },100)
+            // // console.log(driverObj)
+            // if(sliderDiff() > 0){
+            //     that.setState({
+            //         sliderIndex: that.state.sliderIndex + 1
+            //     })
+            // } else if(sliderDiff() < 0){
+            //     that.setState({
+            //         sliderIndex: that.state.sliderIndex - 1
+            //     })
+            // }
             //
+            // // console.log('slide index', that.state.sliderIndex)
+            // // if zero cannot movebackwards
+            // if(!that.state.slideIndex){
+            //     // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+            //     // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+            //     if((!this.state.finalSliderCoords[this.state.sliderIndex]) && (!this.state.finalSliderCoords[this.state.sliderIndex] )){
+            //         console.error("Cannot move backwards past beginning of graph.")
+            //         return
+            //     }
+            // }
+            //
+            //
+            //     // call on sliderIndex and 10 more for every val
+            //
+            //     let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
+            //
+            //     let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
+            //
+            //     let directions = {
+            //         xDir: "left",
+            //         yDir: "bottom"
+            //     }
+            //     let driverObj = { pixels, directions }
+            //     //
+            //
+            //     this.updateDriverWithCoords(driverObj, "slider")
 
-            this.updateDriverWithCoords(driverObj, "slider")
+                var i = 0
+
+                looper(i)
+                // let that = this
+                function looper () {
+                    console.log('i', i)
+                   setTimeout(function () {
+                      // console.log(driverObj);
+                      i = i + 1
+                      if (i < 10) {
+                          // console.log(driverObj)
+                          if(sliderDiff() > 0){
+                              that.setState({
+                                  sliderIndex: that.state.sliderIndex + 1
+                              })
+                          } else if(sliderDiff() < 0){
+                              that.setState({
+                                  sliderIndex: that.state.sliderIndex - 1
+                              })
+                          }
+
+                          // console.log('slide index', that.state.sliderIndex)
+                          // if zero cannot movebackwards
+                          if(!that.state.slideIndex){
+                              // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+                              // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+                              if((!that.state.finalSliderCoords[that.state.sliderIndex]) && (!that.state.finalSliderCoords[that.state.sliderIndex] )){
+                                  console.error("Cannot move backwards past beginning of graph.")
+                                  return
+                              }
+                          }
 
 
+                              // call on sliderIndex and 10 more for every val
 
-        // }
-        sliderDiff()
+                              let currentDriver = that.state.driversArr[that.state.selectedDriverIndex]
+
+                              let pixels = that._convertToPixels(that.state.finalSliderCoords[that.state.sliderIndex].x, that.state.finalSliderCoords[that.state.sliderIndex].y)
+
+                              let directions = {
+                                  xDir: "left",
+                                  yDir: "bottom"
+                              }
+                              let driverObj = { pixels, directions }
+                              //
+
+                              that.updateDriverWithCoords(driverObj, "slider")
+                         looper();
+                      }
+                  }, 10)
+                }
+
+            // }
+            sliderDiff()
+        }
+
     }
+
+
     toggleSnackbar(){
         this.state.snackbarOpen = !this.state.snackbarOpen
         console.log(this.state.snackbarOpen)
@@ -1239,7 +1306,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        console.log(evt)
+        console.log(evt.event.target)
         // to filter out undefined errors
         if(!evt.event){
             if(evt.target.name === 'x'){
@@ -1283,90 +1350,90 @@ class Grid extends Component {
                     legToColorID: evt.target.value
                 })
             }
-        } else {
-            // if slider
-            if(evt.event.target.type === "button" && this.hasParentClass(evt.event.target, "slider")){
-                console.log(evt)
-
-                //manage by leg
-                //make giant array of all coords
-                //for every slider increment move ten
-                let that = this
-                function getPreviousSliderState(){
-                     let previousState
-                    	if(that.state.initialSliderChange){
-                    	    previousState = 50
-                    		that.setState({
-                                initialSliderChange: false,
-                                previousState: previousState
-                                })
-                    	  } else {
-                        	previousState = that.state.currentState
-                              that.setState({
-                                  previousState: previousState
-                              })
-                    	  }
-                    	let currentState = evt.value
-                        that.setState({
-                            currentState: currentState
-                        })
-
-                    }
-                    getPreviousSliderState()
-
-                function sliderDiff(){
-                    let diff
-                    // if first move, previous will be null
-                    if(!that.state.previousState){
-                        diff = that.state.currentState - 50
-                    } else {
-                        diff = that.state.currentState - that.state.previousState
-                    }
-
-                    return diff
-                }
-                // console.log('diff', sliderDiff())
-                // console.log(driverObj)
-                if(sliderDiff() > 0){
-                    that.setState({
-                        sliderIndex: that.state.sliderIndex + 1
-                    })
-                } else if(sliderDiff() < 0){
-                    that.setState({
-                        sliderIndex: that.state.sliderIndex - 1
-                    })
-                }
-                // console.log('slide index', that.state.sliderIndex)
-                // if zero cannot movebackwards
-                if(!that.state.slideIndex){
-                    // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
-                    // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
-                    if((!this.state.finalSliderCoords[this.state.sliderIndex]) && (!this.state.finalSliderCoords[this.state.sliderIndex] )){
-                        console.error("Cannot move backwards past beginning of graph.")
-                        return
-                    }
-                }
-                // for (var i = 0; i < 5; i++) {
-                    let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
-                    let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
-                    let directions = {
-                        xDir: "left",
-                        yDir: "bottom"
-                    }
-                    let driverObj = { pixels, directions }
-                    //
-
-                    this.updateDriverWithCoords(driverObj, "slider")
-
-
-
-                // }
-                sliderDiff()
-            }
-
-
-
         }
+            // // if slider
+            // if(""){
+            //     console.log(evt)
+            //
+            //     //manage by leg
+            //     //make giant array of all coords
+            //     //for every slider increment move ten
+            //     let that = this
+            //     function getPreviousSliderState(){
+            //          let previousState
+            //         	if(that.state.initialSliderChange){
+            //         	    previousState = 50
+            //         		that.setState({
+            //                     initialSliderChange: false,
+            //                     previousState: previousState
+            //                     })
+            //         	  } else {
+            //             	previousState = that.state.currentState
+            //                   that.setState({
+            //                       previousState: previousState
+            //                   })
+            //         	  }
+            //         	let currentState = evt.value
+            //             that.setState({
+            //                 currentState: currentState
+            //             })
+            //
+            //         }
+            //         getPreviousSliderState()
+            //
+            //     function sliderDiff(){
+            //         let diff
+            //         // if first move, previous will be null
+            //         if(!that.state.previousState){
+            //             diff = that.state.currentState - 50
+            //         } else {
+            //             diff = that.state.currentState - that.state.previousState
+            //         }
+            //
+            //         return diff
+            //     }
+            //     // console.log('diff', sliderDiff())
+            //     // console.log(driverObj)
+            //     if(sliderDiff() > 0){
+            //         that.setState({
+            //             sliderIndex: that.state.sliderIndex + 1
+            //         })
+            //     } else if(sliderDiff() < 0){
+            //         that.setState({
+            //             sliderIndex: that.state.sliderIndex - 1
+            //         })
+            //     }
+            //     // console.log('slide index', that.state.sliderIndex)
+            //     // if zero cannot movebackwards
+            //     if(!that.state.slideIndex){
+            //         // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+            //         // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+            //         if((!this.state.finalSliderCoords[this.state.sliderIndex]) && (!this.state.finalSliderCoords[this.state.sliderIndex] )){
+            //             console.error("Cannot move backwards past beginning of graph.")
+            //             return
+            //         }
+            //     }
+            //     // for (var i = 0; i < 5; i++) {
+            //         let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
+            //         let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
+            //         let directions = {
+            //             xDir: "left",
+            //             yDir: "bottom"
+            //         }
+            //         let driverObj = { pixels, directions }
+            //         //
+            //
+            //         this.updateDriverWithCoords(driverObj, "slider")
+            //
+            //
+            //
+            //     // }
+            //     sliderDiff()
+            // }
+
+
+
+
     }
 
     componentDidMount() {
@@ -1452,6 +1519,15 @@ class Grid extends Component {
             })
 
         },500)
+        function addElemClass(){
+            // add class to slider button so can select it later
+            let sliderButton = document.querySelector("[type=button]")
+            if(that.hasParentClass(sliderButton, "slider")){
+                sliderButton.classList.add("slider-button")
+            }
+        }
+        addElemClass()
+
     }
 
     // takes start/end returns all coords between 2 points

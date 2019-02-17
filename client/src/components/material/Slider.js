@@ -31,7 +31,7 @@ class SimpleSlider extends React.Component {
       <div className={`${classes.root} slider `}>
         <Typography id="label">{this.props.label}</Typography>
         <Slider
-            step={0.0001}
+          step={1}
           classes={{ container: classes.slider }}
           value={value}
           aria-labelledby="label"
