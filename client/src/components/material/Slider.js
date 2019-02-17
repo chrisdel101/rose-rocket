@@ -31,7 +31,7 @@ class SimpleSlider extends React.Component {
       <div className={`${classes.root} slider `}>
         <Typography id="label">{this.props.label}</Typography>
         <Slider
-          max={10000}
+          max={1000}
           step={1}
           classes={{ container: classes.slider }}
           value={value}

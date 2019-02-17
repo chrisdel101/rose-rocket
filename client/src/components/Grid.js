@@ -316,7 +316,6 @@ class Grid extends Component {
     }
     // on click set driver with coords and send to child
     updateDriverWithCoords(coords, type){
-        console.log('C', coords)
 
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
         let driversArr = [...this.state.driversArr]
@@ -1054,7 +1053,7 @@ class Grid extends Component {
             function getPreviousSliderState(){
                  let previousState
                     if(that.state.initialSliderChange){
-                        previousState = 50
+                        previousState = 0
                         that.setState({
                             initialSliderChange: false,
                             previousState: previousState
@@ -1081,15 +1080,15 @@ class Grid extends Component {
                 } else {
                     diff = that.state.currentState - that.state.previousState
                 }
+                console.log('diff', diff)
                 return diff
             }
             setTimeout(function(){
-                console.log('val', that.state.currentState)
-                console.log('diff', sliderDiff())
+                // console.log('val', that.state.currentState)
+                // console.log('diff', sliderDiff())
 
             },100)
             function handleIndexValue(){
-                console.log('call')
                 if(sliderDiff() > 0){
                     that.setState({
                         sliderIndex: that.state.sliderIndex + 1
@@ -1099,6 +1098,9 @@ class Grid extends Component {
                         sliderIndex: that.state.sliderIndex - 1
                     })
                 }
+                // console.log('val', that.state.currentState)
+                // console.log('diff', sliderDiff())
+                console.log('index', that.state.sliderIndex)
             }
             function moveDriver(){
                 // if zero cannot movebackwards
@@ -1127,21 +1129,28 @@ class Grid extends Component {
                 looper(i)
                 // let that = this
                 function looper () {
-                    console.log('index', that.state.sliderIndex)
                    setTimeout(function () {
-                      if (i < sliderDiff()) {
-                         handleIndexValue()
-                         moveDriver()
-                         looper();
-                      }
-                      i = i + 1
+                       if(sliderDiff() >= 0){
+                           if (i < sliderDiff()) {
+                               handleIndexValue()
+                               moveDriver()
+                               looper();
+                           }
+                           i = i + 1
+                       } else if(sliderDiff() < 0){
+                           if (i > sliderDiff()) {
+                               handleIndexValue()
+                               moveDriver()
+                               looper();
+                           }
+                           i = i - 1
+                       }
                   }, 10)
                 }
 
             // }
             sliderDiff()
         }
-
     }
 
 
@@ -1469,9 +1478,9 @@ class Grid extends Component {
     // 3 makeCoordsArrs TODO
     // 4  makeSliderCoords
         setTimeout(function(){
-            stops.map((stop, index) => {
-                if(!stops[index + 1]) return
-                let { xSlideCoord, ySlideCoord } = that.slideRange(stop, stops[index + 1])
+            that.state.stops.map((stop, index) => {
+                if(!that.state.stops[index + 1]) return
+                let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stops[index + 1])
                 that.sliderCoordsCalc(xSlideCoord, ySlideCoord)
             })
             that.setState({
