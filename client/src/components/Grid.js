@@ -1088,93 +1088,53 @@ class Grid extends Component {
                 console.log('diff', sliderDiff())
 
             },100)
-            // // console.log(driverObj)
-            // if(sliderDiff() > 0){
-            //     that.setState({
-            //         sliderIndex: that.state.sliderIndex + 1
-            //     })
-            // } else if(sliderDiff() < 0){
-            //     that.setState({
-            //         sliderIndex: that.state.sliderIndex - 1
-            //     })
-            // }
-            //
-            // // console.log('slide index', that.state.sliderIndex)
-            // // if zero cannot movebackwards
-            // if(!that.state.slideIndex){
-            //     // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
-            //     // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
-            //     if((!this.state.finalSliderCoords[this.state.sliderIndex]) && (!this.state.finalSliderCoords[this.state.sliderIndex] )){
-            //         console.error("Cannot move backwards past beginning of graph.")
-            //         return
-            //     }
-            // }
-            //
-            //
-            //     // call on sliderIndex and 10 more for every val
-            //
-            //     let currentDriver = this.state.driversArr[that.state.selectedDriverIndex]
-            //
-            //     let pixels = this._convertToPixels(this.state.finalSliderCoords[this.state.sliderIndex].x, this.state.finalSliderCoords[this.state.sliderIndex].y)
-            //
-            //     let directions = {
-            //         xDir: "left",
-            //         yDir: "bottom"
-            //     }
-            //     let driverObj = { pixels, directions }
-            //     //
-            //
-            //     this.updateDriverWithCoords(driverObj, "slider")
+            function handleIndexValue(){
+                console.log('call')
+                if(sliderDiff() > 0){
+                    that.setState({
+                        sliderIndex: that.state.sliderIndex + 1
+                    })
+                } else if(sliderDiff() < 0){
+                    that.setState({
+                        sliderIndex: that.state.sliderIndex - 1
+                    })
+                }
+            }
+            function moveDriver(){
+                // if zero cannot movebackwards
+                if(!that.state.slideIndex){
+                    // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+                    // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
+                    if((!that.state.finalSliderCoords[that.state.sliderIndex]) && (!that.state.finalSliderCoords[that.state.sliderIndex] )){
+                        console.error("Cannot move backwards past beginning of graph.")
+                        return
+                    }
+                }
+                let currentDriver = that.state.driversArr[that.state.selectedDriverIndex]
 
+                let pixels = that._convertToPixels(that.state.finalSliderCoords[that.state.sliderIndex].x, that.state.finalSliderCoords[that.state.sliderIndex].y)
+
+                let directions = {
+                    xDir: "left",
+                    yDir: "bottom"
+                }
+                let driverObj = { pixels, directions }
+
+                that.updateDriverWithCoords(driverObj, "slider")
+
+            }
                 var i = 0
-
                 looper(i)
                 // let that = this
                 function looper () {
-                    console.log('i', i)
+                    console.log('index', that.state.sliderIndex)
                    setTimeout(function () {
-                      // console.log(driverObj);
-                      i = i + 1
-                      if (i < 10) {
-                          // console.log(driverObj)
-                          if(sliderDiff() > 0){
-                              that.setState({
-                                  sliderIndex: that.state.sliderIndex + 1
-                              })
-                          } else if(sliderDiff() < 0){
-                              that.setState({
-                                  sliderIndex: that.state.sliderIndex - 1
-                              })
-                          }
-
-                          // console.log('slide index', that.state.sliderIndex)
-                          // if zero cannot movebackwards
-                          if(!that.state.slideIndex){
-                              // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
-                              // console.log(this.state.finalSliderCoords[this.state.sliderIndex])
-                              if((!that.state.finalSliderCoords[that.state.sliderIndex]) && (!that.state.finalSliderCoords[that.state.sliderIndex] )){
-                                  console.error("Cannot move backwards past beginning of graph.")
-                                  return
-                              }
-                          }
-
-
-                              // call on sliderIndex and 10 more for every val
-
-                              let currentDriver = that.state.driversArr[that.state.selectedDriverIndex]
-
-                              let pixels = that._convertToPixels(that.state.finalSliderCoords[that.state.sliderIndex].x, that.state.finalSliderCoords[that.state.sliderIndex].y)
-
-                              let directions = {
-                                  xDir: "left",
-                                  yDir: "bottom"
-                              }
-                              let driverObj = { pixels, directions }
-                              //
-
-                              that.updateDriverWithCoords(driverObj, "slider")
+                      if (i < sliderDiff()) {
+                         handleIndexValue()
+                         moveDriver()
                          looper();
                       }
+                      i = i + 1
                   }, 10)
                 }
 
