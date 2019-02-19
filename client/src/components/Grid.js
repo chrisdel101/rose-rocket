@@ -182,8 +182,8 @@ class Grid extends Component {
         // console.log('x', xToMove)
         // console.log('y', yToMove)
         return {
-            xToMove,
-            yToMove
+            x: xToMove,
+            y: yToMove
         }
     }
     // update createCounter by 1
@@ -297,7 +297,7 @@ class Grid extends Component {
         // takes coords for first, last and how many -returns up / down & COORDS
         let { xToMove, yToMove } = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
         let moves = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
-        // console.log(xToMove, yToMove)
+        console.log(moves)
         // convert the number to move to pixels
         let driverProgressinPixels = this._convertToPixels(xToMove, yToMove)
         //
@@ -308,6 +308,7 @@ class Grid extends Component {
 
 
         this.state.driversArr[this.state.selectedDriverIndex] = selectedDriver
+        console.log('update', this.state.driversArr)
         console.log('update', this.state.driversArr)
 
 
@@ -327,13 +328,25 @@ class Grid extends Component {
             // from form
             coords = this._setStopCoords('driver',
             this.state.driverFormX, this.state.driverFormY)
+            // toggle driver to first stop of map start
         } else if(type === "checkbox"){
             if(this.state.iconStartBeginning){
                 // this._resetTruck()
             }
             coords = this._setStopCoords('driver',
             coords.x, coords.y)
+            selectedDriver.driverCoords.x = this.state.stops[0].x
+            selectedDriver.driverCoords.y = this.state.stops[0].y
+            console.log(selectedDriver)
+            this.setState({
+                driversArr: driversArr
+            })
+            this.updateDriverData()
+            let that = this
+            setTimeout(function(){
+                console.log(that.state.driversArr)
 
+            },100)
         } else if(type === "slider"){
             // reset to zero
             // this._resetTruck()
@@ -345,7 +358,7 @@ class Grid extends Component {
             // reset to zero
             this._resetTruck()
             coords = this._setStopCoords('driver', coords.x, coords.y)
-            driversArr[this.state.selectedDriverIndex].driverCoords = {xToMove: 0, yToMove: 0}
+            driversArr[this.state.selectedDriverIndex].driverCoords = {x: 0, y: 0}
         }
         // console.log(coords)
         // subtract for icon positionSelect
@@ -354,7 +367,7 @@ class Grid extends Component {
         // update the values in the object
         driversArr[this.state.selectedDriverIndex].directions = coords.directions
         driversArr[this.state.selectedDriverIndex].pixels = coords.pixels
-        // console.log(driversArr)
+        console.log(driversArr)
         // set new driver vals
         this.setState({
             driversArr: driversArr
@@ -445,27 +458,11 @@ class Grid extends Component {
         // console.log(selectedDriver)
         if(type === "data"){
             // console.log(selectedDriver)
-            this.legStartEnd(selectedDriver.driverCoords.xToMove,selectedDriver.driverCoords.yToMove, 'partial')
+            this.legStartEnd(selectedDriver.driverCoords.x,selectedDriver.driverCoords.y, 'partial')
         } else if(type === "coords"){
-            this.legStartEnd(selectedDriver.driverCoords.xToMove,selectedDriver.driverCoords.yToMove, 'partial')
+            this.legStartEnd(selectedDriver.driverCoords.x,selectedDriver.driverCoords.y, 'partial')
         }
 
-        // get start cell num
-
-        // let legStartEndCellNUm = this.state.legStartEndCellNums[index]
-        // console.log(legStartEndCellNUm)
-
-        // use calc to get num of cells in current arr/leg to color
-
-
-
-        	//get cell of last leg in arr
-    	// var chunk = this.state.holdAllLegColorArrs[index]
-    	// var cell = chunk[chunk.length - 1]
-        // console.log('all leg arrs',this.state.holdAllLegColorArrs)
-        // console.log('single previous arr', chunk)
-        // console.log('last cell or last arr', cell)
-	    //   // need to call color grid with a type condional to get the part btw legs
     }
     colorGrid(x, y, type){
 
@@ -804,12 +801,16 @@ class Grid extends Component {
             ){
                 console.log('both equal')
                 return coord
+                // first stop  on map with nothing previous
+            } else if(index === 0 && (coord === this.state.stops[0])){
+                console.log('first stop on map')
+                    return coord
             } else {
                 // not within the stops
                 return null
             }
         })
-            console.log('return firstStop', firstStop)
+                console.log('return firstStop', firstStop)
         return firstStop
     }
     // takes first stop obj, driver coords obj, and abs diff of a single stops axis
@@ -819,10 +820,10 @@ class Grid extends Component {
         let x2 = parseInt(driverCoords.x)
         let y2 = parseInt(driverCoords.y)
         console.log(driverCoords)
-        // console.log('1', x1)
-        // console.log('2', y1)
-        // console.log('3', x2)
-        // console.log('4', y2)
+        console.log('1', x1)
+        console.log('2', y1)
+        console.log('3', x2)
+        console.log('4', y2)
         let xDiff
         let yDiff
         // console.log('xAbsDiff', xAbsDiff)
@@ -839,6 +840,8 @@ class Grid extends Component {
             xDiff = x1 - x2
         }  else if(x1 === x2){
             xDiff = 0
+            // if it's first stop with no second stop
+        // } else if(!x2 && !y2)
         } else {
             console.error("error in driver movement")
         }
@@ -922,6 +925,7 @@ class Grid extends Component {
         let firstStopIndex = this.state.stops.indexOf(firstStop)
         let secondStop = this.state.stops[firstStopIndex+1]
         let diff = this._absDiff(firstStop, secondStop)
+        console.log(selectedDriver.driverCoords)
         // run once for x and for y
         let percent = this._findPercentFromDriverCoords(firstStop, selectedDriver.driverCoords, diff.yDiff, diff.xDiff)
         console.log('percent', percent)
@@ -1249,7 +1253,8 @@ class Grid extends Component {
     }
     onDropdownSubmit(event) {
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        // console.log(selectedDriver)
+        console.log(selectedDriver)
+        // console.log(event.target.name)
         event.preventDefault()
 
         if(event.target.name === 'driver-dropdown'){
@@ -1275,7 +1280,7 @@ class Grid extends Component {
             setTimeout(function(){
                 // that.addNewDriver()
                 that.updateDriverwithData(selectedDriver.data)
-                that.colorCompleted(selectedDriver.data.activeLegID)
+                // that.colorCompleted(selectedDriver.data.activeLegID)
                 console.log(that.state)
             },100)
 
@@ -1612,11 +1617,11 @@ class Grid extends Component {
 
     }
     handleFormSubmit(event) {
-        console.log(event.target.name)
+        // console.log(event.target.name)
         event.preventDefault();
         let currentDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        console.log(this.state.driversArr)
-        console.log(this.state.selectedDriverIndex)
+        // console.log(this.state.driversArr)
+        // console.log(this.state.selectedDriverIndex)
 
         // update coords
         //set driver to those
