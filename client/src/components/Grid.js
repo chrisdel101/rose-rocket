@@ -332,22 +332,27 @@ class Grid extends Component {
             // toggle driver to first stop of map start
         } else if(type === "checkbox"){
             if(this.state.iconStartBeginning){
-                // this._resetTruck()
+                coords = this._setStopCoords('driver',
+                coords.x, coords.y)
+                selectedDriver.driverCoords.x = this.state.stops[0].x
+                selectedDriver.driverCoords.y = this.state.stops[0].y
+                console.log(selectedDriver)
+                this.setState({
+                    driversArr: driversArr
+                })
+                this.updateDriverData()
+            } else if(!this.state.iconStartBeginning){
+                this._resetTruck()
+                coords = this._setStopCoords('driver',
+                coords.x, coords.y)
+                selectedDriver.driverCoords.x = 0
+                selectedDriver.driverCoords.y = 0
+                this.setState({
+                    driversArr: driversArr
+                })
+                this.updateDriverData()
             }
-            coords = this._setStopCoords('driver',
-            coords.x, coords.y)
-            selectedDriver.driverCoords.x = this.state.stops[0].x
-            selectedDriver.driverCoords.y = this.state.stops[0].y
-            console.log(selectedDriver)
-            this.setState({
-                driversArr: driversArr
-            })
-            this.updateDriverData()
-            let that = this
-            setTimeout(function(){
-                console.log(that.state.driversArr)
 
-            },100)
         } else if(type === "slider"){
             // reset to zero
             // this._resetTruck()
@@ -958,6 +963,7 @@ class Grid extends Component {
         // console.log('new driver state', this.state.selectedDriver)
         return true
     }
+    // resets data but does not move
     _resetTruck(){
         this.setState({
                 finalDriverMoveObj: {
