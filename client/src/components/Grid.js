@@ -75,8 +75,8 @@ class Grid extends Component {
 	}
     // takes and x/y and returns px to move
     _convertToPixels(x,y){
-        // console.log('x', x)
-        // console.log('y', y)
+        console.log('x', x)
+        console.log('y', y)
         let totalX
         let totalY
         // first 10 cells = 100px
@@ -179,8 +179,8 @@ class Grid extends Component {
         } else {
             console.error("error in driver movement")
         }
-        // console.log('x', xToMove)
-        // console.log('y', yToMove)
+        console.log('x', xToMove)
+        console.log('y', yToMove)
         return {
             x: xToMove,
             y: yToMove
@@ -295,11 +295,12 @@ class Grid extends Component {
         // takes number of moves and percent - returns number of moves that is
         let numToMove = this._percentToCoords(diffObj, progress)
         // takes coords for first, last and how many -returns up / down & COORDS
-        let { xToMove, yToMove } = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
+        let { x, y } = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
+        console.log(x, y)
         let moves = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
-        console.log(moves)
         // convert the number to move to pixels
-        let driverProgressinPixels = this._convertToPixels(xToMove, yToMove)
+        let driverProgressinPixels = this._convertToPixels(x, y)
+        console.log(driverProgressinPixels)
         //
         selectedDriver.pixels = driverProgressinPixels
         selectedDriver.data = driverData
@@ -1280,7 +1281,7 @@ class Grid extends Component {
             setTimeout(function(){
                 // that.addNewDriver()
                 that.updateDriverwithData(selectedDriver.data)
-                // that.colorCompleted(selectedDriver.data.activeLegID)
+                that.colorCompleted(selectedDriver.data.activeLegID)
                 console.log(that.state)
             },100)
 
