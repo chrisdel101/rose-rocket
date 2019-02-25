@@ -346,7 +346,6 @@ class Grid extends Component {
                 })
                 this.updateDriverData()
             } else if(!this.state.iconStartBeginning){
-                this._resetTruck()
                 coords = this._setStopCoords('driver',
                 coords.x, coords.y)
                 selectedDriver.driverCoords.x = 0
@@ -1347,54 +1346,32 @@ class Grid extends Component {
                     legToColorID: evt.target.value
                 })
             } else if(evt.target.name === "icon-start"){
-                console.log("HERER")
                 this.state.iconStartBeginning = !this.state.iconStartBeginning
+
                 let setSliderCoords
                 if(!this.state.iconStartBeginning){
-                    console.log(this.state.startingCoords)
                     setSliderCoords = this.state.startingCoords.concat(this.state.sliderCoordsArrs).flat()
-                } else {
-                    setSliderCoords = this.state.sliderCoordsArrs
-                }
-                console.log('toggle', setSliderCoords)
-
-                this.setState({
-                    iconStartBeginning: this.state.iconStartBeginning
-                })
-                let stops = [{
-                    "name": "A",
-                    "x": 0,
-                    "y": 0
-                },
-                {
-                    "name": "B",
-                    "x": 20,
-                    "y": 20
-                }]
-                // start at first stop
-                if(this.state.iconStartBeginning === true){
-                    stops.map((stop, index) => {
-                        if(!stops[index + 1]) return
-                        let { xSlideCoord, ySlideCoord } = this.slideRange(stop, stops[index + 1])
-                        this.sliderCoordsCalc(xSlideCoord, ySlideCoord, {type: "change", checkbox:"checkbox-true"} )
-
-                    })
-                    // console.log(this.state.stops[0].x, this.state.stops[0].y)
-                    this.updateDriverWithCoords({
-                        x: this.state.stops[0].x,
-                        y: this.state.stops[0].y,
-                    }, "checkbox")
-                } else {
-                    stops.map((stop, index) => {
-                        if(!stops[index + 1]) return
-                        let { xSlideCoord, ySlideCoord } = this.slideRange(stop, stops[index + 1])
-                        this.sliderCoordsCalc(xSlideCoord, ySlideCoord, {type: "change", checkbox:"checkbox-false"})
-                    })
                     this.updateDriverWithCoords({
                         x: 0,
                         y: 0
                     }, "checkbox")
+                } else {
+                    setSliderCoords = this.state.sliderCoordsArrs
+                    this.updateDriverWithCoords({
+                        x: this.state.stops[0].x,
+                        y: this.state.stops[0].y,
+                    }, "checkbox")
                 }
+                console.log('toggle', setSliderCoords)
+
+
+
+                this.setState({
+                    iconStartBeginning: this.state.iconStartBeginning,
+                    finalSliderCoords: setSliderCoords
+                })
+
+
 
             }
     }
@@ -1470,27 +1447,24 @@ class Grid extends Component {
                 "y": 20
             }]
             // start at first stop
-            // if(this.state.iconStartBeginning === true){
-                stops.map((stop, index) => {
-                    if(!stops[index + 1]) return
-                    let { xSlideCoord, ySlideCoord } = that.slideRange(stop, stops[index + 1])
-                    that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "starting-coords" )
+            that.updateDriverWithCoords({
+                x: 0,
+                y: 0,
+            }, "checkbox")
+            // make startig coords
+            stops.map((stop, index) => {
+                if(!stops[index + 1]) return
+                let { xSlideCoord, ySlideCoord } = that.slideRange(stop, stops[index + 1])
+                that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "starting-coords" )
 
-                })
-                // console.log(that.state.stops[0].x, that.state.stops[0].y)
-                that.updateDriverWithCoords({
-                    x: that.state.stops[0].x,
-                    y: that.state.stops[0].y,
-                }, "checkbox")
+            })
+            // make all other slide coords
             that.state.stops.map((stop, index) => {
                 if(!that.state.stops[index + 1]) return
                 let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stops[index + 1])
                 that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "stop-coords")
             })
-            // that.setState({
-            //     finalSliderCoords: that.state.sliderCoordsArrs.flat()
-            // })
-            // console.log(that.state.finalSliderCoords)
+
         },500)
         function addElemClass(){
             // add class to slider button so can select it later
