@@ -37,6 +37,7 @@ class Grid extends Component {
             createCounter:0,
             legs: [],
 			stops: [],
+            stopsCopy: [],
             legToColorID:"",
             driverFormX:"",
             driverFormY:"",
@@ -1069,11 +1070,16 @@ class Grid extends Component {
     }
     handleSliderChange(evt){
         let that = this
-        // console.log(evt.value)
 
         // if slider
         if(evt.value){
-            // console.log(evt)
+            console.log(this.state.sliderCoordsArrs)
+            if(!this.state.finalSliderCoords.length){
+                this.setState({
+                    finalSliderCoords: this.state.sliderCoordsArrs.flat()
+                })
+            }
+            console.log('final', this.state.finalSliderCoords)
             //manage by leg
             //make giant array of all coords
             //for every slider increment move ten
@@ -1113,7 +1119,8 @@ class Grid extends Component {
             }
             setTimeout(function(){
                 console.log('val', that.state.currentState)
-                console.log('diff', sliderDiff())
+                // console.log('diff', sliderDiff())
+                // console.log(that.state.finalSliderCoords)
 
             },100)
             // move back and forth
@@ -1134,23 +1141,16 @@ class Grid extends Component {
             function moveDriver(){
                 // if zero cannot movebackwards
                 if(!that.state.slideIndex){
-                    console.log('index', that.state.sliderIndex)
-                    console.log('state',that.state.finalSliderCoords)
-                 console.log(that.state.finalSliderCoords[that.state.sliderIndex])
+                    // console.log('index', that.state.sliderIndex)
+                    // console.log('state',that.state.finalSliderCoords)
+                 // console.log(that.state.finalSliderCoords[that.state.sliderIndex])
                     if((!that.state.finalSliderCoords[that.state.sliderIndex]) && (!that.state.finalSliderCoords[that.state.sliderIndex] )){
                         console.error("Cannot move backwards past beginning of graph.")
                         return
                     }
                 }
                 let currentDriver = that.state.driversArr[that.state.selectedDriverIndex]
-                //
-                // let pixels = utils._convertToPixels(that.state.finalSliderCoords[that.state.sliderIndex].x, that.state.finalSliderCoords[that.state.sliderIndex].y)
-                //
-                // let directions = {
-                //     xDir: "left",
-                //     yDir: "bottom"
-                // }
-                // let driverObj = { pixels, directions }
+
 
                 that.updateDriverWithCoords({
                     x: that.state.finalSliderCoords[that.state.sliderIndex].x,
@@ -1160,7 +1160,7 @@ class Grid extends Component {
             }
                 var i = 0
                 looper(i)
-                // let that = this
+                // move driver x times with delay
                 function looper () {
                    setTimeout(function () {
                        if(sliderDiff() >= 0){
@@ -1380,21 +1380,17 @@ class Grid extends Component {
             finalSliderCoords: setSliderCoords
         })
     }
-    addStartToStops(){
+    // add the beginning to the stops
+    addStartStop(){
         // make an array including beginning
         let stops = [{
             "name": "A",
             "x": 0,
             "y": 0
-        },
-        {
-            "name": "B",
-            "x": 20,
-            "y": 10
         }]
-        let arr = stops.concat(this.state.stops)
+        let arr = stops.concat(this.state.stopsCopy)
         this.setState({
-            stops: arr
+            stopsCopy: arr
         })
     }
 
@@ -1443,8 +1439,11 @@ class Grid extends Component {
         .catch(err => console.log(err));
         this._callStops()
         .then(res => {
-            // console.log(res)
-            this.setState({ stops: res.stops })
+            this.setState({
+                stops: res.stops,
+                stopsCopy: res.stops.slice()
+            })
+
         })
         .catch(err => console.log(err));
         this._callLegs()
@@ -1455,36 +1454,17 @@ class Grid extends Component {
 
         // make array of coords to move icon
         setTimeout(function(){
-            let stops = [{
-                "name": "A",
-                "x": 0,
-                "y": 0
-            },
-            {
-                "name": "B",
-                "x": 20,
-                "y": 10
-            }]
             // start at first stop
             that.updateDriverWithCoords({
                 x: 0,
                 y: 0,
             }, "checkbox")
             // start from map begginng
-            that.addStartToStops()
-            // make startig coords
-            // that.state.stops.map((stop, index) => {
-            //     if(!stops[index + 1]) return
-            //     let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stops[index + 1])
-            //     // console.log(xSlideCoord, ySlideCoord)
-            //     that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "starting-coords" )
-            //
-            // })
-            // make all other stop coords
-            that.state.stops.map((stop, index) => {
-
-                if(!that.state.stops[index + 1]) return
-                let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stops[index + 1])
+            that.addStartStop()
+            // make slider coords
+            that.state.stopsCopy.map((stop, index) => {
+                if(!that.state.stopsCopy[index + 1]) return
+                let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stopsCopy[index + 1])
                 // console.log(xSlideCoord, ySlideCoord)
                 that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "stop-coords")
             })
@@ -1539,8 +1519,8 @@ class Grid extends Component {
 
         }
 
-        console.log('short',shorterArr)
-        console.log('long',longerArr)
+        // console.log('short',shorterArr)
+        // console.log('long',longerArr)
         let obj
         // j runs on all small loop
         let j = 0
@@ -1561,11 +1541,6 @@ class Grid extends Component {
                         this.setState({previousSmall: previousSmall})
                     }
                 }
-
-            // console.log('i', shorterArr[i])
-            // console.log('PSM', previousSmall)
-
-
             if(j < shorterArr.length){
                 // loop through both until shorter runs out
                     obj = {
@@ -1598,62 +1573,19 @@ class Grid extends Component {
                         [Object.keys(previousSmall)[0]]: Object.values(previousSmall)[0],
                     }
                 }
-
-
-
-                // console.log('long obj', Object.keys(longerArr[i])[0])
-                // console.log('long obj',Object.values(longerArr[i])[0])
-                // console.log('key obj', Object.keys(this.state.lastShorterArr)[0])
-                // console.log('key obj',Object.values(this.state.lastShorterArr)[0])
-                // console.log('key obj', Object.keys(this.state.lastShorterArr)[0])
-                // console.log('val obj', Object.values(this.state.lastShorterArr)[0])
             }
             storeArr.push(obj)
-            console.log(' obj', obj)
-            // console.log('store',storeArr)
-        }
-            if(type === "starting-coords"){
-                this.setState({
-                    startingCoords: [...storeArr]
-                })
-            } else if(type === "stop-coords"){
-                this.setState({
-                    sliderCoordsArrs: [...this.state.sliderCoordsArrs, storeArr]
-                })
-            }
 
-            // console.log(this.state.startingCoords)
-    //     // make a new array of all coords
-    //     if(type.type === "start" && type.checkbox === "checkbox-false"){
-    //         // make array
-    //         this.setState({
-    //             sliderCoordsArrs: [...this.state.sliderCoordsArrs, storeArr]
-    //         })
-    //         // add start path
-    //         let addedStartArr = storeArr.concat(this.state.finalSliderCoords)
-    //         console.log('ADDED',addedStartArr)
-    //         this.setState({
-    //             finalSliderCoords: addedStartArr
-    //         })
-    //         // console.log(this.state.finalSliderCoords)
-    //     // add to the one already there
-    // } else if(type.checkbox === "checkbox-false"){
-    //             let addedStartArr = storeArr.concat(this.state.finalSliderCoords)
-    //             console.log(addedStartArr)
-    //             // console.log(this.state.finalSliderCoords)
-    //             this.setState({
-    //                 finalSliderCoords: addedStartArr
-    //             })
-    //
-    //     } else if(type.checkbox === "checkbox-true"){
-    //         // console.log(this.state.finalSliderCoords)
-    //         let removeStartArr = this.state.finalSliderCoords.slice(storeArr.length, this.state.finalSliderCoords.length)
-    //         // console.log(removeStartArr)
-    //
-    //         this.setState({
-    //             finalSliderCoords: removeStartArr
-    //         })
-    //     }
+            // console.log(' obj', obj)
+        }
+        // console.log('stops1',this.state.stopsCopy[0])
+        // console.log('stops2',this.state.stopsCopy[1])
+        // console.log('store',storeArr)
+
+            this.setState({
+                sliderCoordsArrs: [...this.state.sliderCoordsArrs, storeArr]
+            })
+
     }
 
     // creates two rangeArr each x/y  start - stop
@@ -1735,6 +1667,8 @@ class Grid extends Component {
         let x2 = stop2.x
         let y1 = stop1.y
         let y2 = stop2.y
+        // console.log(y1)
+        // console.log(y2)
         let xToMove
         let yToMove
         if(x1 > x2){
