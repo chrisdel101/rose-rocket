@@ -1,6 +1,6 @@
 import React from 'react'
 import { Manager, Reference, Popper } from 'react-popper';
-
+import Icon from './material/Icon'
 
 // takes and array of directions and pixes for x and y
 function Stop(props){
@@ -10,25 +10,42 @@ function Stop(props){
     return coordsArr.map((coord, i) => {
         let styles = {
             [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
-            [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px'
+            [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px',
         }
-        // console.log('styles', styles)
+        function toggleStopNames(props){
+            if(props.toggleStopNames){
+                return "block"
+            } else {
+                return "none"
+            }
+        }
         return(
             <Manager key={i}>
-            <Reference>
-            {({ ref }) => (
-                <div className="stop-marker" style={styles}></div>
-            )}
-            </Reference>
-            <Popper placement="right">
-            {({ ref, style, placement, arrowProps }) => (
-                <div ref={ref} style={style} data-placement={placement}>
-                Popper element
-                <div ref={arrowProps.ref} style={arrowProps.style} />
-                </div>
-            )}
-            </Popper>
-            </Manager>
+        <Reference>
+          {({ ref }) => (
+            <div ref={ref} className="stop-marker" style={styles} />
+          )}
+        </Reference>
+        <Popper placement="left">
+          {({ ref, style, placement, arrowProps }) => (
+            <div
+              ref={ref}
+              style={{ ...style,
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  color: "#fff",
+                  borderRadius: "5px",
+                  marginLeft: "10px",
+                  display: toggleStopNames(props),
+                  marginLeft: "-10px"
+              }}
+              data-placement={placement}
+            >
+              {`stop${i + 1}`}
+              <div ref={arrowProps.ref} style={arrowProps.style} />
+            </div>
+          )}
+        </Popper>
+      </Manager>
         )
     })
 }
