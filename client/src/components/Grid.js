@@ -18,7 +18,7 @@ class Grid extends Component {
             sliderSlicedChunk: [],
             previousXSlideCoord: {x: 0},
             previousYSlideCoord: {y: 0},
-            iconStartAtfirstStop: true,
+            iconStartAtfirstStop: false,
             sliderIndex:0,
             initialSliderChange: true,
             sliderCoordsArrs: [],
@@ -1077,11 +1077,11 @@ class Grid extends Component {
             console.log('slider coords', this.state.sliderCoordsArrs)
             console.log('slider coords', this.state.finalSliderCoords)
             // if final coords empty, flatten it
-            if(!this.state.finalSliderCoords){
-                this.setState({
-                    finalSliderCoords: []
-                })
-            }
+            // if(!this.state.finalSliderCoords){
+            //     this.setState({
+            //         finalSliderCoords: []
+            //     })
+            // }
             if(!this.state.finalSliderCoords.length){
                 this.setState({
                     finalSliderCoords: this.state.sliderCoordsArrs.flat()
@@ -1371,12 +1371,12 @@ class Grid extends Component {
         let tempSliderIndex
         // if not at first stop, include all coords in slider
         console.log(this.state.sliderSlicedChunk)
-        if(!this.state.iconStartAtfirstStop){
+        if(this.state.iconStartAtfirstStop){
             // slice off part before start
             this.state.sliderSlicedChunk = this.state.sliderCoordsArrs.splice(0,1)
             // reassign arr without that part
             setSliderCoords = this.state.sliderCoordsArrs
-            console.log("S" ,setSliderCoords)
+            // console.log("S" ,setSliderCoords)
             tempSliderIndex = 10
             this.updateDriverWithCoords({
                 x: this.state.stops[0].x,
@@ -1394,14 +1394,17 @@ class Grid extends Component {
         }
 
 
+        this.emptyFinalSliderArr()
         this.setState({
             iconStartAtfirstStop: this.state.iconStartAtfirstStop,
-            finalSliderCoords: this.emptyFinalSliderArr(),
             sliderCoordsArrs: setSliderCoords,
             sliderIndex: tempSliderIndex
         })
-        console.log(this.state.finalSliderCoords)
+        // console.log(this.state.finalSliderCoords)
     }
+    // buildFinalSliderArr(arrs){
+    //
+    // }
     // empty the flatten array on each click - it's rebuilt inside handleSliderChange
     emptyFinalSliderArr(){
         // if arr as len, empty it
