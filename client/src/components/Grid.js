@@ -15,9 +15,10 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+            sliderSlicedChunk: [],
             previousXSlideCoord: {x: 0},
             previousYSlideCoord: {y: 0},
-            iconStartBeginning: true,
+            iconStartAtfirstStop: true,
             sliderIndex:0,
             initialSliderChange: true,
             sliderCoordsArrs: [],
@@ -327,7 +328,6 @@ class Grid extends Component {
     }
     // on click set driver with coords and send to child
     updateDriverWithCoords(coords, type){
-
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
         let driversArr = [...this.state.driversArr]
          if(type === "form"){
@@ -338,17 +338,18 @@ class Grid extends Component {
             this.state.driverFormX, this.state.driverFormY)
             // toggle driver to first stop of map start
         } else if(type === "checkbox"){
-            if(this.state.iconStartBeginning){
+            if(this.state.iconStartAtfirstStop){
                 coords = this._setStopCoords('driver',
                 coords.x, coords.y)
                 selectedDriver.driverCoords.x = this.state.stops[0].x
                 selectedDriver.driverCoords.y = this.state.stops[0].y
-                console.log(selectedDriver)
+                console.log('S', selectedDriver)
                 this.setState({
                     driversArr: driversArr
                 })
                 this.updateDriverData()
-            } else if(!this.state.iconStartBeginning){
+                // else start at beginning
+            } else if(!this.state.iconStartAtfirstStop){
                 coords = this._setStopCoords('driver',
                 coords.x, coords.y)
                 selectedDriver.driverCoords.x = 0
@@ -1070,10 +1071,17 @@ class Grid extends Component {
     }
     handleSliderChange(evt){
         let that = this
-
+        console.log('fired')
         // if slider
         if(evt.value){
-            console.log(this.state.sliderCoordsArrs)
+            console.log('slider coords', this.state.sliderCoordsArrs)
+            console.log('slider coords', this.state.finalSliderCoords)
+            // if final coords empty, flatten it
+            if(!this.state.finalSliderCoords){
+                this.setState({
+                    finalSliderCoords: []
+                })
+            }
             if(!this.state.finalSliderCoords.length){
                 this.setState({
                     finalSliderCoords: this.state.sliderCoordsArrs.flat()
@@ -1140,9 +1148,10 @@ class Grid extends Component {
             }
             function moveDriver(){
                 // if zero cannot movebackwards
+                console.log('state',that.state.finalSliderCoords)
                 if(!that.state.slideIndex){
-                    // console.log('index', that.state.sliderIndex)
-                    // console.log('state',that.state.finalSliderCoords)
+                 //    console.log('index', that.state.sliderIndex)
+                    console.log('state',that.state.finalSliderCoords)
                  // console.log(that.state.finalSliderCoords[that.state.sliderIndex])
                     if((!that.state.finalSliderCoords[that.state.sliderIndex]) && (!that.state.finalSliderCoords[that.state.sliderIndex] )){
                         console.error("Cannot move backwards past beginning of graph.")
@@ -1357,28 +1366,51 @@ class Grid extends Component {
             }
     }
     toggleStartCheckbox(){
-        this.state.iconStartBeginning = !this.state.iconStartBeginning
-
+        this.state.iconStartAtfirstStop = !this.state.iconStartAtfirstStop
         let setSliderCoords
-        if(!this.state.iconStartBeginning){
-            setSliderCoords = this.state.startingCoords.concat(this.state.sliderCoordsArrs).flat()
-            this.updateDriverWithCoords({
-                x: 0,
-                y: 0
-            }, "checkbox")
-        } else {
+        let tempSliderIndex
+        // if not at first stop, include all coords in slider
+        console.log(this.state.sliderSlicedChunk)
+        if(!this.state.iconStartAtfirstStop){
+            // slice off part before start
+            this.state.sliderSlicedChunk = this.state.sliderCoordsArrs.splice(0,1)
+            // reassign arr without that part
             setSliderCoords = this.state.sliderCoordsArrs
+            console.log("S" ,setSliderCoords)
+            tempSliderIndex = 10
             this.updateDriverWithCoords({
                 x: this.state.stops[0].x,
                 y: this.state.stops[0].y,
+            }, "checkbox")
+        } else {
+            // if at first stop, only allow slider from there
+            setSliderCoords = this.state.sliderSlicedChunk.concat(this.state.sliderCoordsArrs).flat()
+            console.log('slider', this.state.sliderCoordsArrs)
+            tempSliderIndex = 0
+            this.updateDriverWithCoords({
+                x: 0,
+                y: 0
             }, "checkbox")
         }
 
 
         this.setState({
-            iconStartBeginning: this.state.iconStartBeginning,
-            finalSliderCoords: setSliderCoords
+            iconStartAtfirstStop: this.state.iconStartAtfirstStop,
+            finalSliderCoords: this.emptyFinalSliderArr(),
+            sliderCoordsArrs: setSliderCoords,
+            sliderIndex: tempSliderIndex
         })
+        console.log(this.state.finalSliderCoords)
+    }
+    // empty the flatten array on each click - it's rebuilt inside handleSliderChange
+    emptyFinalSliderArr(){
+        // if arr as len, empty it
+        if(this.state.finalSliderCoords.lenght){
+            this.setState({
+                finalSliderCoords: []
+            })
+        }
+        return
     }
     // add the beginning to the stops
     addStartStop(){
@@ -1459,7 +1491,7 @@ class Grid extends Component {
                 x: 0,
                 y: 0,
             }, "checkbox")
-            // start from map begginng
+            // start from map beginng
             that.addStartStop()
             // make slider coords
             that.state.stopsCopy.map((stop, index) => {
@@ -1482,6 +1514,7 @@ class Grid extends Component {
 
     // takes two ranges and combines the arrays
     // calcs where smaller axis points coords should be placed with larger
+    // makes arr of arrs of all slider coords to follow
     sliderCoordsCalc(xSlideCoord, ySlideCoord, type){
         let storeArr = []
         let currentLong
@@ -1567,7 +1600,7 @@ class Grid extends Component {
                         previousSmall = this.state.lastXarr
                         this.setState({previousSmall})
                     }
-                    console.log('first Run', this.state.previousSmall)
+                    // console.log('first Run', this.state.previousSmall)
                     obj = {
                         [Object.keys(longerArr[i])[0]]: Object.values(longerArr[i])[0],
                         [Object.keys(previousSmall)[0]]: Object.values(previousSmall)[0],
