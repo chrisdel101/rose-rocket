@@ -15,6 +15,7 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+            cancelSlide: false,
             sliderSlicedChunk: [],
             previousXSlideCoord: {x: 0},
             previousYSlideCoord: {y: 0},
@@ -1071,17 +1072,18 @@ class Grid extends Component {
     }
     handleSliderChange(evt){
         let that = this
-        console.log('fired')
+        // set to false if set to true elsewhere
+        if(this.state.cancelSlide){
+            this.state.cancelSlide = false
+            this.setState({
+                cancelSlide: this.state.cancelSlide
+            })
+        }
         // if slider
         if(evt.value){
             console.log('slider coords', this.state.sliderCoordsArrs)
             console.log('slider coords', this.state.finalSliderCoords)
-            // if final coords empty, flatten it
-            // if(!this.state.finalSliderCoords){
-            //     this.setState({
-            //         finalSliderCoords: []
-            //     })
-            // }
+            // flatten on first use & when when toggleStartCheckbox called
             if(!this.state.finalSliderCoords.length){
                 this.setState({
                     finalSliderCoords: this.state.sliderCoordsArrs.flat()
@@ -1133,6 +1135,9 @@ class Grid extends Component {
             },100)
             // move back and forth
             function handleIndexValue(){
+                if(that.state.cancelSlide){
+                    return
+                }
                 if(sliderDiff() > 0){
                     that.setState({
                         sliderIndex: that.state.sliderIndex + 1
@@ -1147,6 +1152,11 @@ class Grid extends Component {
                 console.log('index', that.state.sliderIndex)
             }
             function moveDriver(){
+                // when checkbox in toggleStartCheckbox cancel here
+                if(that.state.cancelSlide){
+                    console.log('CANCEL')
+                    return
+                }
                 // if zero cannot movebackwards
                 console.log('state',that.state.finalSliderCoords)
                 if(!that.state.slideIndex){
@@ -1366,6 +1376,7 @@ class Grid extends Component {
             }
     }
     toggleStartCheckbox(){
+
         this.state.iconStartAtfirstStop = !this.state.iconStartAtfirstStop
         let setSliderCoords
         let tempSliderIndex
@@ -1384,7 +1395,7 @@ class Grid extends Component {
             }, "checkbox")
         } else {
             // if at first stop, only allow slider from there
-            setSliderCoords = this.state.sliderSlicedChunk.concat(this.state.sliderCoordsArrs).flat()
+            setSliderCoords = this.state.sliderSlicedChunk.concat(this.state.sliderCoordsArrs)
             console.log('slider', this.state.sliderCoordsArrs)
             tempSliderIndex = 0
             this.updateDriverWithCoords({
@@ -1394,18 +1405,20 @@ class Grid extends Component {
         }
 
 
-        this.emptyFinalSliderArr()
         this.setState({
+            cancelSlide: true,
             iconStartAtfirstStop: this.state.iconStartAtfirstStop,
             sliderCoordsArrs: setSliderCoords,
-            sliderIndex: tempSliderIndex
+            sliderIndex: tempSliderIndex,
+            // flatten array to remove/add coords when clicked
+            finalSliderCoords: setSliderCoords.flat()
         })
         // console.log(this.state.finalSliderCoords)
     }
     // buildFinalSliderArr(arrs){
     //
     // }
-    // empty the flatten array on each click - it's rebuilt inside handleSliderChange
+    // empty the flatten array on each click - it's rebuilt inside iderChange
     emptyFinalSliderArr(){
         // if arr as len, empty it
         if(this.state.finalSliderCoords.lenght){

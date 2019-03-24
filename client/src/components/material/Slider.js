@@ -15,7 +15,7 @@ const styles = {
 
 class SimpleSlider extends React.Component {
   state = {
-    value:0,
+    value:200,
   };
 
   handleChange = (event, value) => {
