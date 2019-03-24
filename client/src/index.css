@@ -173,9 +173,21 @@ code {
 	display: flex;
 }
 
-.material-form:nth-of-type(1) {
+.material-form[name="driver-form"] {
 	justify-content: space-around;
 	width: 100%;
+}
+.material-form[name="graph-size"] {
+    border-left:black 1px solid;
+    align-items: center;
+	justify-content: space-around;
+}
+.material-form [class*="textField"]{
+    width: 100px;
+}
+#graph-size-label{
+    position: relative;
+    top: -24px;
 }
 
 .legs-container {

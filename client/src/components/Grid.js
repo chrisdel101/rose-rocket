@@ -10,11 +10,13 @@ import Snackbar from './material/Snackbar'
 import Slider from './material/Slider'
 import Checkbox from './material/Checkbox'
 import utils from './grid_utils'
+import MaterialForm from './material/MaterialForm'
 
 class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+            defaultGraphSize: {"x":50, "y":50},
             cancelSlide: false,
             sliderSlicedChunk: [],
             previousXSlideCoord: {x: 0},
@@ -59,7 +61,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 1}, (v, i) => i),
+            boxesToRender: Array.from({length: 1000}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -1044,11 +1046,20 @@ class Grid extends Component {
                             <Slider
                                 label="Driver Position"
                                 onChange={this.handleSliderChange.bind(this)}/>
+
                             <Checkbox
                                 value="checkedC"
                                 name="icon-start"
                                 label="Begin at stop 1"
                                 onChange={this.handleChange.bind(this)}/>
+                            <MaterialForm
+                                graphSize={true}
+                                onChange={this.handleChange.bind(this)}
+                                onSubmit={this.handleFormSubmit}
+                                values={this.state.defaultGraphSize}
+                                formname="graph-size"
+                                buttonsize="small"
+                            />
                         </div>
                         <Tabs
                             onChange={this.handleChange.bind(this)}
