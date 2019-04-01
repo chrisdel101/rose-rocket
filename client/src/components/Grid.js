@@ -16,7 +16,7 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            setGraphSize: {"x":"50", "x":"50"},
+            setGraphSize: {"x":"50", "y":"50"},
             storeGraphSize: this.setGraphSize,
             cancelSlide: false,
             sliderSlicedChunk: [],
@@ -28,7 +28,7 @@ class Grid extends Component {
             sliderCoordsArrs: [],
             utilsTop: '',
             colors: ['red', 'Orange', 'DodgerBlue', 'MediumSeaGreen', 'Violet','SlateBlue', 'Tomato'],
-            floatToggle: true,
+            floatToggle: false,
             showStopNames: false,
             snackbarOpen: false,
             allColorsCounter: 0,
@@ -62,7 +62,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 1}, (v, i) => i),
+            boxesToRender: Array.from({length: 100}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -78,10 +78,24 @@ class Grid extends Component {
             }
 		};
 
-        this.ange = this.handleChange.bind(this);
+        // this.ange = this.handleChange.bind(this);
 
 
 	}
+    createGraph(){
+        let that = this
+        // take state of graph and multiple to get num
+        let cells = parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y)
+        console.log(cells)
+            that.setState({
+                boxesToRender:Array.from({length: cells}, (v, i) => i)
+            })
+            let root = document.documentElement;
+            root.style.setProperty('--graph-size-x',  this.state.setGraphSize.x);
+            root.style.setProperty('--graph-size-y', this.state.setGraphSize.y);
+            // console.log(root.style)
+
+    }
     // takes and x/y and returns px to moveutils._convertToPixels(x,y){
     //     if(!x){
     //         x = 0
@@ -1002,6 +1016,7 @@ class Grid extends Component {
 
     }
     handleStyle(){
+        // set to false temorarily
         if(this.state.floatToggle){
             if(this.state.utilsTop){
                 return {
@@ -1474,8 +1489,9 @@ class Grid extends Component {
 
     componentDidMount() {
         let that = this
-
+        this.createGraph()
         this.scrollToBottom()
+        // make scroll to the correct part of screen
         let utils = document.querySelector('.utils-container')
         let grid = document.querySelector('.grid-container')
         let utilsTop
