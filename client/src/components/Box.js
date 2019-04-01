@@ -44,7 +44,7 @@ class Box extends React.Component {
             break
           default:
             // on first render just run markup
-            result = <this.BoxMarkup key={i} />
+            result = <this.BoxMarkup key={i} id={i}/>
             break
         }
         return result
@@ -79,14 +79,14 @@ class Box extends React.Component {
         return false
       return true
     })();
-    return <this.BoxMarkup hasStopColor={hasStopColor} key={i} />
+    return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
   }
   allColorsRemoveLogic(i) {
     let { stopsColor } = this.props
     let hasStopColor = (() => {
       if (stopsColor && stopsColor.includes(i)) return false
     })();
-    return <this.BoxMarkup hasStopColor={hasStopColor} key={i} />
+    return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
   }
   legColorsAddLogic(i) {
     let { legsColor } = this.props
@@ -96,7 +96,7 @@ class Box extends React.Component {
         return false
       return true
     })();
-    return <this.BoxMarkup hasLegColor={hasLegColor} key={i} />
+    return <this.BoxMarkup hasLegColor={hasLegColor} key={i} id={i} />
   }
   legColorsRemoveLogic(i) {
     let { legsColor } = this.props
@@ -104,7 +104,7 @@ class Box extends React.Component {
     let hasLegColor = (() => {
       if (legsColor && legsColor.includes(i)) return false;
   })();
-    return <this.BoxMarkup hasLegColor={hasLegColor} key={i} />
+    return <this.BoxMarkup hasLegColor={hasLegColor} key={i} id={i} />
   }
   completedColorsAddLogic(i) {
     let { completeColor } = this.props
@@ -113,19 +113,22 @@ class Box extends React.Component {
         return false
       return true
     })();
-    return <this.BoxMarkup hasCompletionColor={hasCompletionColor} key={i} />
+    return <this.BoxMarkup hasCompletionColor={hasCompletionColor} key={i} id={i} />
   }
   completedColorsRemoveLogic(i) {
     let { completeColor } = this.props
     let hasCompletionColor = (() => {
       if (completeColor && completeColor.includes(i)) return false;
     })();
-    return <this.BoxMarkup hasCompletionColor={hasCompletionColor} key={i} />
+    return <this.BoxMarkup hasCompletionColor={hasCompletionColor} key={i} id={i} />
   }
 
   BoxMarkup(input) {
-    return (
+      let idStr = `id${input.id}`
+      return (
       <div
+        id={idStr}
+        key={input.id}
         className={`box ${input.hasStopColor ? `stop-color${this.props.selectedDriver}` : ""} ${
           input.hasLegColor ? `leg-color${this.props.selectedDriver}` : ""
         } ${input.hasCompletionColor ? `complete-color${this.props.selectedDriver}` : ""}`}
