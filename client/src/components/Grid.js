@@ -17,7 +17,7 @@ class Grid extends Component {
 		super(props);
 		this.state = {
             setGraphSize: {"x":"50", "y":"50"},
-            storeGraphSize: this.setGraphSize,
+            storeGraphSize: {"x":"50", "y":"50"},
             cancelSlide: false,
             sliderSlicedChunk: [],
             previousXSlideCoord: {x: 0},
@@ -86,14 +86,21 @@ class Grid extends Component {
         let that = this
         // take state of graph and multiple to get num
         let cells = parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y)
+        if(!cells){
+            console.error('No cell values')
+            return
+        }
         console.log(cells)
-            that.setState({
-                boxesToRender:Array.from({length: cells}, (v, i) => i)
-            })
+        that.setState({
+            boxesToRender:Array.from({length: cells}, (v, i) => i)
+        })
+        setCSSvars()
+
+        function setCSSvars(){
             let root = document.documentElement;
-            root.style.setProperty('--graph-size-x',  this.state.setGraphSize.x);
-            root.style.setProperty('--graph-size-y', this.state.setGraphSize.y);
-            // console.log(root.style)
+            root.style.setProperty('--graph-size-x',  that.state.setGraphSize.x);
+            root.style.setProperty('--graph-size-y', that.state.setGraphSize.y);
+        }
 
     }
     // takes and x/y and returns px to moveutils._convertToPixels(x,y){
@@ -1356,7 +1363,8 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        console.log(evt.target.value)
+        // console.log(evt.target.value)
+
         // to filter out undefined errors
             if(evt.target.name === 'x' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
             let xVal = evt.target.value
@@ -1366,6 +1374,7 @@ class Grid extends Component {
                     x: xVal
                 }
             }))
+            console.log(this.state.storeGraphSize)
             } else if(evt.target.name === 'y' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
                 let yVal = evt.target.value
                 this.setState(prevState => ({
@@ -1374,6 +1383,7 @@ class Grid extends Component {
                         y: yVal
                     }
                 }))
+                console.log(this.state.storeGraphSize)
             } else if(evt.target.name === 'x' && !evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
 
                 this.setState({
@@ -1784,14 +1794,18 @@ class Grid extends Component {
     }
     handleFormSubmit(event) {
         event.preventDefault();
-        // console.log(this.state.driversArr)
         // console.log(this.state.selectedDriverIndex)
-
+        let that = this
         if(event.target.name === 'graph-size'){
+            console.log(this.state.storeGraphSize)
             this.setState({
                 setGraphSize: this.state.storeGraphSize
             })
-            return
+            setTimeout(function(){
+                console.log(that.state.setGraphSize)
+                that.createGraph()
+                return
+            },100)
         }
         let currentDriver = this.state.driversArr[this.state.selectedDriverIndex]
                 // update coords
