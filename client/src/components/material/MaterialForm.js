@@ -109,10 +109,10 @@ class MaterialForm extends React.Component {
       }
   }
   render() {
-      console.log(this.props)
+      // console.log(this.props)
     const { classes } = this.props;
     return (
-      <form className={`${classes.container} material-form`} noValidate autoComplete="off" name={this.state.formName} onSubmit={(ev) => this.props.onSubmit(ev)}>
+      <form className={`${classes.container} ${this.props.addedClass} material-form`} noValidate autoComplete="off" name={this.state.formName} onSubmit={(ev) => this.props.onSubmit(ev)}>
         {this.renderFormType(this.props, classes)}
              <MaterialButton size={this.props.buttonsize} color="primary" type="primary-button" text="Submit" buttonNumber={3}/>
       </form>

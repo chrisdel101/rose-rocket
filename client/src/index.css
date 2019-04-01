@@ -181,6 +181,7 @@ code {
     border-left:black 1px solid;
     align-items: center;
 	justify-content: space-around;
+    padding-left: 10px;
 }
 .material-form [class*="textField"]{
     width: 100px;

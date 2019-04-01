@@ -16,7 +16,8 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            defaultGraphSize: {"x":50, "y":50},
+            setGraphSize: {"x":"50", "x":"50"},
+            storeGraphSize: this.setGraphSize,
             cancelSlide: false,
             sliderSlicedChunk: [],
             previousXSlideCoord: {x: 0},
@@ -61,7 +62,7 @@ class Grid extends Component {
             previousLegY:0,
             partialLegStartCoords: "",
             partialLegEndCoords: "",
-            boxesToRender: Array.from({length: 1000}, (v, i) => i),
+            boxesToRender: Array.from({length: 1}, (v, i) => i),
             holdAllStopColorIndexes: [],
             holdAllLegColorArrs: [],
             holdingCompletedArrs: [],
@@ -77,7 +78,7 @@ class Grid extends Component {
             }
 		};
 
-        this.handleChange = this.handleChange.bind(this);
+        this.ange = this.handleChange.bind(this);
 
 
 	}
@@ -1055,9 +1056,10 @@ class Grid extends Component {
                             <MaterialForm
                                 graphSize={true}
                                 onChange={this.handleChange.bind(this)}
-                                onSubmit={this.handleFormSubmit}
-                                values={this.state.defaultGraphSize}
+                                onSubmit={this.handleFormSubmit.bind(this)}
+                                values={this.state.setGraphSize}
                                 formname="graph-size"
+                                addedClass="graph-size"
                                 buttonsize="small"
                             />
                         </div>
@@ -1339,13 +1341,30 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        // console.log(evt.target.name)
+        console.log(evt.target.value)
         // to filter out undefined errors
-            if(evt.target.name === 'x'){
+            if(evt.target.name === 'x' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
+            let xVal = evt.target.value
+            this.setState(prevState => ({
+                storeGraphSize: {
+                    ...prevState.storeGraphSize,
+                    x: xVal
+                }
+            }))
+            } else if(evt.target.name === 'y' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
+                let yVal = evt.target.value
+                this.setState(prevState => ({
+                    storeGraphSize: {
+                        ...prevState.storeGraphSize,
+                        y: yVal
+                    }
+                }))
+            } else if(evt.target.name === 'x' && !evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
+
                 this.setState({
                     driverFormX: evt.target.value
                 })
-            } else if(evt.target.name === 'y'){
+            } else if(evt.target.name === 'y' && !evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
                 this.setState({
                     driverFormY: evt.target.value,
                 })
@@ -1748,14 +1767,19 @@ class Grid extends Component {
 
     }
     handleFormSubmit(event) {
-        // console.log(event.target.name)
         event.preventDefault();
-        let currentDriver = this.state.driversArr[this.state.selectedDriverIndex]
         // console.log(this.state.driversArr)
         // console.log(this.state.selectedDriverIndex)
 
-        // update coords
-        //set driver to those
+        if(event.target.name === 'graph-size'){
+            this.setState({
+                setGraphSize: this.state.storeGraphSize
+            })
+            return
+        }
+        let currentDriver = this.state.driversArr[this.state.selectedDriverIndex]
+                // update coords
+                //set driver to those
             //UPDATE STATE DATA
             if(event.target.name === 'driver-dropdown' || event.target.name === 'color'){
                 this.onDropdownSubmit(event)
