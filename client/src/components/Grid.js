@@ -11,6 +11,7 @@ import Slider from './material/Slider'
 import Checkbox from './material/Checkbox'
 import utils from './grid_utils'
 import MaterialForm from './material/MaterialForm'
+import Modal from './material/Modal'
 
 class Grid extends Component {
 	constructor(props) {
@@ -1033,7 +1034,7 @@ class Grid extends Component {
                     <div className="grid">
                         {this.renderTrucks()}
 
-
+                        <Modal />
                         <Stop
                             coords={this.state.stopsDirsArr}
                             toggleStopNames={this.state.showStopNames}/>
@@ -1511,9 +1512,9 @@ class Grid extends Component {
             })
             // call these with the default driver on mount
             that.addNewDriver()
-            that.updateDriverWithCoords({x:0, y:0}, 'manual' )
+            // that.updateDriverWithCoords({x:0, y:0}, 'manual' )
             // that.updateDriverwithData(that.state.loadingDataArr[0])
-            that.colorCompleted(that.state.loadingDataArr[0].activeLegID, "coords")
+            // that.colorCompleted(that.state.loadingDataArr[0].activeLegID, "coords")
 
             // that.pleted(that.state.driverCoords.y)
             // console.log('state',that.state)
@@ -1551,22 +1552,7 @@ class Grid extends Component {
                     "y": 4
 
                 }],
-                stopsCopy: [{
-                    "name": "A",
-                    "x": 10,
-                    "y": 10
-                    },
-                    {
-                    "name": "B",
-                    "x": 20,
-                    "y": 20
-                    },
-                    {
-                    "name": "C",
-                    "x": 18,
-                    "y": 4
-
-                }]
+                stopsCopy: this.state.stops.slice()
             })
             this.legConstructor(this.state.stops)
 
@@ -1584,14 +1570,14 @@ class Grid extends Component {
         // make array of coords to move icon
         setTimeout(function(){
             // start at first stop
-            that.updateDriverWithCoords({
-                x: 0,
-                y: 0,
-            }, "checkbox")
+            // that.updateDriverWithCoords({
+            //     x: 0,
+            //     y: 0,
+            // }, "checkbox")
             // start from map beginng
             that.addStartStop()
             // make slider coords
-            console.log(this)
+
             that.state.stopsCopy.map((stop, index) => {
                 if(!that.state.stopsCopy[index + 1]) return
                 let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stopsCopy[index + 1])
@@ -1606,7 +1592,7 @@ class Grid extends Component {
                 sliderButton.classList.add("slider-button")
             }
         }
-        addElemClass()
+        // addElemClass()
 
     }
 
