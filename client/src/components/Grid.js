@@ -79,17 +79,7 @@ class Grid extends Component {
             }
 		};
 
-        // this.ange = this.handleChange.bind(this);
-
-
 	}
-    // takes an obj with x and y sizes
-    calcStartingCell(sizeObj){
-        // find the corner cell formula is (x * y) - x
-            let startingCellNum = (parseInt(sizeObj.x) * parseInt(sizeObj.y)) - parseInt(sizeObj.x)
-            this.setState({startingCellNumAll: startingCellNum})
-            // console.log(startingCellNum)
-    }
     createGraph(){
         let that = this
         // take state of graph and multiple to get num
@@ -110,9 +100,11 @@ class Grid extends Component {
             root.style.setProperty('--graph-size-y', that.state.setGraphSize.y);
         }
         setTimeout(function(){
-            that.calcStartingCell(that.state.setGraphSize)
+            that.setState({
+                startingCellNumAll: utils._calcStartingCell(that.state.setGraphSize)
+            })
             that.calcRowVariaion()
-        })
+        },200)
 
     }
     // takes coords and type - needs access to state
@@ -144,15 +136,6 @@ class Grid extends Component {
         }
 
     }
-    // takes 2 objs of coords and determines the diff
-    _absDiff(firstCoordsObj, secondCoordsObj){
-        let xDiff = Math.abs(firstCoordsObj.x - secondCoordsObj.x)
-        let yDiff = Math.abs(firstCoordsObj.y - secondCoordsObj.y)
-        return {
-            xDiff,
-            yDiff
-        }
-    }
     // take amount in leg with a percent - returns num to move out of total leg number
     _percentToCoords(diffObj, percent){
         let xNum = Math.floor((diffObj.xDiff * 0.01) * percent)
@@ -160,41 +143,6 @@ class Grid extends Component {
 
         return {xNum, yNum}
 
-    }
-    // takes 3 objs - deterimine if driver moves coords up/down
-    _getDriverCoords(firstLegStopObj, lastLegStopObj, numToMoveObj ){
-        let x1 = firstLegStopObj.x
-        let x2 = lastLegStopObj.x
-        let y1 = firstLegStopObj.y
-        let y2 = lastLegStopObj.y
-        let xNum = numToMoveObj.xNum
-        let yNum = numToMoveObj.yNum
-        // if x moves up, add
-        let xToMove
-        let yToMove
-        if(x1 < x2){
-            // console.log(firstStopOfLeg[0].x)
-            // console.log(lastStopOfLeg[0].x)
-            xToMove = x1 + xNum
-            // console.log(xToMove)
-        } else if(x1 >= x2){
-            xToMove = x1 - xNum
-        } else {
-            console.error("error in driver movement")
-        }
-        if(y1 < y2){
-            yToMove = y1 + yNum
-        } else if(y1 >= y2){
-            yToMove = y1 - yNum
-        } else {
-            console.error("error in driver movement")
-        }
-        console.log('x', xToMove)
-        console.log('y', yToMove)
-        return {
-            x: xToMove,
-            y: yToMove
-        }
     }
     // update createCounter by 1
     increaseDriverIdindex(){
@@ -298,16 +246,16 @@ class Grid extends Component {
             return stop.name === secondLetter
         })
         //calc abs distance bwt coords  - coords for first and last
-        let diffObj = this._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
+        let diffObj = utils._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
         // console.log(diffObj)
 
         let progress = parseInt(driverData.legProgress)
         // takes number of moves and percent - returns number of moves that is
-        let numToMove = this._percentToCoords(diffObj, progress)
+        let numToMove = utils._percentToCoords(diffObj, progress)
         // takes coords for first, last and how many -returns up / down & COORDS
-        let { x, y } = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
+        let { x, y } = utils._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
         console.log(x, y)
-        let moves = this._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
+        let moves = utils._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
         // convert the number to move to pixels
         let driverProgressinPixels = utils._convertToPixels(x, y)
         console.log(driverProgressinPixels)
@@ -433,12 +381,12 @@ class Grid extends Component {
         // console.log(stopStartCoords)
         // console.log(stopEndCoords)
         // get diff to get number of moves
-        // let diffObj = this._absDiff(stopStartCoords, stopEndCoords)
+        // let diffObj = utils._absDiff(stopStartCoords, stopEndCoords)
         // console.log(diff)
         // percent driver is complete of leg
         // let progress = parseInt(this.state.driver.legProgress)
         // // takes number of moves and percent - returns number of moves that is partial of leg in coords
-        // let numToMove = this._percentToCoords(diffObj, progress)
+        // let numToMove = utils._percentToCoords(diffObj, progress)
         // console.log('num to move', numToMove)
         // console.log(this.state.legStartEndCellNums)
         // cell nums
@@ -839,104 +787,6 @@ class Grid extends Component {
                 // console.log('return firstStop', firstStop)
         return firstStop
     }
-    // takes first stop obj, driver coords obj, and abs diff of a single stops axis
-    _findPercentFromDriverCoords(firstStop, driverCoords, yAbsDiff, xAbsDiff){
-        let x1 = parseInt(firstStop.x)
-        let y1 = parseInt(firstStop.y)
-        let x2 = parseInt(driverCoords.x)
-        let y2 = parseInt(driverCoords.y)
-        // console.log(driverCoords)
-        // console.log('1', x1)
-        // console.log('2', y1)
-        // console.log('3', x2)
-        // console.log('4', y2)
-        let xDiff
-        let yDiff
-        // console.log('xAbsDiff', xAbsDiff)
-        // console.log('yAbsDiff', yAbsDiff)
-        // find number moved from last stop
-        if(x1 < x2){
-            // console.log('run 1')
-            // console.log(firstStopOfLeg[0].x)
-            // console.log(lastStopOfLeg[0].x)
-            xDiff = x2 - x1
-            // console.log(xToMove)
-        } else if(x1 > x2){
-            // console.log('run 2')
-            xDiff = x1 - x2
-        }  else if(x1 === x2){
-            xDiff = 0
-            // if it's first stop with no second stop
-        // } else if(!x2 && !y2)
-        } else {
-            console.error("error in driver movement")
-        }
-        if(y1 < y2){
-            // console.log('run 1')
-            yDiff = y2 - y1
-        } else if(y1 > y2){
-            // console.log('run 2')
-            yDiff = y1 - y2
-        } else if(y1 === y2){
-            yDiff = 0
-        } else {
-            console.error("error in driver movement")
-        }
-        // console.log('xDiff', xDiff)
-        // console.log('yDiff', yDiff)
-        // divide number moved so far in leg by total number in leg
-        let xPercent
-        let yPercent
-        // check for zero vals
-        if(xDiff === 0){
-            xPercent = 0
-        }
-        if(yDiff === 0){
-            yPercent = 0
-        }
-        if(xDiff && xDiff !== 0){
-            // console.log('xdiff', xDiff)
-            xPercent = xDiff / xAbsDiff
-        }
-        if(yDiff && yDiff !== 0){
-            // console.log('yDiff',yDiff)
-            yPercent = yDiff / yAbsDiff
-        }
-        let finalPercent
-        // console.log(xPercent)
-        // console.log(yPercent)
-        // if one val is missing use the other alone
-        if(!xPercent || !yPercent){
-            if(xPercent){
-                return finalPercent = xPercent * 100
-            } else if(yPercent){
-                return finalPercent = yPercent * 100
-            }
-        }
-        // it both are zero then zero percent
-        if(xPercent === 0 && yPercent === 0){
-            return finalPercent = 0
-        }
-
-        // console.log('x%',xPercent)
-        // console.log('y%',yPercent)
-        //use the larger leg to updaet val - TODO: make both percents equal so driver fits back into grid
-        if(xAbsDiff > yAbsDiff){
-            return finalPercent = xPercent
-        } else if(xAbsDiff < yAbsDiff){
-            return finalPercent = yPercent
-            // if equal use the larger percent
-        } else if(xAbsDiff === yAbsDiff){
-            if(xPercent >= yPercent){
-                return finalPercent = xPercent
-            } else {
-                return finalPercent = yPercent
-            }
-        } else {
-            console.error('An error occured in the percentage calcs')
-            return
-        }
-    }
     // takes driver coords from state and sets new progress and leg
     updateDriverData(){
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
@@ -950,10 +800,10 @@ class Grid extends Component {
         }
         let firstStopIndex = this.state.stops.indexOf(firstStop)
         let secondStop = this.state.stops[firstStopIndex+1]
-        let diff = this._absDiff(firstStop, secondStop)
+        let diff = utils._absDiff(firstStop, secondStop)
         // console.log(selectedDriver.driverCoords)
         // run once for x and for y
-        let percent = this._findPercentFromDriverCoords(firstStop, selectedDriver.driverCoords, diff.yDiff, diff.xDiff)
+        let percent = utils._findPercentFromDriverCoords(firstStop, selectedDriver.driverCoords, diff.yDiff, diff.xDiff)
         // /console.log('percent', percent)
         // console.log(firstStop.name)
         let currentLeg = this.state.legs.filter(leg => {
@@ -1485,7 +1335,7 @@ class Grid extends Component {
             stopsCopy: arr
         })
     }
-
+    handleModal(){}
     componentDidMount() {
         let that = this
         // create graph size based on input
