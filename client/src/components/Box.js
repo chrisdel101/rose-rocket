@@ -124,13 +124,16 @@ class Box extends React.Component {
   }
 
   BoxMarkup(input) {
+      console.log(input)
       let idStr = `id${input.id}`
+      // console.log('input', input.hasStopColor)
+      // console.log('input', this.props)
       return (
       <div
         id={idStr}
         key={input.id}
         className={`box ${input.hasStopColor ? `stop-color${this.props.selectedDriver}` : ""} ${
-          input.hasLegColor ? `leg-color${this.props.selectedDriver}` : ""
+          input.hasLegColor ? `leg-color` : ""
         } ${input.hasCompletionColor ? `complete-color${this.props.selectedDriver}` : ""}`}
       />
     )
@@ -187,7 +190,7 @@ class Box extends React.Component {
     }
   }
   render() {
-    // console.log(this.props.selectedDriver)
+
     if (this.props.toRender && this.props.toRender.length) {
       return <React.Fragment>{this.renderBoxes()}</React.Fragment>
     } else {

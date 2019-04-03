@@ -1274,7 +1274,7 @@ class Grid extends Component {
             event.stopPropagation()
                 if(event.target.dataset.number === "1"){
                     this.colorAllStops()
-                    console.log(this.state.allColorsCounter)
+                    // console.log(this.state.allColorsCounter)
                     this.setState({
                         allColorsCounter: this.state.allColorsCounter + 1,
                         colorType: "all"
@@ -1548,8 +1548,8 @@ class Grid extends Component {
                     },
                     {
                     "name": "C",
-                    "x": 15,
-                    "y": 15
+                    "x": 18,
+                    "y": 4
 
                 }],
                 stopsCopy: res.stops.slice()
@@ -1912,13 +1912,13 @@ class Grid extends Component {
         return index
     }
     colorLeg(input){
-        // console.log(this.state.finalLegColorObj)
+        console.log(this.state.finalLegColorObj)
         let that = this
         // - get val from Dropdown-
         // change it to an index
 
         let index = this._legIndex(input)
-        // console.log('i', index)
+        console.log('i', index)
         // get leg using index out of array
         let leg = this.state.holdAllLegColorArrs[index]
         // set state on child to change the color
