@@ -124,7 +124,6 @@ class Box extends React.Component {
   }
 
   BoxMarkup(input) {
-      console.log(input)
       let idStr = `id${input.id}`
       // console.log('input', input.hasStopColor)
       // console.log('input', this.props)
@@ -133,7 +132,7 @@ class Box extends React.Component {
         id={idStr}
         key={input.id}
         className={`box ${input.hasStopColor ? `stop-color${this.props.selectedDriver}` : ""} ${
-          input.hasLegColor ? `leg-color` : ""
+          input.hasLegColor ? `leg-color${this.props.selectedDriver}` : ""
         } ${input.hasCompletionColor ? `complete-color${this.props.selectedDriver}` : ""}`}
       />
     )

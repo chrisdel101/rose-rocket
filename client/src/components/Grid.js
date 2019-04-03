@@ -87,7 +87,6 @@ class Grid extends Component {
         // find the corner cell formula is (x * y) - x
             let startingCellNum = (parseInt(sizeObj.x) * parseInt(sizeObj.y)) - parseInt(sizeObj.x)
             this.setState({startingCellNumAll: startingCellNum})
-            console.log('staring cell', this.state.startingCellNumAll)
             // console.log(startingCellNum)
     }
     createGraph(){
@@ -413,11 +412,11 @@ class Grid extends Component {
         // console.log('currnt arr', currentLegArr)
         // get current and next leg json info
         let thisLeg = this.state.legs[dataIndex]
-        console.log(thisLeg)
+        // console.log(thisLeg)
         let legFirstStop = this.state.stops.filter(stop => {
             return stop.name === thisLeg.startStop
         })
-        console.log(legFirstStop)
+        // console.log(legFirstStop)
         let legLastStop = this.state.stops.filter(stop => {
             return stop.name === thisLeg.endStop
         })
@@ -491,8 +490,8 @@ class Grid extends Component {
     }
     colorGrid(x, y, type){
 
-        console.log(this.state.previousStopX)
-        console.log(this.state.previousStopY)
+        // console.log(this.state.previousStopX)
+        // console.log(this.state.previousStopY)
         // calc num of units to move based on prev position
         let tempCellNumsArr = []
 
@@ -509,8 +508,8 @@ class Grid extends Component {
         tempX = this._numToMove(tempX, tempY, 'stop').tempX
         tempY = this._numToMove(tempX, tempY, 'stop').tempY
         // tempY = this._numToMove(tempX, tempY, 'stop').moveY
-        console.log('tempx', tempX)
-        console.log('tempy', tempY)
+        // console.log('tempx', tempX)
+        // console.log('tempy', tempY)
 
         // on first move on grid only - for bottom corner
         if(this.state.previousStopX === 0 && this.state.previousStopY  === 0){
@@ -564,7 +563,7 @@ class Grid extends Component {
                 }
             }
         }
-        console.log(tempCellNumsArr)
+        // console.log(tempCellNumsArr)
         // holdAllStopColorIndexes - cells for color or entire plots - spread out
         if(type === 'all'){
 
@@ -1504,7 +1503,7 @@ class Grid extends Component {
 
 
         setTimeout(function(){
-            console.log(that.state.legs)
+            // console.log(that.state.legs)
             that.state.stops.map((stop, i) => {
                     that.legStartEnd(stop.x, stop.y,'all')
                     that.colorGrid(stop.x, stop.y, 'all')
@@ -1552,7 +1551,22 @@ class Grid extends Component {
                     "y": 4
 
                 }],
-                stopsCopy: res.stops.slice()
+                stopsCopy: [{
+                    "name": "A",
+                    "x": 10,
+                    "y": 10
+                    },
+                    {
+                    "name": "B",
+                    "x": 20,
+                    "y": 20
+                    },
+                    {
+                    "name": "C",
+                    "x": 18,
+                    "y": 4
+
+                }]
             })
             this.legConstructor(this.state.stops)
 
@@ -1577,10 +1591,11 @@ class Grid extends Component {
             // start from map beginng
             that.addStartStop()
             // make slider coords
+            console.log(this)
             that.state.stopsCopy.map((stop, index) => {
                 if(!that.state.stopsCopy[index + 1]) return
                 let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stopsCopy[index + 1])
-                // console.log(xSlideCoord, ySlideCoord)
+                console.log(xSlideCoord, ySlideCoord)
                 that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "stop-coords")
             })
         },500)
@@ -1865,7 +1880,7 @@ class Grid extends Component {
     }
 
     _legIndex(input){
-        console.log('i', input)
+        // console.log('i', input)
         let index
         switch(input){
             // pre-stop
