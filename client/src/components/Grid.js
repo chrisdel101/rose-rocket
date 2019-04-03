@@ -16,8 +16,8 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            setGraphSize: {"x":"50", "y":"50"},
-            storeGraphSize: {"x":"50", "y":"50"},
+            setGraphSize: {"x":"20", "y":"20"},
+            storeGraphSize: {"x":"20", "y":"20"},
             cancelSlide: false,
             sliderSlicedChunk: [],
             previousXSlideCoord: {x: 0},
@@ -53,7 +53,7 @@ class Grid extends Component {
             driverLegStart: "",
             driverCoords: "",
             positionSelect: "coords",
-            startingCellNumAll: 39800,
+            startingCellNumAll: 0,
             startingCellNumPartial: "",
             previousLegEndCell:0,
             previousStopX: 0,
@@ -82,6 +82,14 @@ class Grid extends Component {
 
 
 	}
+    // takes an obj with x and y sizes
+    calcStartingCell(sizeObj){
+        // find the corner cell formula is (x * y) - x
+            let startingCellNum = (parseInt(sizeObj.x) * parseInt(sizeObj.y)) - parseInt(sizeObj.x)
+            this.setState({startingCellNumAll: startingCellNum})
+            console.log('staring cell', this.state.startingCellNumAll)
+            // console.log(startingCellNum)
+    }
     createGraph(){
         let that = this
         // take state of graph and multiple to get num
@@ -90,54 +98,23 @@ class Grid extends Component {
             console.error('No cell values')
             return
         }
-        console.log(cells)
+        // console.log(cells)
         that.setState({
             boxesToRender:Array.from({length: cells}, (v, i) => i)
         })
         setCSSvars()
-
+        // sets vals in css to grid size
         function setCSSvars(){
             let root = document.documentElement;
             root.style.setProperty('--graph-size-x',  that.state.setGraphSize.x);
             root.style.setProperty('--graph-size-y', that.state.setGraphSize.y);
         }
+        setTimeout(function(){
+            that.calcStartingCell(that.state.setGraphSize)
+            that.calcRowVariaion()
+        })
 
     }
-    // takes and x/y and returns px to moveutils._convertToPixels(x,y){
-    //     if(!x){
-    //         x = 0
-    //     }
-    //     if(!y){
-    //         y =0
-    //     }
-    //     let totalX
-    //     let totalY
-    //     // first 10 cells = 100px
-    //     // after that everythig 11px
-    //     // - minus cells add 100px
-    //     // - rest * 11 then sum
-    //     if(x > 10){
-    //         x = x - 10
-    //         totalX = 100 + (x * 11)
-    //     } else {
-    //         totalX = x * 10
-    //     }
-    //     if(y > 10){
-    //         y = y - 10
-    //         totalY = 100 + (y * 11)
-    //     } else {
-    //         totalY = y * 10
-    //     }
-    //     let moveX = parseInt(totalX)
-    //     let moveY = parseInt(totalY)
-    //     // console.log('mx', moveX)
-    //     // console.log('my', moveY)
-    //     let coordsObj = {
-    //         moveX: moveX,
-    //         moveY: moveY
-    //     }
-    //     return coordsObj
-    // }
     // takes coords and type - needs access to state
     _numToMove(x,y, type){
         if(type === 'stop'){
@@ -415,9 +392,10 @@ class Grid extends Component {
     colorCompleted(legID, type){
         let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
     	var arr = this.state.legs.filter(leg => {
+            // console.log(leg.legID)
     		return leg.legID === legID
     	})
-        // console.log(selectedDriver)
+
         //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
         // console.log(holdingArrIndex)
@@ -435,10 +413,11 @@ class Grid extends Component {
         // console.log('currnt arr', currentLegArr)
         // get current and next leg json info
         let thisLeg = this.state.legs[dataIndex]
-
+        console.log(thisLeg)
         let legFirstStop = this.state.stops.filter(stop => {
             return stop.name === thisLeg.startStop
         })
+        console.log(legFirstStop)
         let legLastStop = this.state.stops.filter(stop => {
             return stop.name === thisLeg.endStop
         })
@@ -502,10 +481,18 @@ class Grid extends Component {
         }
 
     }
+    // calc num of cells to vertial based on grid size
+    calcRowVariaion(){
+        // formula - move up/down is the same value as x and y
+        this.setState({
+            moveRowCells: parseInt(this.state.setGraphSize.x)
+        })
+
+    }
     colorGrid(x, y, type){
 
-        // console.log(this.state.previousStopX)
-        // console.log(this.state.previousStopY)
+        console.log(this.state.previousStopX)
+        console.log(this.state.previousStopY)
         // calc num of units to move based on prev position
         let tempCellNumsArr = []
 
@@ -522,8 +509,8 @@ class Grid extends Component {
         tempX = this._numToMove(tempX, tempY, 'stop').tempX
         tempY = this._numToMove(tempX, tempY, 'stop').tempY
         // tempY = this._numToMove(tempX, tempY, 'stop').moveY
-        // console.log('tempx', tempX)
-        // console.log('tempy', tempY)
+        console.log('tempx', tempX)
+        console.log('tempy', tempY)
 
         // on first move on grid only - for bottom corner
         if(this.state.previousStopX === 0 && this.state.previousStopY  === 0){
@@ -535,10 +522,11 @@ class Grid extends Component {
         while(tempX && tempY){
             // if last was les than current- do this
             if(this.state.previousStopY < y){
-                tempCellNum = tempCellNum - 200
+                tempCellNum = tempCellNum - this.state.moveRowCells
                 tempCellNumsArr.push(tempCellNum)
+                // console.log('temp', tempCellNumsArr)
             } else if(this.state.previousStopY > y){
-                tempCellNum = tempCellNum + 200
+                tempCellNum = tempCellNum + this.state.moveRowCells
                 tempCellNumsArr.push(tempCellNum)
             }
             if(this.state.previousStopX < x){
@@ -559,11 +547,11 @@ class Grid extends Component {
         for (var i = 0; i < loopAxis; i++) {
             if(tempY){
                 if(this.state.previousStopY < y){
-                    tempCellNum = tempCellNum - 200
+                    tempCellNum = tempCellNum - this.state.moveRowCells
                     tempCellNumsArr.push(tempCellNum)
 
                 } else if(this.state.previousStopY > y){
-                    tempCellNum = tempCellNum + 200
+                    tempCellNum = tempCellNum + this.state.moveRowCells
                     tempCellNumsArr.push(tempCellNum)
                 }
             } else if(tempX){
@@ -576,9 +564,9 @@ class Grid extends Component {
                 }
             }
         }
+        console.log(tempCellNumsArr)
         // holdAllStopColorIndexes - cells for color or entire plots - spread out
         if(type === 'all'){
-            // console.log(tempCellNumsArr)
 
             this.setState({
                 previousStopX: x,
@@ -663,10 +651,10 @@ class Grid extends Component {
         while(tempX && tempY){
             // if last was les than current- do this
             if(this.state.previousLegY < y){
-                tempCellNum = tempCellNum - 200
+                tempCellNum = tempCellNum - this.state.moveRowCells
                 tempCellNumsArr.push(tempCellNum)
             } else if(this.state.previousLegY > y){
-                tempCellNum = tempCellNum + 200
+                tempCellNum = tempCellNum + this.state.moveRowCells
                 tempCellNumsArr.push(tempCellNum)
             }
             if(this.state.previousLegX < x){
@@ -688,12 +676,12 @@ class Grid extends Component {
             if(tempY){
 
                 if(this.state.previousLegY < y){
-                    tempCellNum = tempCellNum - 200
+                    tempCellNum = tempCellNum - this.state.moveRowCells
 
                     tempCellNumsArr.push(tempCellNum)
 
                 } else if(this.state.previousLegY > y){
-                    tempCellNum = tempCellNum + 200
+                    tempCellNum = tempCellNum + this.state.moveRowCells
                     tempCellNumsArr.push(tempCellNum)
                 }
             } else if(tempX){
@@ -774,7 +762,7 @@ class Grid extends Component {
             // console.log(this.state.finalStopColorArr)
         // on click push to child state
     }
-    // on click pass props to chilc
+    // on click pass props to child
     colorCompletedStops(){
             console.log(this.state.holdingCompletedArrs)
             let merged = [].concat.apply([], this.state.holdingCompletedArrs);
@@ -1286,7 +1274,7 @@ class Grid extends Component {
             event.stopPropagation()
                 if(event.target.dataset.number === "1"){
                     this.colorAllStops()
-                    // console.log(this.state.allColorsCounter)
+                    console.log(this.state.allColorsCounter)
                     this.setState({
                         allColorsCounter: this.state.allColorsCounter + 1,
                         colorType: "all"
@@ -1368,6 +1356,7 @@ class Grid extends Component {
         // to filter out undefined errors
             if(evt.target.name === 'x' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
             let xVal = evt.target.value
+            // onChange store the input sizes
             this.setState(prevState => ({
                 storeGraphSize: {
                     ...prevState.storeGraphSize,
@@ -1499,6 +1488,7 @@ class Grid extends Component {
 
     componentDidMount() {
         let that = this
+        // create graph size based on input
         this.createGraph()
         this.scrollToBottom()
         // make scroll to the correct part of screen
@@ -1514,7 +1504,7 @@ class Grid extends Component {
 
 
         setTimeout(function(){
-            // console.log(that.state.legs)
+            console.log(that.state.legs)
             that.state.stops.map((stop, i) => {
                     that.legStartEnd(stop.x, stop.y,'all')
                     that.colorGrid(stop.x, stop.y, 'all')
@@ -1543,18 +1533,39 @@ class Grid extends Component {
         .catch(err => console.log(err));
         this._callStops()
         .then(res => {
+            // temp stops
             this.setState({
-                stops: res.stops,
+                stops:
+                [{
+                    "name": "A",
+                    "x": 10,
+                    "y": 10
+                    },
+                    {
+                    "name": "B",
+                    "x": 20,
+                    "y": 20
+                    },
+                    {
+                    "name": "C",
+                    "x": 15,
+                    "y": 15
+
+                }],
                 stopsCopy: res.stops.slice()
             })
+            this.legConstructor(this.state.stops)
+
 
         })
         .catch(err => console.log(err));
-        this._callLegs()
-        .then(res => {
-            this.setState({ legs: res.legs })
-        })
-        .catch(err => console.log(err))
+        this.legConstructor(this.state.stops)
+
+        // this._callLegs()
+        // .then(res => {
+        //     this.setState({ legs: res.legs })
+        // })
+        // .catch(err => console.log(err))
 
         // make array of coords to move icon
         setTimeout(function(){
@@ -1796,6 +1807,7 @@ class Grid extends Component {
         event.preventDefault();
         // console.log(this.state.selectedDriverIndex)
         let that = this
+        // on submit use the stored sizes
         if(event.target.name === 'graph-size'){
             console.log(this.state.storeGraphSize)
             this.setState({
@@ -1853,6 +1865,7 @@ class Grid extends Component {
     }
 
     _legIndex(input){
+        console.log('i', input)
         let index
         switch(input){
             // pre-stop
@@ -1905,6 +1918,7 @@ class Grid extends Component {
         // change it to an index
 
         let index = this._legIndex(input)
+        // console.log('i', index)
         // get leg using index out of array
         let leg = this.state.holdAllLegColorArrs[index]
         // set state on child to change the color
@@ -1914,6 +1928,21 @@ class Grid extends Component {
             finalLegColorObj: legObj,
             legColorsCounter: this.state.legColorsCounter + 1,
             colorType: "leg"
+        })
+    }
+    // build legs out of stops
+    legConstructor(stops){
+        let legs = stops.map((stop, i) => {
+            if(!stops[i + 1]) return
+            return {
+                "startStop": stop.name,
+                "endStop": stops[i + 1].name,
+                "legID": `${stop.name}${stops[i + 1].name}`
+
+            }
+        }).filter(stop => stop)
+        this.setState({
+            legs: legs
         })
     }
 
