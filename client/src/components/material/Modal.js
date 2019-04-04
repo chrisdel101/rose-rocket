@@ -34,6 +34,7 @@ const styles = theme => ({
 class SimpleModal extends React.Component {
   state = {
     open: false,
+    that: this
   };
 
   handleOpen = () => {
@@ -43,6 +44,15 @@ class SimpleModal extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+  componentDidMount(){
+      let that = this
+      setTimeout(function(){
+          that.setState({
+              open:that.props.open
+          })
+
+          },1000)
+  }
 
   render() {
     const { classes } = this.props;
@@ -59,7 +69,7 @@ class SimpleModal extends React.Component {
         >
           <div style={getModalStyle()} className={classes.paper}>
             <Typography variant="h6" id="modal-title">
-              Text in a modal
+              Set your plot points
             </Typography>
             <Typography variant="subtitle1" id="simple-modal-description">
               Duis mollis, est non commodo luctus, nisi erat porttitor ligula.

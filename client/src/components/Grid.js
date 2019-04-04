@@ -17,6 +17,7 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+            modalState: false,
             setGraphSize: {"x":"20", "y":"20"},
             storeGraphSize: {"x":"20", "y":"20"},
             cancelSlide: false,
@@ -884,7 +885,7 @@ class Grid extends Component {
                     <div className="grid">
                         {this.renderTrucks()}
 
-                        <Modal />
+                        <Modal open={this.state.modalState}/>
                         <Stop
                             coords={this.state.stopsDirsArr}
                             toggleStopNames={this.state.showStopNames}/>
@@ -942,6 +943,13 @@ class Grid extends Component {
                 </div>
             </main>
         )
+    }
+    handleModal(){
+        this.state.modalState = !this.state.modalState
+        this.setState({
+            modalState: this.state.modalState
+        })
+        console.log(this.state.modalState)
     }
     handleSliderChange(evt){
         let that = this
@@ -1335,7 +1343,7 @@ class Grid extends Component {
             stopsCopy: arr
         })
     }
-    handleModal(){}
+
     componentDidMount() {
         let that = this
         // create graph size based on input
@@ -1351,7 +1359,7 @@ class Grid extends Component {
             })
         },500)
 
-
+        this.handleModal()
 
         setTimeout(function(){
             // console.log(that.state.legs)
