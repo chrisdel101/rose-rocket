@@ -885,7 +885,11 @@ class Grid extends Component {
                     <div className="grid">
                         {this.renderTrucks()}
 
-                        <Modal open={this.state.modalState}/>
+                        <Modal
+                            open={this.state.modalState}
+                            cells={parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y)}
+
+                            />
                         <Stop
                             coords={this.state.stopsDirsArr}
                             toggleStopNames={this.state.showStopNames}/>

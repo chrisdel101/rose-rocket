@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
+import Select from './Select'
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -34,7 +35,7 @@ const styles = theme => ({
 class SimpleModal extends React.Component {
   state = {
     open: false,
-    that: this
+    cells: ""
   };
 
   handleOpen = () => {
@@ -44,19 +45,25 @@ class SimpleModal extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+  makeRange(){
+    let num = this.props.cells
+    let arr = Array.from({length: num}, (v, i) => i)
+    this.setState({
+        cells: arr
+    })
+  }
   componentDidMount(){
+      this.makeRange()
       let that = this
       setTimeout(function(){
           that.setState({
               open:that.props.open
           })
-
           },1000)
   }
 
   render() {
     const { classes } = this.props;
-
     return (
       <div>
         <Typography gutterBottom>Click to get the full Modal experience!</Typography>
@@ -72,7 +79,9 @@ class SimpleModal extends React.Component {
               Set your plot points
             </Typography>
             <Typography variant="subtitle1" id="simple-modal-description">
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            <Select
+                cells={this.state.cells}
+                />
             </Typography>
             <SimpleModalWrapped />
           </div>
