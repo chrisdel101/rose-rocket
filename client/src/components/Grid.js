@@ -12,6 +12,7 @@ import Checkbox from './material/Checkbox'
 import utils from './grid_utils'
 import MaterialForm from './material/MaterialForm'
 import Modal from './material/Modal'
+import Card from './material/Card'
 
 class Grid extends Component {
 	constructor(props) {
@@ -20,6 +21,8 @@ class Grid extends Component {
             modalState: false,
             setGraphSize: {"x":"20", "y":"20"},
             storeGraphSize: {"x":"20", "y":"20"},
+            plotObjs:[],
+            tempPlotObj:{x:"",y:""},
             cancelSlide: false,
             sliderSlicedChunk: [],
             previousXSlideCoord: {x: 0},
@@ -886,9 +889,13 @@ class Grid extends Component {
                         {this.renderTrucks()}
 
                         <Modal
-                            open={this.state.modalState}
-                            cells={parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y)}
+                            setModalOpen={this.state.modalState}
+                            cells={Math.sqrt(parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y))}
+                            onChange={this.handleChange.bind(this)}
 
+                            />
+                        <Modal
+                            plotsModalOpen={this.state.plotObjs.length}
                             />
                         <Stop
                             coords={this.state.stopsDirsArr}
@@ -953,7 +960,7 @@ class Grid extends Component {
         this.setState({
             modalState: this.state.modalState
         })
-        console.log(this.state.modalState)
+        // console.log(this.state.modalState)
     }
     handleSliderChange(evt){
         let that = this
@@ -1214,6 +1221,7 @@ class Grid extends Component {
     // hold vals in input until next entered
     handleChange(evt) {
         // console.log(evt.target.value)
+        // console.log(evt.target.name)
 
         // to filter out undefined errors
             if(evt.target.name === 'x' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
@@ -1276,10 +1284,48 @@ class Grid extends Component {
                 })
             } else if(evt.target.name === "icon-start"){
                     this.toggleStartCheckbox()
-
-
-
+            // plot points from modal input
+            } else if(evt.target.name === "xSelect" || evt.target.name === "ySelect"){
+                if(evt.target.name === "xSelect"){
+                    this.setState(prevState => ({
+                        tempPlotObj: {
+                            ...prevState.tempPlotObj,
+                            x: evt.target.value
+                        }
+                    }))
+                    let that = this
+                    setTimeout(function(){
+                        that.setPlot(that.state.tempPlotObj)
+                    })
+                } else if(evt.target.name === "ySelect"){
+                    this.setState(prevState => ({
+                        tempPlotObj: {
+                            ...prevState.tempPlotObj,
+                            y: evt.target.value
+                        }
+                    }))
+                    let that = this
+                    setTimeout(function(){
+                        that.setPlot(that.state.tempPlotObj)
+                    })
+                }
             }
+    }
+    // set plot points from inputs in modal
+    setPlot(obj){
+        console.log(obj)
+        if(!obj.x || !obj.y){
+            console.error("Must have two plot points")
+            return
+        }
+        this.setState({
+            tempPlotObj: obj,
+            plotObjs: [...this.state.plotObjs, this.state.tempPlotObj],
+            tempPlotObj: ""
+        })
+    }
+    displayPlotPoints(){
+
     }
     toggleStartCheckbox(){
 

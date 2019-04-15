@@ -29,7 +29,8 @@ class SimpleSelect extends React.Component {
   state = {
     value: '',
     name: '',
-    labelWidth: 0,
+    xSelect: '',
+    ySelect: ''
   };
 
 
@@ -63,13 +64,14 @@ class SimpleSelect extends React.Component {
   handleChange = event => {
       console.log(event.target.name)
       console.log(event.target.value)
+      this.props.onChange(event)
     this.setState({ [event.target.name]: event.target.value });
 
   };
 
   render() {
     const { classes } = this.props;
-
+    // console.log(this.props.cells)
     return (
       <form className={classes.root} autoComplete="off">
         <FormControl className={`${classes.formControl} regular`}>
@@ -87,7 +89,7 @@ class SimpleSelect extends React.Component {
               <em>None</em>
             </MenuItem>
             { this.props.cells.map((cell,i) => {
-            return <MenuItem value={cell} key={i}>{cell}</MenuItem>
+            return <MenuItem value={cell+1} key={i}>{cell+1}</MenuItem>
                })
             }
 
@@ -108,7 +110,7 @@ class SimpleSelect extends React.Component {
               <em>None</em>
             </MenuItem>
             { this.props.cells.map((cell,i) => {
-            return <MenuItem value={cell} key={i}>{cell}</MenuItem>
+            return <MenuItem value={cell+1} key={i}>{cell+1}</MenuItem>
                })
             }
           </Select>

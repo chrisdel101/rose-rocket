@@ -20,6 +20,16 @@ function getModalStyle() {
     transform: `translate(-${top}%, -${left}%)`,
   };
 }
+function getModal2lStyle() {
+  const top = 100
+  const left = 100
+
+  return {
+    top: `${top}px`,
+    left: `${left}px`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const styles = theme => ({
   paper: {
@@ -38,13 +48,16 @@ class SimpleModal extends React.Component {
     cells: ""
   };
 
-  handleOpen = () => {
+  handleOpen = (e) => {
+      console.log(e)
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (e) => {
     this.setState({ open: false });
   };
+
+  // make range for selects
   makeRange(){
     let num = this.props.cells
     let arr = Array.from({length: num}, (v, i) => i)
@@ -55,39 +68,80 @@ class SimpleModal extends React.Component {
   componentDidMount(){
       this.makeRange()
       let that = this
+      // set state from parent to open modal
       setTimeout(function(){
           that.setState({
-              open:that.props.open
+              open:that.props.setModalOpen
           })
           },1000)
   }
+  handleSelectChange(e){
+      this.props.onChange(e)
+  }
+  createNewPlot(){
 
+  }
+  renderInputModal(classes){
+    return(
+        <React.Fragment>
+          <Typography gutterBottom>Click to get the full Modal experience!
+          </Typography>
+          <Button onClick={this.createNewPlot}>Add next point</Button>
+          <Modal
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={this.state.open}
+            onClose={this.handleClose}
+          >
+            <div style={getModalStyle()} className={classes.paper}>
+
+              <Typography variant="h6" id="modal-title">
+                Set your plot points
+              </Typography>
+              <Typography variant="subtitle1" id="simple-modal-description">
+              <Select
+                  cells={this.state.cells}
+                  onChange={this.handleSelectChange.bind(this)}
+                  />
+              </Typography>
+              <SimpleModalWrapped />
+            </div>
+          </Modal>
+        </React.Fragment>
+    )
+  }
+  renderDisplayPlotsModal(classes){
+      return(
+          <React.Fragment>
+            <Button onClick={this.createNewPlot}>Add next point</Button>
+            <Modal
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+              open={this.props.plotsModalOpen}
+              onClose={this.handleClose}
+            >
+              <div style={getModal2lStyle()} className={classes.paper}>
+
+                <Typography variant="h6" id="modal-title">
+                  Plotted Points
+                </Typography>
+                <Typography variant="subtitle1" id="simple-modal-description">
+                </Typography>
+                <SimpleModalWrapped />
+              </div>
+            </Modal>
+          </React.Fragment>
+      )
+
+  }
   render() {
     const { classes } = this.props;
-    return (
-      <div>
-        <Typography gutterBottom>Click to get the full Modal experience!</Typography>
-        <Button onClick={this.handleOpen}>Open Modal</Button>
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={this.state.open}
-          onClose={this.handleClose}
-        >
-          <div style={getModalStyle()} className={classes.paper}>
-            <Typography variant="h6" id="modal-title">
-              Set your plot points
-            </Typography>
-            <Typography variant="subtitle1" id="simple-modal-description">
-            <Select
-                cells={this.state.cells}
-                />
-            </Typography>
-            <SimpleModalWrapped />
-          </div>
-        </Modal>
-      </div>
-    );
+        return (
+            <React.Fragment>
+                {this.renderInputModal(classes)}
+                {this.renderDisplayPlotsModal(classes)}
+            </React.Fragment>
+    )
   }
 }
 

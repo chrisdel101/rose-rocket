@@ -90,6 +90,12 @@ code {
 	color: var(--driver-color) !important;
 	position: relative !important;
 }
+.card.hide-card {
+    display: none;
+}
+.card.show-card {
+    display: block;
+}
 
 .truck-wrapper {
 	position: absolute;
