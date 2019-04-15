@@ -11,8 +11,8 @@ import Slider from './material/Slider'
 import Checkbox from './material/Checkbox'
 import utils from './grid_utils'
 import MaterialForm from './material/MaterialForm'
+import MaterialButton from './material/MaterialButton'
 import Modal from './material/Modal'
-import Card from './material/Card'
 
 class Grid extends Component {
 	constructor(props) {
@@ -883,20 +883,16 @@ class Grid extends Component {
      render() {
     	return(
             <main className="page-container">
-
+            <Modal
+                setModalOpen={this.state.modalState}
+                cells={Math.sqrt(parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y))}
+                onChange={this.handleChange.bind(this)}
+                plots={this.state.plotObjs.length ? this.state.plotObjs : undefined}
+                />
                 <div className="grid-container" style={this.handleStyle.bind(this)()}>
                     <div className="grid">
                         {this.renderTrucks()}
 
-                        <Modal
-                            setModalOpen={this.state.modalState}
-                            cells={Math.sqrt(parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y))}
-                            onChange={this.handleChange.bind(this)}
-
-                            />
-                        <Modal
-                            plotsModalOpen={this.state.plotObjs.length}
-                            />
                         <Stop
                             coords={this.state.stopsDirsArr}
                             toggleStopNames={this.state.showStopNames}/>
@@ -911,11 +907,20 @@ class Grid extends Component {
                             selectedDriver={this.state.selectedDriverIndex}
                         />
 
+
+
                     </div>
                 </div>
                 <div className={`${this.state.floatToggle? "float-toggle" :""} utils-container`}>
                     <div className="driver-controls">
                         <div className="upper-controls">
+                        <MaterialButton
+                            buttonNumber={4}
+                            size="small"
+                            text="Show Modal"
+                            type="primary-button"
+                            color=""
+                            />
                             <Slider
                                 label="Driver Position"
                                 onChange={this.handleSliderChange.bind(this)}/>

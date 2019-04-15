@@ -11,23 +11,27 @@ function rand() {
 }
 
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
+  const top = 50;
+  const left = 50;
 
   return {
+    width: '500px',
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    justifyContent: 'center',
     top: `${top}%`,
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
   };
 }
-function getModal2lStyle() {
-  const top = 100
-  const left = 100
+function getModalRighStyle() {
+  const top = 50
+  const right = 20
 
   return {
     top: `${top}px`,
-    left: `${left}px`,
-    transform: `translate(-${top}%, -${left}%)`,
+    right: `${right}px`,
+    transform: `translate(-${top}%, -${right}%)`,
   };
 }
 
@@ -57,7 +61,7 @@ class SimpleModal extends React.Component {
     this.setState({ open: false });
   };
 
-  // make range for selects
+  // make range for select dropdowns
   makeRange(){
     let num = this.props.cells
     let arr = Array.from({length: num}, (v, i) => i)
@@ -78,23 +82,19 @@ class SimpleModal extends React.Component {
   handleSelectChange(e){
       this.props.onChange(e)
   }
-  createNewPlot(){
+  handleClick(e){
 
   }
   renderInputModal(classes){
     return(
         <React.Fragment>
-          <Typography gutterBottom>Click to get the full Modal experience!
-          </Typography>
-          <Button onClick={this.createNewPlot}>Add next point</Button>
           <Modal
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             open={this.state.open}
-            onClose={this.handleClose}
-          >
-            <div style={getModalStyle()} className={classes.paper}>
-
+            onClose={this.handleClose}>
+            <div style={getModalStyle()} className={`${classes.paper} modal`}>
+            <div className="modal-right modal-col">
               <Typography variant="h6" id="modal-title">
                 Set your plot points
               </Typography>
@@ -104,42 +104,41 @@ class SimpleModal extends React.Component {
                   onChange={this.handleSelectChange.bind(this)}
                   />
               </Typography>
+              </div>
               <SimpleModalWrapped />
+              <div className="modal-lef modal-col">
+                  <Typography variant="h6" id="modal-title">
+                    Plotted Points
+                  </Typography>
+                 {this.renderPlotsList(this.props)}
+
+              </div>
             </div>
           </Modal>
         </React.Fragment>
     )
   }
-  renderDisplayPlotsModal(classes){
-      return(
-          <React.Fragment>
-            <Button onClick={this.createNewPlot}>Add next point</Button>
-            <Modal
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-              open={this.props.plotsModalOpen}
-              onClose={this.handleClose}
-            >
-              <div style={getModal2lStyle()} className={classes.paper}>
-
-                <Typography variant="h6" id="modal-title">
-                  Plotted Points
-                </Typography>
-                <Typography variant="subtitle1" id="simple-modal-description">
-                </Typography>
-                <SimpleModalWrapped />
-              </div>
-            </Modal>
-          </React.Fragment>
-      )
-
+  renderPlotsList(props){
+      if(!props.plots) return
+    return(
+        <div className="plots-list">
+            <ol>
+            {   props.plots.map(plot => {
+                return(
+                    <li><strong>X</strong>: {plot.x}&nbsp;&nbsp;&nbsp; <strong>Y</strong>:{plot.y}</li>
+                )
+                })
+            }
+            </ol>
+            <button onClick={this.handleClick}>Graph it</button>
+        </div>
+    )
   }
   render() {
     const { classes } = this.props;
         return (
             <React.Fragment>
                 {this.renderInputModal(classes)}
-                {this.renderDisplayPlotsModal(classes)}
             </React.Fragment>
     )
   }

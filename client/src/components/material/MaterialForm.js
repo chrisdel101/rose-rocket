@@ -85,7 +85,7 @@ class MaterialForm extends React.Component {
       } else if(props.values && props.graphSize){
           return(
               <React.Fragment>
-               <Typography id="graph-size-label">Form</Typography>
+               <Typography id="graph-size-label">Graph Size</Typography>
                   <TextField
                   id="graph-size-form-x"
                   label="X length"
