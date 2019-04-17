@@ -49,10 +49,15 @@ const styles = theme => ({
 });
 
 class SimpleModal extends React.Component {
-  state = {
-    open: false,
-    cells: ""
-  };
+    constructor(){
+        super()
+        this.state = {
+            open: false,
+            cells: ""
+        };
+
+        this.makeRange = this.makeRange.bind(this)
+    }
 
   handleOpen = (e) => {
       console.log(e)
@@ -69,12 +74,9 @@ class SimpleModal extends React.Component {
   makeRange(){
     let num = this.props.cells
     let arr = Array.from({length: num}, (v, i) => i)
-    this.setState({
-        cells: arr
-    })
+    return arr
   }
   componentDidMount(){
-      this.makeRange()
       let that = this
       // set state from parent to open modal
       setTimeout(function(){
@@ -116,6 +118,7 @@ class SimpleModal extends React.Component {
           </div>)
   }
   renderInputModal(classes){
+      let cellsrange = this.makeRange(this.props.cells)
     return(
         <React.Fragment>
           <Modal
@@ -135,7 +138,7 @@ class SimpleModal extends React.Component {
               </Typography>
               <Typography variant="subtitle1" id="simple-modal-description">
               <Select
-                  cells={this.state.cells}
+                  cells={cellsrange}
                   onChange={this.handleSelectChange.bind(this)}
                   />
               </Typography>

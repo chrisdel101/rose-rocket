@@ -99,6 +99,7 @@ class Grid extends Component {
         setCSSvars()
         // sets vals in css to grid size
         function setCSSvars(){
+            // console.log(that.state.setGraphSize)
             let root = document.documentElement;
             root.style.setProperty('--graph-size-x',  that.state.setGraphSize.x);
             root.style.setProperty('--graph-size-y', that.state.setGraphSize.y);
@@ -107,7 +108,7 @@ class Grid extends Component {
             that.setState({
                 startingCellNumAll: utils._calcStartingCell(that.state.setGraphSize)
             })
-            that.calcRowVariaion()
+            // that.calcRowVariaion()
         },200)
 
     }
@@ -1422,12 +1423,21 @@ class Grid extends Component {
             stopsCopy: arr
         })
     }
+    handlePlotLoading(json){
+        // this.createGraph()
+        this._setStopCoords('stop')
+        this.state.stops.map((stop, i) => {
+                this.legStartEnd(stop.x, stop.y,'all')
+                this.colorGrid(stop.x, stop.y, 'all')
+
+        })
+    }
 
 
     componentDidMount() {
         let that = this
         // create graph size based on input - COMMENT OUT
-        // this.createGraph()
+        this.createGraph()
         this.scrollToBottom()
         // make scroll to the correct part of screen
         let utils = document.querySelector('.utils-container')
@@ -1450,7 +1460,7 @@ class Grid extends Component {
             // })
             // call these with the default driver on mount
             //--- COMMENT OUT
-            // that.addNewDriver()
+            that.addNewDriver()
             // that.updateDriverWithCoords({x:0, y:0}, 'manual' )
             // that.updateDriverwithData(that.state.loadingDataArr[0])
             // that.colorCompleted(that.state.loadingDataArr[0].activeLegID, "coords")
@@ -1756,9 +1766,18 @@ class Grid extends Component {
         event.preventDefault();
         // console.log(this.state.selectedDriverIndex)
         let that = this
+        function validGraphSides(input){
+            if(input.x !== input.y){
+                console.error("X and Y must be equal")
+                alert("X and Y values must be equal")
+                return false
+            }
+            return true
+        }
         // on submit use the stored sizes
         if(event.target.name === 'graph-size'){
-            console.log(this.state.storeGraphSize)
+            console.log('store', this.state.storeGraphSize)
+            if(!validGraphSides(this.state.storeGraphSize)) return
             this.setState({
                 setGraphSize: this.state.storeGraphSize
             })
@@ -1813,15 +1832,10 @@ class Grid extends Component {
         } else if(event.target.classList && event.target.classList.contains("modal-submit")){
             let json = utils._makePlotJson(this.state.plotObjs)
             this.setState({stops: json})
-            this.createGraph()
-            this._setStopCoords('stop')
-            // this.state.stops.map((stop, i) => {
-            //         that.legStartEnd(stop.x, stop.y,'all')
-            //         that.colorGrid(stop.x, stop.y, 'all')
-            //
-            // })
+            this.handlePlotLoading(this.state.stops)
         }
     }
+
     _legIndex(input){
         // console.log('i', input)
         let index
