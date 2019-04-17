@@ -215,7 +215,19 @@ var utils = (function () {
             console.error('An error occured in the percentage calcs')
             return
         }
-    }
+    },
+    // make json from the entered plot points
+    _makePlotJson(plotsArr){
+        return plotsArr.map((coords,i) => {
+            return {
+                    "name":String.fromCharCode(i+65),
+                    "x":coords.x,
+                    "y":coords.y
+                }
+            })
+        }
+
+
 }
 })();
 

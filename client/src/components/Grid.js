@@ -887,6 +887,7 @@ class Grid extends Component {
                 open={this.state.modalState}
                 cells={Math.sqrt(parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y))}
                 onChange={this.handleChange.bind(this)}
+                onSubmit={this.handleSubmit.bind(this)}
                 plots={this.state.plotObjs.length ? this.state.plotObjs : undefined}
                 />
                 <div className="grid-container" style={this.handleStyle.bind(this)()}>
@@ -934,7 +935,7 @@ class Grid extends Component {
                             <MaterialForm
                                 graphSize={true}
                                 onChange={this.handleChange.bind(this)}
-                                onSubmit={this.handleFormSubmit.bind(this)}
+                                onSubmit={this.handleSubmit.bind(this)}
                                 values={this.state.setGraphSize}
                                 formname="graph-size"
                                 addedClass="graph-size"
@@ -943,7 +944,7 @@ class Grid extends Component {
                         </div>
                         <Tabs
                             onChange={this.handleChange.bind(this)}
-                            onSubmit={this.handleFormSubmit.bind(this)}
+                            onSubmit={this.handleSubmit.bind(this)}
                             onClick={this.handleClick.bind(this)}
                             values={{x:this.state.driverFormX, y:this.state.driverFormY}}
                             legs={this.state.legs ? this.state.legs : null}
@@ -961,13 +962,13 @@ class Grid extends Component {
             </main>
         )
     }
-    handleModal(){
+    handleModalOpenClose(){
         this.state.modalState = !this.state.modalState
         this.setState({
             modalState: this.state.modalState
         })
-        console.log('handleModal')
-        console.log(this.state.modalState)
+        // console.log('handleModalOpenClose')
+        // console.log(this.state.modalState)
     }
     handleSliderChange(evt){
         let that = this
@@ -1319,7 +1320,7 @@ class Grid extends Component {
                     }))
                     let that = this
                     setTimeout(function(){
-                        that.setPlot(that.state.tempPlotObj)
+                        that.receivePlotData(that.state.tempPlotObj)
                     })
                 } else if(evt.target.name === "ySelect"){
                     this.setState(prevState => ({
@@ -1330,20 +1331,20 @@ class Grid extends Component {
                     }))
                     let that = this
                     setTimeout(function(){
-                        that.setPlot(that.state.tempPlotObj)
+                        that.receivePlotData(that.state.tempPlotObj)
                     })
                     // when X is clicked trigger this - open close
                 } else if(evt.target.classList.contains("close-icon")){
 
-                    this.handleModal()
+                    this.handleModalOpenClose()
                         // on modal close trigger this - open close
                 } else if(evt.target.nextSibling.classList.contains("modal")){
-                    this.handleModal()
+                    this.handleModalOpenClose()
                 }
             }
     }
     // set plot points from inputs in modal
-    setPlot(obj){
+    receivePlotData(obj){
         console.log(obj)
         if(!obj.x || !obj.y){
             console.error("Must have two plot points")
@@ -1354,9 +1355,6 @@ class Grid extends Component {
             plotObjs: [...this.state.plotObjs, this.state.tempPlotObj],
             tempPlotObj: ""
         })
-    }
-    displayPlotPoints(){
-
     }
     toggleStartCheckbox(){
 
@@ -1425,10 +1423,11 @@ class Grid extends Component {
         })
     }
 
+
     componentDidMount() {
         let that = this
-        // create graph size based on input
-        this.createGraph()
+        // create graph size based on input - COMMENT OUT
+        // this.createGraph()
         this.scrollToBottom()
         // make scroll to the correct part of screen
         let utils = document.querySelector('.utils-container')
@@ -1443,13 +1442,15 @@ class Grid extends Component {
 
         setTimeout(function(){
             // console.log(that.state.legs)
-            that.state.stops.map((stop, i) => {
-                    that.legStartEnd(stop.x, stop.y,'all')
-                    that.colorGrid(stop.x, stop.y, 'all')
-
-            })
+            //--- COMMENT OUT
+            // that.state.stops.map((stop, i) => {
+            //         that.legStartEnd(stop.x, stop.y,'all')
+            //         that.colorGrid(stop.x, stop.y, 'all')
+            //
+            // })
             // call these with the default driver on mount
-            that.addNewDriver()
+            //--- COMMENT OUT
+            // that.addNewDriver()
             // that.updateDriverWithCoords({x:0, y:0}, 'manual' )
             // that.updateDriverwithData(that.state.loadingDataArr[0])
             // that.colorCompleted(that.state.loadingDataArr[0].activeLegID, "coords")
@@ -1461,43 +1462,49 @@ class Grid extends Component {
 
 
         // call to set stops and truck
-        this._setStopCoords('stop')
+        //--- COMMENT OUT
+
+        // this._setStopCoords('stop')
         // Call our fetch function below once the component mounts
-        this._callDriver()
-        .then(res => {
-            // load into ar r. Can be looped over if mutlple drivers
-            this.setState({ loadingDataArr: [...this.state.loadingDataArr, res.driver] })
-        })
-        .catch(err => console.log(err));
-        this._callStops()
-        .then(res => {
-            // temp stops
-            this.setState({
-                stops:
-                [{
-                    "name": "A",
-                    "x": 10,
-                    "y": 10
-                    },
-                    {
-                    "name": "B",
-                    "x": 20,
-                    "y": 20
-                    },
-                    {
-                    "name": "C",
-                    "x": 18,
-                    "y": 4
+        //--- COMMENT OUT
 
-                }],
-                stopsCopy: this.state.stops.slice()
-            })
-            this.legConstructor(this.state.stops)
+        // this._callDriver()
+        // .then(res => {
+        //     // load into ar r. Can be looped over if mutlple drivers
+        //     this.setState({ loadingDataArr: [...this.state.loadingDataArr, res.driver] })
+        // })
+        // .catch(err => console.log(err));
+        //--- COMMENT OUT
+        // this._callStops()
+        // .then(res => {
+        //     // temp stops
+        //     this.setState({
+        //         stops:
+        //         [{
+        //             "name": "A",
+        //             "x": 10,
+        //             "y": 10
+        //             },
+        //             {
+        //             "name": "B",
+        //             "x": 20,
+        //             "y": 20
+        //             },
+        //             {
+        //             "name": "C",
+        //             "x": 18,
+        //             "y": 4
+        //
+        //         }],
+        //         stopsCopy: this.state.stops.slice()
+        //     })
+        //--- COMMENT OUT
+            // this.legConstructor(this.state.stops)
 
 
-        })
-        .catch(err => console.log(err));
-        this.legConstructor(this.state.stops)
+        // })
+        // .catch(err => console.log(err));
+        // this.legConstructor(this.state.stops)
 
         // this._callLegs()
         // .then(res => {
@@ -1512,16 +1519,18 @@ class Grid extends Component {
             //     x: 0,
             //     y: 0,
             // }, "checkbox")
+            //--- COMMENT OUT
             // start from map beginng
-            that.addStartStop()
+            // that.addStartStop()
             // make slider coords
+            //--- COMMENT OUT
 
-            that.state.stopsCopy.map((stop, index) => {
-                if(!that.state.stopsCopy[index + 1]) return
-                let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stopsCopy[index + 1])
-                console.log(xSlideCoord, ySlideCoord)
-                that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "stop-coords")
-            })
+        //     that.state.stopsCopy.map((stop, index) => {
+        //         if(!that.state.stopsCopy[index + 1]) return
+        //         let { xSlideCoord, ySlideCoord } = that.slideRange(stop, that.state.stopsCopy[index + 1])
+        //         console.log(xSlideCoord, ySlideCoord)
+        //         that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "stop-coords")
+        //     })
         },500)
         function addElemClass(){
             // add class to slider button so can select it later
@@ -1742,7 +1751,8 @@ class Grid extends Component {
         return {xToMove, yToMove}
 
     }
-    handleFormSubmit(event) {
+    handleSubmit(event) {
+        // console.log(event.target)
         event.preventDefault();
         // console.log(this.state.selectedDriverIndex)
         let that = this
@@ -1800,9 +1810,18 @@ class Grid extends Component {
                 console.log(that.state.selectedDriver.activeLegID)
                 console.log(that.state)
             },100)
+        } else if(event.target.classList && event.target.classList.contains("modal-submit")){
+            let json = utils._makePlotJson(this.state.plotObjs)
+            this.setState({stops: json})
+            this.createGraph()
+            this._setStopCoords('stop')
+            // this.state.stops.map((stop, i) => {
+            //         that.legStartEnd(stop.x, stop.y,'all')
+            //         that.colorGrid(stop.x, stop.y, 'all')
+            //
+            // })
         }
     }
-
     _legIndex(input){
         // console.log('i', input)
         let index

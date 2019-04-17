@@ -84,6 +84,7 @@ class SimpleModal extends React.Component {
           },1000)
   }
   componentDidUpdate(){
+      // when parent updates the state, it will register here
       if(this.props.open !== this.state.open){
           this.setState({
               open: this.props.open
@@ -93,10 +94,14 @@ class SimpleModal extends React.Component {
   handleSelectChange(e){
       this.props.onChange(e)
   }
+  handleSubmit(e){
+      this.props.onSubmit(e)
+  }
   handleClick(e){
       if(e.target.classList && e.target.classList.contains('close-icon')){
           this.handleClose(e)
-          // console.log(this.state.open)
+      } else if(e.target.classList && e.target.classList.contains('modal-submit')){
+          this.handleSubmit(e)
       }
   }
   renderIcon(){
@@ -160,7 +165,7 @@ class SimpleModal extends React.Component {
                 })
             }
             </ol>
-            <button onClick={this.handleClick}>Graph it</button>
+            <button className="modal-submit" onClick={this.handleClick.bind(this)}>Graph it</button>
         </div>
     )
   }
