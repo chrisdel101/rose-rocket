@@ -18,7 +18,7 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            modalState: false,
+            modalState: true,
             setGraphSize: {"x":"20", "y":"20"},
             storeGraphSize: {"x":"20", "y":"20"},
             plotObjs:[],
@@ -884,7 +884,7 @@ class Grid extends Component {
     	return(
             <main className="page-container">
             <Modal
-                setModalOpen={this.state.modalState}
+                open={this.state.modalState}
                 cells={Math.sqrt(parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y))}
                 onChange={this.handleChange.bind(this)}
                 plots={this.state.plotObjs.length ? this.state.plotObjs : undefined}
@@ -915,11 +915,12 @@ class Grid extends Component {
                     <div className="driver-controls">
                         <div className="upper-controls">
                         <MaterialButton
+                            onClick={this.handleClick.bind(this)}
                             buttonNumber={4}
                             size="small"
                             text="Show Modal"
                             type="primary-button"
-                            color=""
+                            color="default"
                             />
                             <Slider
                                 label="Driver Position"
@@ -965,7 +966,8 @@ class Grid extends Component {
         this.setState({
             modalState: this.state.modalState
         })
-        // console.log(this.state.modalState)
+        console.log('handleModal')
+        console.log(this.state.modalState)
     }
     handleSliderChange(evt){
         let that = this
@@ -1167,7 +1169,13 @@ class Grid extends Component {
                     this.setState({
                         snackbarOpen: false
                     })
-
+                    // for show modal button
+            } else if(event.target.dataset.number === '4' && event.target.classList.contains("button")){
+                this.state.modalState = !this.state.modalState
+                this.setState({
+                    modalState: this.state.modalState
+                })
+                console.log(this.state.modalState)
             }
         }
     }
@@ -1225,7 +1233,11 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        // console.log(evt.target.value)
+        console.log(evt.target)
+        // console.log(evt)
+        // console.log(evt.target.parentNode)
+        // console.log(evt.target.parentNode)
+        // console.log(evt.target.nextSibling)
         // console.log(evt.target.name)
 
         // to filter out undefined errors
@@ -1290,7 +1302,14 @@ class Grid extends Component {
             } else if(evt.target.name === "icon-start"){
                     this.toggleStartCheckbox()
             // plot points from modal input
-            } else if(evt.target.name === "xSelect" || evt.target.name === "ySelect"){
+        } else if
+        (evt.target.name === "xSelect" ||
+         evt.target.name === "ySelect" ||
+         evt.target.classList && evt.target.classList.contains("close-icon") ||
+         evt.target.nextSibling && evt.target.nextSibling.classList.contains("modal")
+        )
+         {
+             console.log(evt.target.classList)
                 if(evt.target.name === "xSelect"){
                     this.setState(prevState => ({
                         tempPlotObj: {
@@ -1313,6 +1332,13 @@ class Grid extends Component {
                     setTimeout(function(){
                         that.setPlot(that.state.tempPlotObj)
                     })
+                    // when X is clicked trigger this - open close
+                } else if(evt.target.classList.contains("close-icon")){
+
+                    this.handleModal()
+                        // on modal close trigger this - open close
+                } else if(evt.target.nextSibling.classList.contains("modal")){
+                    this.handleModal()
                 }
             }
     }
@@ -1414,7 +1440,6 @@ class Grid extends Component {
             })
         },500)
 
-        this.handleModal()
 
         setTimeout(function(){
             // console.log(that.state.legs)

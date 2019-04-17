@@ -93,6 +93,10 @@ code {
 .modal-col{
     margin: 0 20px;
 }
+.modal .close-icon{
+    font-size: 20px;
+
+}
 .truck-wrapper {
 	position: absolute;
 	bottom: 0;

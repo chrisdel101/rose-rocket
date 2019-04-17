@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Select from './Select'
+import Icon from "./Icon";
+
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -59,6 +61,8 @@ class SimpleModal extends React.Component {
 
   handleClose = (e) => {
     this.setState({ open: false });
+    this.props.onChange(e)
+    console.log(this.state.open)
   };
 
   // make range for select dropdowns
@@ -75,15 +79,36 @@ class SimpleModal extends React.Component {
       // set state from parent to open modal
       setTimeout(function(){
           that.setState({
-              open:that.props.setModalOpen
+              open:that.props.open
           })
           },1000)
+  }
+  componentDidUpdate(){
+      if(this.props.open !== this.state.open){
+          this.setState({
+              open: this.props.open
+          })
+      }
   }
   handleSelectChange(e){
       this.props.onChange(e)
   }
   handleClick(e){
-
+      if(e.target.classList && e.target.classList.contains('close-icon')){
+          this.handleClose(e)
+          // console.log(this.state.open)
+      }
+  }
+  renderIcon(){
+      let that = this
+      return(
+          <div tabIndex="-1" className="icon-wrapper">
+            <Icon
+              className="close-icon"
+              strType="close"
+              onClick={that.handleClick.bind(that)}
+              />
+          </div>)
   }
   renderInputModal(classes){
     return(
@@ -92,9 +117,14 @@ class SimpleModal extends React.Component {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             open={this.state.open}
-            onClose={this.handleClose}>
+            onClose={this.handleClose}
+            onClick={this.handleClick.bind(this)}>
             <div style={getModalStyle()} className={`${classes.paper} modal`}>
             <div className="modal-right modal-col">
+            <Icon
+              className="close-icon"
+              strType="close"
+              />
               <Typography variant="h6" id="modal-title">
                 Set your plot points
               </Typography>
@@ -123,9 +153,9 @@ class SimpleModal extends React.Component {
     return(
         <div className="plots-list">
             <ol>
-            {   props.plots.map(plot => {
+            {   props.plots.map((plot,i) => {
                 return(
-                    <li><strong>X</strong>: {plot.x}&nbsp;&nbsp;&nbsp; <strong>Y</strong>:{plot.y}</li>
+                    <li key={i}><strong>X</strong>: {plot.x}&nbsp;&nbsp;&nbsp; <strong>Y</strong>:{plot.y}</li>
                 )
                 })
             }
