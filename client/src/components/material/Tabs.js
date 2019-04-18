@@ -10,6 +10,8 @@ import AddButton from "./AddButton";
 import MaterialButton from "./MaterialButton";
 import Icon from "./Icon";
 import Checkbox from "./Checkbox";
+import ReactTooltip from 'react-tooltip'
+
 
 
 function TabContainer(props) {
@@ -85,19 +87,18 @@ class SimpleTabs extends React.Component {
 
   }
   handleAddButtonClick(e){
-      // console.log(e)
       this.props.onClick(e)
       this.addTab()
       this.setState({value: this.props.selectedDriver})
-      console.log(this.state.value)
+      // console.log(this.state.value)
   }
   handleRemoveButtonClick(e){
-
       if(!this.state.hovered){
           return
       }
+      console.log('HERE')
       let driverIndex = parseInt(e.target.innerText.substring(13,14)) - 1
-      this.props.onClick(`${e.target.innerText} icon-click`)
+      this.props.onClick({event: e, iconClick:true, cursor:true})
       this.subtractTab(driverIndex)
   }
 
@@ -117,7 +118,8 @@ class SimpleTabs extends React.Component {
         if(this.state.hovered){
             return
         }
-        this.props.onClick(e.target.innerText)
+        console.log()
+        this.props.onClick({event: e, iconClick:false, cursor:true})
     }
 
     renderIcon(){
@@ -130,15 +132,15 @@ class SimpleTabs extends React.Component {
             </div>)
     }
   render() {
-      // console.log(this.state.value)
-      // console.log(this.props.selectedDriver)
     const { classes } = this.props;
     const { value } = this.state;
-    if(this.props.driversArr){
+    if(this.props.cursorArr){
         return (
             <div className={classes.root}>
             <AppBar position="static">
+
                 <Tabs
+
                     classes={{
                         indicator: classes.indicator
                     }}
@@ -147,15 +149,22 @@ class SimpleTabs extends React.Component {
                     value={this.props.selectedDriver}
                     onChange={this.handleChange}
                     onClick={this.handleTabsClick.bind(this)} >
-                {
-                    this.props.driversArr.map((tab, i) => {
 
-                    return <Tab
+                {
+                    this.props.cursorArr.map((tab, i) => {
+
+                    return(
+                        <div>
+                            <Tab
+                                data-tip="Click to Hide Cursor"
+                                data-key={i}
                                 icon={this.renderIcon()} onMouseMove={this.mouseEvent.bind(this)}
                                 label={tab.name}
                                 key={i}
                                 onClick={this.handleRemoveButtonClick.bind(this)}>
                            </Tab>
+                           <ReactTooltip />
+                        </div>)
                        })
                 }
                 <AddButton
@@ -186,6 +195,7 @@ class SimpleTabs extends React.Component {
             </AppBar>
 
                 <TabContainer>
+
                 <Accordion
                     onClick={this.props.onClick}
                     onSubmit={this.props.onSubmit}

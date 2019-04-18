@@ -85,7 +85,7 @@ code {
 	background-color: #fff;
 }
 
-.truck {
+.cursor {
 	font-size: 30px !important;
 	color: var(--driver-color) !important;
 	position: relative !important;
@@ -97,11 +97,14 @@ code {
     font-size: 20px;
 
 }
-.truck-wrapper {
+.cursor-wrapper.show {
 	position: absolute;
 	bottom: 0;
 	z-index: 2;
 	left: 0;
+}
+.cursor-wrapper.hide {
+	display: none;
 }
 
 .stop-marker:before {

@@ -2,10 +2,10 @@ import React from 'react'
 import Icon from './material/Icon'
 
 // takes and array of directions and pixes for x and y
-function Truck(props){
+function Cursor(props){
     if(!props.coords) return null
     let coord = props.coords
-    // console.log(props)  
+    // console.log(props)
     let driverID = props.coords.id
     // console.log(driverID)
     let style = {
@@ -14,13 +14,13 @@ function Truck(props){
         "--driver-color": props.colors[driverID]
     }
     return(
-        <div className="truck-wrapper icon-wrapper" style={style}>
+        <div className={`${props.show ? 'show' : 'hide' } cursor-wrapper icon-wrapper`} style={style}>
             <Icon
-                 className="truck"
+                 className="cursor"
                  strType="place"
                  />
         </div>
     )
 }
 
-export default Truck
+export default Cursor

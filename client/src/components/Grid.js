@@ -4,7 +4,7 @@ import { Manager, Reference, Popper, Arrow } from "react-popper";
 import "../App.css";
 import Box from './Box'
 import Stop from './Stop'
-import Truck from './Truck'
+import Cursor from './Cursor'
 import Tabs from './material/Tabs'
 import Snackbar from './material/Snackbar'
 import Slider from './material/Slider'
@@ -18,7 +18,7 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            modalState: true,
+            modalState: false,
             setGraphSize: {"x":"20", "y":"20"},
             storeGraphSize: {"x":"20", "y":"20"},
             plotObjs:[],
@@ -42,18 +42,18 @@ class Grid extends Component {
             colorType: "",
             loadingDataArr: [],
             // changes based on tab click
-            selectedDriverIndex: 0,
+            cursorIndex: 0,
             // used to assign driver id on creation
             createCounter:0,
             legs: [],
 			stops: [],
             stopsCopy: [],
             legToColorID:"",
-            driverFormX:"",
-            driverFormY:"",
-            driverLegInput:"",
-            driversArr: [],
-            driverProgressInput: "",
+            cursorFormX:"",
+            cursorFormY:"",
+            cursorLegInput:"",
+            cursorArr: [],
+            cursorInputProgress: "",
             currentDriver: "",
             driverLegStart: "",
             driverCoords: "",
@@ -151,8 +151,8 @@ class Grid extends Component {
     }
     // update createCounter by 1
     increaseDriverIdindex(){
-        // console.log('called')
         let x = this.state.createCounter + 1
+        console.log('called',x)
         // console.log(index)
         this.setState({
             createCounter: x
@@ -172,16 +172,17 @@ class Grid extends Component {
                 moveY: 0
             },
             id: this.state.createCounter,
-            name: `driver ${this.state.createCounter + 1}`,
-            color: this.state.colors[this.state.createCounter]
+            name: `cursor ${this.state.createCounter + 1}`,
+            color: this.state.colors[this.state.createCounter],
+            show:true
         }
         // console.log('id',newDriverObj.id)
         let arr = []
         arr.push(newDriverObj)
-        let allDrivers = this.state.driversArr.concat(arr)
-        // console.log(allDrivers)
+        let allCursors = this.state.cursorArr.concat(arr)
+        // console.log(allCursors)
         this.setState({
-            driversArr: allDrivers
+            cursorArr: allCursors
         })
         this.increaseDriverIdindex()
         this.changeDriver('new-driver', newDriverObj.id)
@@ -192,51 +193,51 @@ class Grid extends Component {
         //set new driver to be the selectedDriver
         if(type === 'new-driver')
             this.setState({
-                selectedDriverIndex: driverID,
+                cursorIndex: driverID,
                 colorType: ""
             })
         else if(type === 'change-driver'){
             this.setState({
-                selectedDriverIndex: driverID,
+                cursorIndex: driverID,
             })
         }
         let that = this
         setTimeout(function(){
-            // console.log(that.state.selectedDriverIndex)
+            // console.log(that.state.cursorIndex)
 
         })
 
     }
     removeDriver(event){
         // get the full name of the driver
-        let driverName = event.substring(6,14)
+        let driverName = event.event.target.dataset.key
         // filter out driver by that name
-        let driver = this.state.driversArr.filter(obj => {
+        let driver = this.state.cursorArr.filter(obj => {
              return (obj.name === driverName.toLowerCase() ? obj : false)
         })
-        // console.log(this.state.driversArr)
+        // console.log(this.state.cursorArr)
         // change to next available one lower than the deleted one
-        for (var i = this.state.driversArr.length - 1; i >= 0; i--) {
-            if(driver[0].id > this.state.driversArr[i].id){
-                this.changeDriver('change-driver', this.state.driversArr[i].id)
+        for (var i = this.state.cursorArr.length - 1; i >= 0; i--) {
+            if(driver[0].id > this.state.cursorArr[i].id){
+                this.changeDriver('change-driver', this.state.cursorArr[i].id)
             }
         }
-        console.log(this.state.driversArr)
+        console.log(this.state.cursorArr)
         let that = this
         setTimeout(function(){
 
-            let index = that.state.driversArr.indexOf(driver[0])
-            // splice out of driversArr
-            that.state.driversArr.splice(index,1)
+            let index = that.state.cursorArr.indexOf(driver[0])
+            // splice out of cursorArr
+            that.state.cursorArr.splice(index,1)
             that.setState({
-                driversArr: that.state.driversArr
+                cursorArr: that.state.cursorArr
             })
-            console.log(that.state.driversArr)
+            console.log(that.state.cursorArr)
         })
     }
     // runs on load using pre-loaded data and when form submitted
     updateDriverwithData(driverData){
-        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
         // console.log(selectedDriver)
         // get from api or form
         let legName = driverData.activeLegID
@@ -271,26 +272,27 @@ class Grid extends Component {
         selectedDriver.driverCoords = moves
 
 
-        this.state.driversArr[this.state.selectedDriverIndex] = selectedDriver
-        console.log('update', this.state.driversArr)
-        console.log('update', this.state.driversArr)
+        this.state.cursorArr[this.state.cursorIndex] = selectedDriver
+        console.log('update', this.state.cursorArr)
+        console.log('update', this.state.cursorArr)
 
 
         this.setState({
-            driversArr: this.state.driversArr
+            cursorArr: this.state.cursorArr
         })
-        // console.log('after', this.state.driversArr)
+        // console.log('after', this.state.cursorArr)
     }
     // on click set driver with coords and send to child
     updateDriverWithCoords(coords, type){
-        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        let driversArr = [...this.state.driversArr]
+
+        let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
+        let cursorArr = [...this.state.cursorArr]
          if(type === "form"){
             // reset to zero
             this._resetTruck()
             // from form
             coords = this._setStopCoords('driver',
-            this.state.driverFormX, this.state.driverFormY)
+            this.state.cursorFormX, this.state.cursorFormY)
             // toggle driver to first stop of map start
         } else if(type === "checkbox"){
             if(this.state.iconStartAtfirstStop){
@@ -300,7 +302,7 @@ class Grid extends Component {
                 selectedDriver.driverCoords.y = this.state.stops[0].y
                 console.log('S', selectedDriver)
                 this.setState({
-                    driversArr: driversArr
+                    cursorArr: cursorArr
                 })
                 this.updateDriverData()
                 // else start at beginning
@@ -310,7 +312,7 @@ class Grid extends Component {
                 selectedDriver.driverCoords.x = 0
                 selectedDriver.driverCoords.y = 0
                 this.setState({
-                    driversArr: driversArr
+                    cursorArr: cursorArr
                 })
                 this.updateDriverData()
             }
@@ -323,27 +325,28 @@ class Grid extends Component {
             coords = this._setStopCoords('driver',
             coords.x, coords.y)
         } else if(type === "manual"){
+            console.log("LOAD")
             // reset to zero
             this._resetTruck()
             coords = this._setStopCoords('driver', coords.x, coords.y)
-            driversArr[this.state.selectedDriverIndex].driverCoords = {x: 0, y: 0}
+            cursorArr[this.state.cursorIndex].driverCoords = {x: 0, y: 0}
         }
         // console.log(coords)
         // subtract for icon positionSelect
         coords.pixels.moveX = coords.pixels.moveX - 30
-        // console.log(driversArr[this.state.selectedDriver])
+        // console.log(cursorArr[this.state.selectedDriver])
         // update the values in the object
-        driversArr[this.state.selectedDriverIndex].directions = coords.directions
-        driversArr[this.state.selectedDriverIndex].pixels = coords.pixels
-        //console.log(driversArr)
+        cursorArr[this.state.cursorIndex].directions = coords.directions
+        cursorArr[this.state.cursorIndex].pixels = coords.pixels
+        //console.log(cursorArr)
         // set new driver vals
         this.setState({
-            driversArr: driversArr
+            cursorArr: cursorArr
         })
     }
     // calc up to driver position to color
     colorCompleted(legID, type){
-        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
     	var arr = this.state.legs.filter(leg => {
             // console.log(leg.legID)
     		return leg.legID === legID
@@ -726,7 +729,7 @@ class Grid extends Component {
     }
     // takes driver coords and finds the leg start
     _getLegStartfromCoords(){
-        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
         let coords = selectedDriver.driverCoords
         // console.log('driver coords', coords)
         // if x & y is between the stops
@@ -794,8 +797,8 @@ class Grid extends Component {
     }
     // takes driver coords from state and sets new progress and leg
     updateDriverData(){
-        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
-        // console.log('selectedDriver', this.state.selectedDriverIndex)
+        let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
+        // console.log('selectedDriver', this.state.cursorIndex)
         let firstStop = this._getLegStartfromCoords()[0]
         // only works with map stops!
         if(!firstStop){
@@ -819,18 +822,18 @@ class Grid extends Component {
             legProgress: percent.toString()
         }
         //  console.log(newPositionWpercent)
-        let driversArr = [...this.state.driversArr]
-        // console.log(driversArr[this.state.selectedDriverIndex])
+        let cursorArr = [...this.state.cursorArr]
+        // console.log(cursorArr[this.state.cursorIndex])
         // console.log(selectedDriver)
         // update the values in the object
 
         selectedDriver.data = newPositionWpercent
 
         // console.log(selectedDriver)
-        driversArr[this.state.selectedDriverIndex] = selectedDriver
-        // console.log(driversArr)
+        cursorArr[this.state.cursorIndex] = selectedDriver
+        // console.log(cursorArr)
         this.setState({
-            driversArr: driversArr,
+            cursorArr: cursorArr,
             selectedDriver: newPositionWpercent
         })
         // console.log(newPositionWpercent)
@@ -854,11 +857,11 @@ class Grid extends Component {
         })
     }
     // renders all truck instances
-    renderTrucks(props){
-        if(this.state.driversArr){
-                return this.state.driversArr.map((driverData,i) => {
-                // console.log(driverData)
-                return <Truck coords={driverData} key={i} colors={this.state.colors} counter={this.state.createCounter}/>
+    renderCursor(){
+        if(this.state.cursorArr && Array.isArray(this.state.cursorArr)){
+                return this.state.cursorArr.map((driverData,i) => {
+                // console.log(driverDyata)
+                return <Cursor show={driverData.show} coords={driverData} key={i} colors={this.state.colors} counter={this.state.createCounter}/>
             })
         } else {
             return null
@@ -893,8 +896,7 @@ class Grid extends Component {
                 />
                 <div className="grid-container" style={this.handleStyle.bind(this)()}>
                     <div className="grid">
-                        {this.renderTrucks()}
-
+                    {this.renderCursor()}
                         <Stop
                             coords={this.state.stopsDirsArr}
                             toggleStopNames={this.state.showStopNames}/>
@@ -906,7 +908,7 @@ class Grid extends Component {
                             legColorsCounter={this.state.legColorsCounter}
                             completedColorsCounter={this.state.completedColorsCounter}
                             allColorsCounter={this.state.allColorsCounter}
-                            selectedDriver={this.state.selectedDriverIndex}
+                            selectedDriver={this.state.cursorIndex}
                         />
 
 
@@ -947,12 +949,12 @@ class Grid extends Component {
                             onChange={this.handleChange.bind(this)}
                             onSubmit={this.handleSubmit.bind(this)}
                             onClick={this.handleClick.bind(this)}
-                            values={{x:this.state.driverFormX, y:this.state.driverFormY}}
+                            values={{x:this.state.cursorFormX, y:this.state.cursorFormY}}
                             legs={this.state.legs ? this.state.legs : null}
                             texts={this.state.texts}
-                            driversArr={this.state.driversArr.length ? this.state.driversArr : null}
+                            cursorArr={this.state.cursorArr.length ? this.state.cursorArr : null}
                             colors={this.state.colors}
-                            selectedDriver={this.state.selectedDriverIndex}
+                            selectedDriver={this.state.cursorIndex}
                             />
 
                             <Snackbar
@@ -1069,7 +1071,7 @@ class Grid extends Component {
                         return
                     }
                 }
-                let currentDriver = that.state.driversArr[that.state.selectedDriverIndex]
+                let currentDriver = that.state.cursorArr[that.state.cursorIndex]
 
 
                 that.updateDriverWithCoords({
@@ -1119,31 +1121,41 @@ class Grid extends Component {
     // https://stackoverflow.com/questions/16863917/check-if-class-exists-somewhere-in-parent-vanilla-js/19049101
     hasParentClass(element, checkClass){
         if (element.className.split(' ').indexOf(checkClass)>=0) return true;
-        return element.parentNode && this.hasParentClass(element.parentNode, checkClass);
+        return element.parentElement && this.hasParentClass(element.parentElement, checkClass);
+    }
+    toggleShowCursor(e){
+        let currentCursor = this.state.cursorArr[this.state.cursorIndex]
+        // toggle
+        currentCursor.show = !currentCursor.show
+        const cursorArrCopy = [...this.state.cursorArr]
+        // https://stackoverflow.com/a/47580775/5972531
+        this.setState({
+            cursorArr: cursorArrCopy
+        })
     }
     handleClick(event){
-// console.log(event.target)
+        // console.log(event.target.classList)
+        // console.log(this.hasParentClass(event.target, "snackbar")event.target)
         if(!event) return
         // console.log(event)
         // For TAB clicks - sending strings back here as return vals
-        if(typeof event === 'string'){
-            // to remove drivers from tabs
-            if(event.includes('icon-click') && event.includes('DRIVER')){
+            // to remove drivers from tabs when clicking X
+            if(event.event && event.iconClick && event.cursor){
                 // don't remove single driver
-                if(this.state.driversArr.length > 1){
+                if(this.state.cursorArr.length > 1){
                     this.removeDriver(event)
                 }
                 // to detect which driver is selected
-            } else if(event.includes('DRIVER') && !event.includes('icon-click')){
-                // minus one for zero index
-                let driverIndex = parseInt(event[event.length - 2]) - 1
+            } else if(event.event && !event.iconClick && event.cursor){
+                // use data prop on html
+                let driverIndex = parseInt(event.event.target.dataset.key)
+                console.log('DI',driverIndex)
                 // change to another driver
                 this.changeDriver('change-driver', driverIndex)
+                this.toggleShowCursor(event)
 
-            }
-            // if events and not strings
-        } else {
-            if(event.target.classList.contains('add-button')){
+                // if events and not strings
+            } else if(event.target.classList.contains('add-button')){
                 event.stopPropagation()
                 // call add new driver
                     this.addNewDriver()
@@ -1179,13 +1191,13 @@ class Grid extends Component {
                 })
                 console.log(this.state.modalState)
             }
-        }
+
     }
     handleDropdownChange(e) {
         console.log(e.target.name)
         if(e.target.name === 'driver-select'){
             console.log('here')
-            this.setState({driverLegInput: e.target.value})
+            this.setState({cursorLegInput: e.target.value})
         } else if(e.target.name === 'color-select'){
             console.log('he')
             this.setState({
@@ -1195,28 +1207,28 @@ class Grid extends Component {
         }
     }
     onDropdownSubmit(event) {
-        let selectedDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
         console.log(selectedDriver)
         // console.log(event.target.name)
         event.preventDefault()
 
         if(event.target.name === 'driver-dropdown'){
             // user needs to choose a leg else return
-            if(!this.state.driverLegInput) return
+            if(!this.state.cursorLegInput) return
             let progress
-            if(!this.state.driverProgressInput){
+            if(!this.state.cursorInputProgress){
                 progress = 0
             } else {
-                progress = this.state.driverProgressInput
+                progress = this.state.cursorInputProgress
             }
             let updatedData = {
-                activeLegID: this.state.driverLegInput,
+                activeLegID: this.state.cursorLegInput,
                 legProgress: progress
             }
             selectedDriver.data = updatedData
             //update driver position in state
             this.setState({
-                driversArr: this.state.driversArr
+                cursorArr: this.state.cursorArr
             })
 
             let that = this
@@ -1265,19 +1277,19 @@ class Grid extends Component {
             } else if(evt.target.name === 'x' && !evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
 
                 this.setState({
-                    driverFormX: evt.target.value
+                    cursorFormX: evt.target.value
                 })
             } else if(evt.target.name === 'y' && !evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
                 this.setState({
-                    driverFormY: evt.target.value,
+                    cursorFormY: evt.target.value,
                 })
             } else if(evt.target.name === 'position-select'){
 
             } else if(evt.target.name === 'driver-select'){
-                this.setState({driverLegInput: evt.target.value})
+                this.setState({cursorLegInput: evt.target.value})
             } else if(evt.target.name === 'progress-input'){
                 console.log('hi')
-                this.setState({driverProgressInput:evt.target.value})
+                this.setState({cursorInputProgress:evt.target.value})
                 // comes from names on checkboxes
             } else if(evt.target.name === 'float-toggle'){
                 this.state.floatToggle = !this.state.floatToggle
@@ -1461,7 +1473,7 @@ class Grid extends Component {
             // call these with the default driver on mount
             //--- COMMENT OUT
             that.addNewDriver()
-            // that.updateDriverWithCoords({x:0, y:0}, 'manual' )
+            that.updateDriverWithCoords({x:0, y:0}, 'manual' )
             // that.updateDriverwithData(that.state.loadingDataArr[0])
             // that.colorCompleted(that.state.loadingDataArr[0].activeLegID, "coords")
 
@@ -1764,7 +1776,7 @@ class Grid extends Component {
     handleSubmit(event) {
         // console.log(event.target)
         event.preventDefault();
-        // console.log(this.state.selectedDriverIndex)
+        // console.log(this.state.cursorIndex)
         let that = this
         function validGraphSides(input){
             if(input.x !== input.y){
@@ -1776,7 +1788,7 @@ class Grid extends Component {
         }
         // on submit use the stored sizes
         if(event.target.name === 'graph-size'){
-            console.log('store', this.state.storeGraphSize)
+            // console.log('store', this.state.storeGraphSize)
             if(!validGraphSides(this.state.storeGraphSize)) return
             this.setState({
                 setGraphSize: this.state.storeGraphSize
@@ -1787,7 +1799,7 @@ class Grid extends Component {
                 return
             },100)
         }
-        let currentDriver = this.state.driversArr[this.state.selectedDriverIndex]
+        let currentDriver = this.state.cursorArr[this.state.cursorIndex]
                 // update coords
                 //set driver to those
             //UPDATE STATE DATA
@@ -1797,19 +1809,19 @@ class Grid extends Component {
             } else if(event.target.name === 'driver-form') {
                 let formData = {}
                 // set to new input. If blank use the previous one
-                if(this.state.driverFormX){
-                    formData['x'] = parseInt(this.state.driverFormX)
+                if(this.state.cursorFormX){
+                    formData['x'] = parseInt(this.state.cursorFormX)
                 } else {
                     formData['x'] = currentDriver.driverCoords.x
                 }
-                if(this.state.driverFormY){
-                    formData['y'] = parseInt(this.state.driverFormY)
+                if(this.state.cursorFormY){
+                    formData['y'] = parseInt(this.state.cursorFormY)
                 } else {
                     formData['y'] = currentDriver.driverCoords.y
                 }
                 console.log(currentDriver)
                     currentDriver.driverCoords = formData
-                console.log(this.state.driversArr)
+                console.log(this.state.cursorArr)
                 this.setState({
                     driverCoords: formData
                 })
@@ -1920,7 +1932,7 @@ class Grid extends Component {
 
     // set coords in pxs of plots
     _setStopCoords(type,x,y){
-        // console.log(x,y)
+        console.log(type, x,y)
         let that = this
         let coordsArr = []
 
