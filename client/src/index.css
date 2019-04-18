@@ -106,6 +106,10 @@ code {
 .cursor-wrapper.hide {
 	display: none;
 }
+.auto-plot span{
+    padding-right: 17px;
+
+}
 
 .stop-marker:before {
 	content: '\25CF';

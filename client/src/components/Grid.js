@@ -18,7 +18,7 @@ class Grid extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            modalState: false,
+            modalState: true,
             setGraphSize: {"x":"20", "y":"20"},
             storeGraphSize: {"x":"20", "y":"20"},
             plotObjs:[],
@@ -47,6 +47,7 @@ class Grid extends Component {
             createCounter:0,
             legs: [],
 			stops: [],
+            jsonStops:[],
             stopsCopy: [],
             legToColorID:"",
             cursorFormX:"",
@@ -152,7 +153,7 @@ class Grid extends Component {
     // update createCounter by 1
     increaseDriverIdindex(){
         let x = this.state.createCounter + 1
-        console.log('called',x)
+        // console.log('called',x)
         // console.log(index)
         this.setState({
             createCounter: x
@@ -160,7 +161,7 @@ class Grid extends Component {
         // console.log('new Index', this.state.createCounter)
     }
     // new add driver - runs on mount and when add button clicked
-    addNewDriver(){
+    addNewCursor(){
 
         let newDriverObj = {
             directions: {
@@ -174,7 +175,7 @@ class Grid extends Component {
             id: this.state.createCounter,
             name: `cursor ${this.state.createCounter + 1}`,
             color: this.state.colors[this.state.createCounter],
-            show:true
+            show:false
         }
         // console.log('id',newDriverObj.id)
         let arr = []
@@ -858,6 +859,7 @@ class Grid extends Component {
     }
     // renders all truck instances
     renderCursor(){
+        // console.log('CI',this.state.cursorIndex)
         if(this.state.cursorArr && Array.isArray(this.state.cursorArr)){
                 return this.state.cursorArr.map((driverData,i) => {
                 // console.log(driverDyata)
@@ -1125,7 +1127,6 @@ class Grid extends Component {
     }
     toggleShowCursor(e){
         let currentCursor = this.state.cursorArr[this.state.cursorIndex]
-        // toggle
         currentCursor.show = !currentCursor.show
         const cursorArrCopy = [...this.state.cursorArr]
         // https://stackoverflow.com/a/47580775/5972531
@@ -1148,17 +1149,21 @@ class Grid extends Component {
                 // to detect which driver is selected
             } else if(event.event && !event.iconClick && event.cursor){
                 // use data prop on html
-                let driverIndex = parseInt(event.event.target.dataset.key)
-                console.log('DI',driverIndex)
-                // change to another driver
-                this.changeDriver('change-driver', driverIndex)
-                this.toggleShowCursor(event)
+                let tabClickedIndex = parseInt(event.event.target.dataset.key)
+                // change to another cursor based on click
+                this.changeDriver('change-driver', tabClickedIndex)
+                let that = this
+                setTimeout(function () {
+                    console.log('TAB',tabClickedIndex)
+                    console.log('current', that.state.cursorIndex)
+                    that.toggleShowCursor(event)
+                })
 
                 // if events and not strings
             } else if(event.target.classList.contains('add-button')){
                 event.stopPropagation()
                 // call add new driver
-                    this.addNewDriver()
+                    this.addNewCursor()
 
             } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
@@ -1233,7 +1238,7 @@ class Grid extends Component {
 
             let that = this
             setTimeout(function(){
-                // that.addNewDriver()
+                // that.addNewCursor()
                 that.updateDriverwithData(selectedDriver.data)
                 that.colorCompleted(selectedDriver.data.activeLegID)
                 console.log(that.state)
@@ -1435,15 +1440,7 @@ class Grid extends Component {
             stopsCopy: arr
         })
     }
-    handlePlotLoading(json){
-        // this.createGraph()
-        this._setStopCoords('stop')
-        this.state.stops.map((stop, i) => {
-                this.legStartEnd(stop.x, stop.y,'all')
-                this.colorGrid(stop.x, stop.y, 'all')
 
-        })
-    }
 
 
     componentDidMount() {
@@ -1472,7 +1469,7 @@ class Grid extends Component {
             // })
             // call these with the default driver on mount
             //--- COMMENT OUT
-            that.addNewDriver()
+            that.addNewCursor()
             that.updateDriverWithCoords({x:0, y:0}, 'manual' )
             // that.updateDriverwithData(that.state.loadingDataArr[0])
             // that.colorCompleted(that.state.loadingDataArr[0].activeLegID, "coords")
@@ -1842,11 +1839,37 @@ class Grid extends Component {
                 console.log(that.state)
             },100)
         } else if(event.target.classList && event.target.classList.contains("modal-submit")){
-            let json = utils._makePlotJson(this.state.plotObjs)
-            this.setState({stops: json})
-            this.handlePlotLoading(this.state.stops)
+            this.otLoading('manual')
+        } else if(event.target.classList && event.target.classList.contains("auto-plot-submit")){
+            this.handlePlotLoading('auto')
         }
     }
+    handlePlotLoading(type){
+        if(type === "manual"){
+            console.log('MANUAL')
+            let json = utils._makePlotJson(this.state.plotObjs)
+            this.setState({stops: json})
+            this._setStopCoords('stop')
+
+        } else if(type === "auto"){
+            this._callStops()
+            .then(res => {
+                // temp stops
+                this.setState({
+                    stops: res.stops,
+                    stopsCopy: res.stops
+                })
+                console.log(this.state.stops)
+                this._setStopCoords('stop')
+                // this.state.stops.stops.map((stop, i) => {
+                    // this.legStartEnd(stop.x, stop.y,'all')
+                    // this.colorGrid(stop.x, stop.y, 'all')
+
+                // })
+            })
+        }
+    }
+
 
     _legIndex(input){
         // console.log('i', input)
@@ -1941,7 +1964,7 @@ class Grid extends Component {
                 setTimeout(function(){
                 if(that.state.stops.length > 0){
                     that.state.stops.forEach(stop => {
-                        // console.log(stop.x, stop.y)
+                        console.log(stop.x, stop.y)
                         let pixels = utils._convertToPixels(
                             stop.x, stop.y
                         )

@@ -100,9 +100,10 @@ class SimpleModal extends React.Component {
       this.props.onSubmit(e)
   }
   handleClick(e){
+      e.stopPropagation()
       if(e.target.classList && e.target.classList.contains('close-icon')){
           this.handleClose(e)
-      } else if(e.target.classList && e.target.classList.contains('modal-submit')){
+      } else if(e.target.classList && (e.target.classList.contains('modal-submit') || e.target.classList.contains('auto-plot-submit'))){
           this.handleSubmit(e)
       }
   }
@@ -134,13 +135,19 @@ class SimpleModal extends React.Component {
               strType="close"
               />
               <Typography variant="h6" id="modal-title">
-                Set your plot points
+                Set your own plot points
               </Typography>
               <Typography variant="subtitle1" id="simple-modal-description">
               <Select
                   cells={cellsrange}
                   onChange={this.handleSelectChange.bind(this)}
                   />
+              </Typography>
+              <Typography variant="subtitle2" id="simple-modal-description">
+                <div className="auto-plot">
+                    <span><strong>OR</strong> Auto plot for me</span>
+                        <button className="auto-plot-submit" onClick={this.handleClick.bind(this)}>Auto</button>
+                </div>
               </Typography>
               </div>
               <SimpleModalWrapped />
