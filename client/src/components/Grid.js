@@ -109,8 +109,9 @@ class Grid extends Component {
             that.setState({
                 startingCellNumAll: utils._calcStartingCell(that.state.setGraphSize)
             })
-            // that.calcRowVariaion()
-        },200)
+            console.log('TOP', that.state.startingCellNumAll)
+            that.calcRowVariaion()
+        })
 
     }
     // takes coords and type - needs access to state
@@ -151,7 +152,7 @@ class Grid extends Component {
 
     }
     // update createCounter by 1
-    increaseDriverIdindex(){
+    increaseCursorIdindex(){
         let x = this.state.createCounter + 1
         // console.log('called',x)
         // console.log(index)
@@ -163,7 +164,7 @@ class Grid extends Component {
     // new add driver - runs on mount and when add button clicked
     addNewCursor(){
 
-        let newDriverObj = {
+        let newCursorObj = {
             directions: {
                 xDir: "left",
                 yDir: "bottom"
@@ -177,57 +178,51 @@ class Grid extends Component {
             color: this.state.colors[this.state.createCounter],
             show:false
         }
-        // console.log('id',newDriverObj.id)
+        // console.log('id',newCursorObj.id)
         let arr = []
-        arr.push(newDriverObj)
+        arr.push(newCursorObj)
         let allCursors = this.state.cursorArr.concat(arr)
         // console.log(allCursors)
         this.setState({
             cursorArr: allCursors
         })
-        this.increaseDriverIdindex()
-        this.changeDriver('new-driver', newDriverObj.id)
+        this.increaseCursorIdindex()
+        this.changeCursor('new-cursor', newCursorObj.id)
 
     }
     // make new driver the selectedDriver on add
-    changeDriver(type, driverID){
+    changeCursor(type, cursorID){
         //set new driver to be the selectedDriver
-        if(type === 'new-driver')
+        if(type === 'new-cursor')
             this.setState({
-                cursorIndex: driverID,
+                cursorIndex: cursorID,
                 colorType: ""
             })
-        else if(type === 'change-driver'){
+        else if(type === 'change-cursor'){
             this.setState({
-                cursorIndex: driverID,
+                cursorIndex: cursorID,
             })
         }
-        let that = this
-        setTimeout(function(){
-            // console.log(that.state.cursorIndex)
-
-        })
-
     }
     removeDriver(event){
         // get the full name of the driver
-        let driverName = event.event.target.dataset.key
+        let cursorName = event.event.target.dataset.key
         // filter out driver by that name
-        let driver = this.state.cursorArr.filter(obj => {
-             return (obj.name === driverName.toLowerCase() ? obj : false)
+        let cursor = this.state.cursorArr.filter(obj => {
+             return (obj.name === cursorName.toLowerCase() ? obj : false)
         })
         // console.log(this.state.cursorArr)
         // change to next available one lower than the deleted one
         for (var i = this.state.cursorArr.length - 1; i >= 0; i--) {
-            if(driver[0].id > this.state.cursorArr[i].id){
-                this.changeDriver('change-driver', this.state.cursorArr[i].id)
+            if(cursor[0].id > this.state.cursorArr[i].id){
+                this.changeCursor('change-cursor', this.state.cursorArr[i].id)
             }
         }
         console.log(this.state.cursorArr)
         let that = this
         setTimeout(function(){
 
-            let index = that.state.cursorArr.indexOf(driver[0])
+            let index = that.state.cursorArr.indexOf(cursor[0])
             // splice out of cursorArr
             that.state.cursorArr.splice(index,1)
             that.setState({
@@ -237,7 +232,7 @@ class Grid extends Component {
         })
     }
     // runs on load using pre-loaded data and when form submitted
-    updateDriverwithData(driverData){
+    updateCursorwithData(driverData){
         let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
         // console.log(selectedDriver)
         // get from api or form
@@ -447,7 +442,7 @@ class Grid extends Component {
 
     }
     colorGrid(x, y, type){
-
+        console.log(this.state.startingCellNumAll)
         // console.log(this.state.previousStopX)
         // console.log(this.state.previousStopY)
         // calc num of units to move based on prev position
@@ -477,6 +472,7 @@ class Grid extends Component {
         }
         // move in tandem while both vals exist
         while(tempX && tempY){
+            // console.log(this.state.moveRowCells)
             // if last was les than current- do this
             if(this.state.previousStopY < y){
                 tempCellNum = tempCellNum - this.state.moveRowCells
@@ -521,7 +517,7 @@ class Grid extends Component {
                 }
             }
         }
-        // console.log(tempCellNumsArr)
+        console.log(tempCellNumsArr)
         // holdAllStopColorIndexes - cells for color or entire plots - spread out
         if(type === 'all'){
 
@@ -1151,7 +1147,7 @@ class Grid extends Component {
                 // use data prop on html
                 let tabClickedIndex = parseInt(event.event.target.dataset.key)
                 // change to another cursor based on click
-                this.changeDriver('change-driver', tabClickedIndex)
+                this.changeCursor('change-cursor', tabClickedIndex)
                 let that = this
                 setTimeout(function () {
                     console.log('TAB',tabClickedIndex)
@@ -1239,7 +1235,7 @@ class Grid extends Component {
             let that = this
             setTimeout(function(){
                 // that.addNewCursor()
-                that.updateDriverwithData(selectedDriver.data)
+                that.updateCursorwithData(selectedDriver.data)
                 that.colorCompleted(selectedDriver.data.activeLegID)
                 console.log(that.state)
             },100)
@@ -1328,7 +1324,7 @@ class Grid extends Component {
          evt.target.nextSibling && evt.target.nextSibling.classList.contains("modal")
         )
          {
-             console.log(evt.target.classList)
+             // console.log(evt.target.classList)
                 if(evt.target.name === "xSelect"){
                     this.setState(prevState => ({
                         tempPlotObj: {
@@ -1471,7 +1467,7 @@ class Grid extends Component {
             //--- COMMENT OUT
             that.addNewCursor()
             that.updateDriverWithCoords({x:0, y:0}, 'manual' )
-            // that.updateDriverwithData(that.state.loadingDataArr[0])
+            // that.updateCursorwithData(that.state.loadingDataArr[0])
             // that.colorCompleted(that.state.loadingDataArr[0].activeLegID, "coords")
 
             // that.pleted(that.state.driverCoords.y)
@@ -1839,12 +1835,13 @@ class Grid extends Component {
                 console.log(that.state)
             },100)
         } else if(event.target.classList && event.target.classList.contains("modal-submit")){
-            this.otLoading('manual')
+            this.handlePlotLoading('manual')
         } else if(event.target.classList && event.target.classList.contains("auto-plot-submit")){
             this.handlePlotLoading('auto')
         }
     }
     handlePlotLoading(type){
+        let that = this
         if(type === "manual"){
             console.log('MANUAL')
             let json = utils._makePlotJson(this.state.plotObjs)
@@ -1854,18 +1851,26 @@ class Grid extends Component {
         } else if(type === "auto"){
             this._callStops()
             .then(res => {
-                // temp stops
                 this.setState({
                     stops: res.stops,
-                    stopsCopy: res.stops
+                    stopsCopy: res.stops,
+                    setGraphSize: {"x":"100", "y": "100"}
+                    // setGraphSize: {"x":"100", "y": "100"}
                 })
-                console.log(this.state.stops)
+                // adjust graph size to match
+                console.log('call graph')
+                this.createGraph()
                 this._setStopCoords('stop')
-                // this.state.stops.stops.map((stop, i) => {
-                    // this.legStartEnd(stop.x, stop.y,'all')
-                    // this.colorGrid(stop.x, stop.y, 'all')
+                setTimeout(function(){
+                    console.log(that.state.startingCellNumAll)
+                    that.state.stops.map((stop, i) => {
 
-                // })
+                        // that.legStartEnd(stop.x, stop.y,'all')
+                        that.colorGrid(stop.x, stop.y, 'all')
+
+                    })
+
+                })
             })
         }
     }
@@ -1955,7 +1960,6 @@ class Grid extends Component {
 
     // set coords in pxs of plots
     _setStopCoords(type,x,y){
-        console.log(type, x,y)
         let that = this
         let coordsArr = []
 
@@ -1964,7 +1968,7 @@ class Grid extends Component {
                 setTimeout(function(){
                 if(that.state.stops.length > 0){
                     that.state.stops.forEach(stop => {
-                        console.log(stop.x, stop.y)
+                        // console.log(stop.x, stop.y)
                         let pixels = utils._convertToPixels(
                             stop.x, stop.y
                         )

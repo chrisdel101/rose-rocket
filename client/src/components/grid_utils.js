@@ -66,7 +66,7 @@ var utils = (function () {
     _calcStartingCell: function(sizeObj){
         // find the corner cell formula is (x * y) - x
             let startingCellNum = (parseInt(sizeObj.x) * parseInt(sizeObj.y)) - parseInt(sizeObj.x)
-            console.log(startingCellNum)
+            console.log('startingCell', startingCellNum)
             return startingCellNum
     },
     // takes 2 objs of coords and determines the diff
