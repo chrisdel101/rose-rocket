@@ -1,12 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Modal from '@material-ui/core/Modal';
-import Button from '@material-ui/core/Button';
-import Select from './Select'
+import React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Modal from "@material-ui/core/Modal";
+import Button from "@material-ui/core/Button";
+import Select from "./Select";
 import Icon from "./Icon";
-
+import MaterialForm from "./MaterialForm";
+import MaterialButton from "./MaterialButton";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -17,180 +18,208 @@ function getModalStyle() {
   const left = 50;
 
   return {
-    width: '500px',
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    justifyContent: 'center',
+    width: "500px",
+    display: "flex",
+    justifyContent: "center",
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
+    transform: `translate(-${top}%, -${left}%)`
   };
 }
 function getModalRighStyle() {
-  const top = 50
-  const right = 20
+  const top = 50;
+  const right = 20;
 
   return {
     top: `${top}px`,
     right: `${right}px`,
-    transform: `translate(-${top}%, -${right}%)`,
+    transform: `translate(-${top}%, -${right}%)`
   };
 }
 
 const styles = theme => ({
   paper: {
-    position: 'absolute',
+    position: "absolute",
     width: theme.spacing.unit * 50,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
-    outline: 'none',
-  },
+    outline: "none"
+  }
 });
 
 class SimpleModal extends React.Component {
-    constructor(){
-        super()
-        this.state = {
-            open: false,
-            cells: ""
-        };
+  constructor() {
+    super();
+    this.state = {
+      open: false,
+      cells: ""
+    };
 
-        this.makeRange = this.makeRange.bind(this)
-    }
+    this.makeRange = this.makeRange.bind(this);
+  }
 
-  handleOpen = (e) => {
-      console.log(e)
+  handleOpen = e => {
+    console.log(e);
     this.setState({ open: true });
   };
 
-  handleClose = (e) => {
+  handleClose = e => {
     this.setState({ open: false });
-    this.props.onChange(e)
-    console.log(this.state.open)
+    this.props.onChange(e);
+    console.log(this.state.open);
   };
 
   // make range for select dropdowns
-  makeRange(){
-    let num = this.props.cells
-    let arr = Array.from({length: num}, (v, i) => i)
-    return arr
+  makeRange() {
+    let num = this.props.cells;
+    let arr = Array.from({ length: num }, (v, i) => i);
+    return arr;
   }
-  componentDidMount(){
-      let that = this
-      // set state from parent to open modal
-      setTimeout(function(){
-          that.setState({
-              open:that.props.open
-          })
-          },1000)
+  componentDidMount() {
+    let that = this;
+    // set state from parent to open modal
+    setTimeout(function() {
+      that.setState({
+        open: that.props.open
+      });
+    }, 1000);
   }
-  componentDidUpdate(){
-      // when parent updates the state, it will register here
-      if(this.props.open !== this.state.open){
-          this.setState({
-              open: this.props.open
-          })
-      }
+  componentDidUpdate() {
+    // when parent updates the state, it will register here
+    if (this.props.open !== this.state.open) {
+      this.setState({
+        open: this.props.open
+      });
+    }
   }
-  handleSelectChange(e){
-      this.props.onChange(e)
+  handleSelectChange(e) {
+    this.props.onChange(e);
   }
-  handleSubmit(e){
-      this.props.onSubmit(e)
+  handleSubmit(e) {
+    this.props.onSubmit(e);
   }
-  handleClick(e){
-      e.stopPropagation()
-      if(e.target.classList && e.target.classList.contains('close-icon')){
-          this.handleClose(e)
-      } else if(e.target.classList && (e.target.classList.contains('modal-submit') || e.target.classList.contains('auto-plot-submit'))){
-          this.handleSubmit(e)
-      }
+  handleClick(e) {
+      console.log(e.target)
+    e.stopPropagation();
+    if (e.target.classList && e.target.classList.contains("close-icon")) {
+      this.handleClose(e);
+    } else if (
+      e.target.classList &&
+      (e.target.classList.contains("modal-submit") ||
+        e.target.classList.contains("auto-plot-submit"))
+    ) {
+      this.handleSubmit(e);
+    }
   }
-  renderIcon(){
-      let that = this
-      return(
-          <div tabIndex="-1" className="icon-wrapper">
-            <Icon
-              className="close-icon"
-              strType="close"
-              onClick={that.handleClick.bind(that)}
-              />
-          </div>)
+  renderIcon() {
+    let that = this;
+    return (
+      <div tabIndex="-1" className="icon-wrapper">
+        <Icon
+          className="close-icon"
+          strType="close"
+          onClick={that.handleClick.bind(that)}
+        />
+      </div>
+    );
   }
-  renderInputModal(classes){
-      let cellsrange = this.makeRange(this.props.cells)
-    return(
-        <React.Fragment>
-          <Modal
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-            open={this.state.open}
-            onClose={this.handleClose}
-            onClick={this.handleClick.bind(this)}>
-            <div style={getModalStyle()} className={`${classes.paper} modal`}>
-            <div className="modal-right modal-col">
-            <Icon
-              className="close-icon"
-              strType="close"
-              />
+  renderInputModal(classes) {
+    let cellsrange = this.makeRange(this.props.cells);
+    return (
+      <React.Fragment>
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={this.state.open}
+          onClose={this.handleClose}
+          onClick={this.handleClick.bind(this)}
+        >
+          <div style={getModalStyle()} className={`${classes.paper} modal`}>
+            <div className="modal-col modal-left">
               <Typography variant="h6" id="modal-title">
-                Set your own plot points
+                Set Graph Size
+              </Typography>
+              <MaterialForm
+                graphSize={true}
+                onChange={this.handleSelectChange.bind(this)}
+                onSubmit={this.handleSubmit.bind(this)}
+                values={this.state.setGraphSize}
+                formname="graph-size"
+                addedClass="graph-size"
+                buttonsize="small"
+              />
+            </div>
+            <div className="modal-center modal-col">
+              <Icon className="close-icon" strType="close" />
+              <Typography variant="h6" id="modal-title">
+                Set Plot Points
               </Typography>
               <Typography variant="subtitle1" id="simple-modal-description">
-              <Select
+                <Select
                   cells={cellsrange}
                   onChange={this.handleSelectChange.bind(this)}
-                  />
+                />
               </Typography>
               <Typography variant="subtitle2" id="simple-modal-description">
                 <div className="auto-plot">
-                    <span><strong>OR</strong> Auto plot for me</span>
-                        <button className="auto-plot-submit" onClick={this.handleClick.bind(this)}>Auto</button>
+                  <span id="auto-plot-span">
+                    <strong>OR</strong>
+                  </span>
+                  <MaterialButton
+                    type="auto-plot-submit submit"
+                    value="Submit"
+                    size="small"
+                    color="primary"
+                    text="Auto"
+                    onClick={this.handleClick.bind(this)}
+                    />
                 </div>
               </Typography>
-              </div>
-              <SimpleModalWrapped />
-              <div className="modal-lef modal-col">
-                  <Typography variant="h6" id="modal-title">
-                    Plotted Points
-                  </Typography>
-                 {this.renderPlotsList(this.props)}
-
-              </div>
             </div>
-          </Modal>
-        </React.Fragment>
-    )
+            <SimpleModalWrapped />
+            <div className="modal-right modal-col">
+              <Typography variant="h6" id="modal-title">
+                Points Plotted
+              </Typography>
+              {this.renderPlotsList(this.props)}
+            </div>
+          </div>
+        </Modal>
+      </React.Fragment>
+    );
   }
-  renderPlotsList(props){
-      if(!props.plots) return
-    return(
-        <div className="plots-list">
-            <ol>
-            {   props.plots.map((plot,i) => {
-                return(
-                    <li key={i}><strong>X</strong>: {plot.x}&nbsp;&nbsp;&nbsp; <strong>Y</strong>:{plot.y}</li>
-                )
-                })
-            }
-            </ol>
-            <button className="modal-submit" onClick={this.handleClick.bind(this)}>Graph it</button>
-        </div>
-    )
+  renderPlotsList(props) {
+    if (!props.plots) return;
+    return (
+      <div className="plots-list-container">
+        <ol className="plots-list">
+          {props.plots.map((plot, i) => {
+            return (
+              <li key={i}>
+                <strong>X</strong>:{plot.x}&nbsp;&nbsp;&nbsp; <strong>Y</strong>
+                :{plot.y}
+              </li>
+            );
+          })}
+        </ol>
+        <MaterialButton
+          type=" modal-submit submit"
+          value="Submit"
+          size="small"
+          color="secondary"
+          text="Graph"/>
+      </div>
+    );
   }
   render() {
     const { classes } = this.props;
-        return (
-            <React.Fragment>
-                {this.renderInputModal(classes)}
-            </React.Fragment>
-    )
+    return <React.Fragment>{this.renderInputModal(classes)}</React.Fragment>;
   }
 }
 
 SimpleModal.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 // We need an intermediary variable for handling the recursive nesting.

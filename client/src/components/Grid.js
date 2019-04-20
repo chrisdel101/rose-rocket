@@ -442,7 +442,7 @@ class Grid extends Component {
 
     }
     colorGrid(x, y, type){
-        console.log(this.state.startingCellNumAll)
+        // console.log(this.state.startingCellNumAll)
         // console.log(this.state.previousStopX)
         // console.log(this.state.previousStopY)
         // calc num of units to move based on prev position
@@ -517,7 +517,7 @@ class Grid extends Component {
                 }
             }
         }
-        console.log(tempCellNumsArr)
+        // console.log(tempCellNumsArr)
         // holdAllStopColorIndexes - cells for color or entire plots - spread out
         if(type === 'all'){
 
@@ -648,12 +648,12 @@ class Grid extends Component {
                 }
             }
         }
-        // console.log('last', tempCellNum)
+        console.log('last', tempCellNum)
         let legCellNums = {
             start: tempStartNum,
             end: tempCellNum
         }
-        // console.log('coords', legCellNums)
+        console.log('coords', legCellNums)
         // each array b4 being pushing into main one
         // console.log('tempCellNumsArr', tempCellNumsArr)
         // console.log('x', x)
@@ -933,15 +933,7 @@ class Grid extends Component {
                                 name="icon-start"
                                 label="Begin at stop 1"
                                 onChange={this.handleChange.bind(this)}/>
-                            <MaterialForm
-                                graphSize={true}
-                                onChange={this.handleChange.bind(this)}
-                                onSubmit={this.handleSubmit.bind(this)}
-                                values={this.state.setGraphSize}
-                                formname="graph-size"
-                                addedClass="graph-size"
-                                buttonsize="small"
-                            />
+
                         </div>
                         <Tabs
                             onChange={this.handleChange.bind(this)}
@@ -1248,7 +1240,7 @@ class Grid extends Component {
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        console.log(evt.target)
+        // console.log(evt.target)
         // console.log(evt)
         // console.log(evt.target.parentNode)
         // console.log(evt.target.parentNode)
@@ -1767,7 +1759,7 @@ class Grid extends Component {
 
     }
     handleSubmit(event) {
-        // console.log(event.target)
+        console.log(event.target)
         event.preventDefault();
         // console.log(this.state.cursorIndex)
         let that = this
@@ -1865,7 +1857,7 @@ class Grid extends Component {
                     console.log(that.state.startingCellNumAll)
                     that.state.stops.map((stop, i) => {
 
-                        // that.legStartEnd(stop.x, stop.y,'all')
+                        that.legStartEnd(stop.x, stop.y,'all')
                         that.colorGrid(stop.x, stop.y, 'all')
 
                     })

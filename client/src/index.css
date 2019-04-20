@@ -91,12 +91,49 @@ code {
 	position: relative !important;
 }
 .modal-col{
-    margin: 0 20px;
+    /* margin: 0 20px; */
+    width: 33%;
+}
+.modal-col #modal-title{
+    text-align: center;
 }
 .modal .close-icon{
     font-size: 20px;
+}
+.modal-left, .modal-center {
+    border-right:black 1px solid;
+}
+.modal-left button{
+    margin: auto;
+}
+.modal-center, .modal-right {
+    margin-left: 5px;
+}
+.modal-right .plots-list-container{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+.modal-left button{
+    margin: auto;
+}
+.modal-center .auto-plot{
+    margin-left: 10px;
+    margin-top: 10px;
+}
+#auto-plot-span {
+    color: gray;
+}
+.modal-right .plots-list-container button{
+    position: absolute;
+    bottom: 28px;
+    left: 30px;
 
 }
+
+
 .cursor-wrapper.show {
 	position: absolute;
 	bottom: 0;
@@ -105,10 +142,6 @@ code {
 }
 .cursor-wrapper.hide {
 	display: none;
-}
-.auto-plot span{
-    padding-right: 17px;
-
 }
 
 .stop-marker:before {
@@ -196,12 +229,7 @@ code {
 	justify-content: space-around;
 	width: 100%;
 }
-.material-form[name="graph-size"] {
-    border-left:black 1px solid;
-    align-items: center;
-	justify-content: space-around;
-    padding-left: 10px;
-}
+
 .material-form [class*="textField"]{
     width: 100px;
 }
