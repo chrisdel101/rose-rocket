@@ -60,14 +60,14 @@ class SimpleModal extends React.Component {
   }
 
   handleOpen = e => {
-    console.log(e);
+    // console.log(e);
     this.setState({ open: true });
   };
 
   handleClose = e => {
     this.setState({ open: false });
     this.props.onChange(e);
-    console.log(this.state.open);
+    // console.log(this.state.open);
   };
 
   // make range for select dropdowns
@@ -100,7 +100,7 @@ class SimpleModal extends React.Component {
     this.props.onSubmit(e);
   }
   handleClick(e) {
-      console.log(e.target)
+      // console.log(e.target)
     e.stopPropagation();
     if (e.target.classList && e.target.classList.contains("close-icon")) {
       this.handleClose(e);
@@ -183,6 +183,12 @@ class SimpleModal extends React.Component {
                 Points Plotted
               </Typography>
               {this.renderPlotsList(this.props)}
+              <MaterialButton
+                type=" modal-submit submit"
+                value="Submit"
+                size="small"
+                color="secondary"
+                text="Graph"/>
             </div>
           </div>
         </Modal>
@@ -203,12 +209,6 @@ class SimpleModal extends React.Component {
             );
           })}
         </ol>
-        <MaterialButton
-          type=" modal-submit submit"
-          value="Submit"
-          size="small"
-          color="secondary"
-          text="Graph"/>
       </div>
     );
   }

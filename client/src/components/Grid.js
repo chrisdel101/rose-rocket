@@ -31,7 +31,7 @@ class Grid extends Component {
             sliderIndex:0,
             initialSliderChange: true,
             sliderCoordsArrs: [],
-            utilsTop: '',
+            // utilsTop: '',
             colors: ['red', 'Orange', 'DodgerBlue', 'MediumSeaGreen', 'Violet','SlateBlue', 'Tomato'],
             floatToggle: false,
             showStopNames: false,
@@ -321,7 +321,7 @@ class Grid extends Component {
             coords = this._setStopCoords('driver',
             coords.x, coords.y)
         } else if(type === "manual"){
-            console.log("LOAD")
+            // console.log("LOAD")
             // reset to zero
             this._resetTruck()
             coords = this._setStopCoords('driver', coords.x, coords.y)
@@ -648,14 +648,15 @@ class Grid extends Component {
                 }
             }
         }
-        console.log('last', tempCellNum)
+        // console.log('last', tempCellNum)
         let legCellNums = {
             start: tempStartNum,
             end: tempCellNum
         }
-        console.log('coords', legCellNums)
+        // console.log('coords', legCellNums)
         // each array b4 being pushing into main one
         // console.log('tempCellNumsArr', tempCellNumsArr)
+        // console.log('holdAllLegColorArrs', this.state.holdAllLegColorArrs)
         // console.log('x', x)
         // console.log('y', y)
         // - make this previousLast
@@ -866,10 +867,12 @@ class Grid extends Component {
         }
 
     }
+    // position utils-container based on size with graph
     handleStyle(){
         // set to false temorarily
         if(this.state.floatToggle){
             if(this.state.utilsTop){
+                console.log(this.state.utilsTop)
                 return {
                     bottom: this.state.utilsTop.toString() + "px"
                 }
@@ -883,6 +886,7 @@ class Grid extends Component {
     }
 
      render() {
+         // console.log(this.state.legs)
     	return(
             <main className="page-container">
             <Modal
@@ -1123,7 +1127,7 @@ class Grid extends Component {
         })
     }
     handleClick(event){
-        // console.log(event.target.classList)
+        console.log(event)
         // console.log(this.hasParentClass(event.target, "snackbar")event.target)
         if(!event) return
         // console.log(event)
@@ -1200,8 +1204,8 @@ class Grid extends Component {
         }
     }
     onDropdownSubmit(event) {
-        let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
-        console.log(selectedDriver)
+        let selectedCursor = this.state.cursorArr[this.state.cursorIndex]
+        console.log(selectedCursor)
         // console.log(event.target.name)
         event.preventDefault()
 
@@ -1218,7 +1222,7 @@ class Grid extends Component {
                 activeLegID: this.state.cursorLegInput,
                 legProgress: progress
             }
-            selectedDriver.data = updatedData
+            selectedCursor.data = updatedData
             //update driver position in state
             this.setState({
                 cursorArr: this.state.cursorArr
@@ -1227,12 +1231,13 @@ class Grid extends Component {
             let that = this
             setTimeout(function(){
                 // that.addNewCursor()
-                that.updateCursorwithData(selectedDriver.data)
-                that.colorCompleted(selectedDriver.data.activeLegID)
+                that.updateCursorwithData(selectedCursor.data)
+                that.colorCompleted(selectedCursor.data.activeLegID)
                 console.log(that.state)
             },100)
 
         } else if(event.target.name === 'color'){
+            // console.log('color', this.state.legToColorID)
             this.colorLeg(this.state.legToColorID)
 
         }
@@ -1292,9 +1297,12 @@ class Grid extends Component {
                 })
                 let that = this
                 // go to bottom on toggle
-                setTimeout(function(){
-                    that.scrollToBottom()
-                })
+                // console.log(document.body.scrollHeight)
+                this.offsetGridConatainer()
+
+                // setTimeout(function(){
+                //     that.scrollToBottom()
+                // })
             } else if(evt.target.name === "stop-name-toggle"){
                 this.state.showStopNames = !this.state.showStopNames
 
@@ -1428,7 +1436,20 @@ class Grid extends Component {
             stopsCopy: arr
         })
     }
+    offsetGridConatainer(){
+        let that = this
+        let utils = document.querySelector('.utils-container')
+        let grid = document.querySelector('.grid-container')
 
+        if(utils.offsetHeight + grid.offsetHeight > window.innerHeight){
+            console.log('HERE')
+            setTimeout(function(){
+                that.setState({
+                    // utilsTop: utils.offsetHeight
+                })
+            },500)
+        }
+    }
 
 
     componentDidMount() {
@@ -1437,15 +1458,8 @@ class Grid extends Component {
         this.createGraph()
         this.scrollToBottom()
         // make scroll to the correct part of screen
-        let utils = document.querySelector('.utils-container')
-        let grid = document.querySelector('.grid-container')
-        let utilsTop
-        setTimeout(function(){
-            that.setState({
-                utilsTop: utils.offsetHeight
-            })
-        },500)
 
+        this.offsetGridConatainer()
 
         setTimeout(function(){
             // console.log(that.state.legs)
@@ -1759,7 +1773,7 @@ class Grid extends Component {
 
     }
     handleSubmit(event) {
-        console.log(event.target)
+        // console.log(event.target)
         event.preventDefault();
         // console.log(this.state.cursorIndex)
         let that = this
@@ -1839,6 +1853,17 @@ class Grid extends Component {
             let json = utils._makePlotJson(this.state.plotObjs)
             this.setState({stops: json})
             this._setStopCoords('stop')
+            setTimeout(function(){
+                that.legConstructor(that.state.stops)
+                // console.log(that.state.startingCellNumAll)
+                that.state.stops.map((stop, i) => {
+
+                    that.legStartEnd(stop.x, stop.y,'all')
+                    that.colorGrid(stop.x, stop.y, 'all')
+
+                })
+
+            })
 
         } else if(type === "auto"){
             this._callStops()
@@ -1855,8 +1880,8 @@ class Grid extends Component {
                 this._setStopCoords('stop')
                 setTimeout(function(){
                     console.log(that.state.startingCellNumAll)
+                    that.legConstructor(that.state.stops)
                     that.state.stops.map((stop, i) => {
-
                         that.legStartEnd(stop.x, stop.y,'all')
                         that.colorGrid(stop.x, stop.y, 'all')
 
@@ -1925,6 +1950,7 @@ class Grid extends Component {
         console.log('i', index)
         // get leg using index out of array
         let leg = this.state.holdAllLegColorArrs[index]
+        console.log('leg', this.state.holdAllLegColorArrs)
         // set state on child to change the color
         let legObj = {leg, index}
         console.log(legObj)
@@ -1937,6 +1963,7 @@ class Grid extends Component {
     // build legs out of stops
     legConstructor(stops){
         let legs = stops.map((stop, i) => {
+            // console.log(stop)
             if(!stops[i + 1]) return
             return {
                 "startStop": stop.name,
@@ -1948,6 +1975,7 @@ class Grid extends Component {
         this.setState({
             legs: legs
         })
+        // console.log(this.state.legs)
     }
 
     // set coords in pxs of plots
@@ -1998,8 +2026,13 @@ class Grid extends Component {
 
     }
     scrollToBottom(){
-        // console.log('scroll bottom')
-        window.scrollTo(0,document.body.scrollHeight)
+        // if(window.outerHeight > document.body.scrollHeight){
+        //     console.log('scroll bottom')
+        //     return
+        // } else {
+            console.log('scroll bottom DO')
+            window.scrollTo(0,document.body.scrollHeight)
+        // }
     }
 
     _callLegs = async () => {

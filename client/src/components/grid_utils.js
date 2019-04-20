@@ -13,13 +13,13 @@ var utils = (function () {
         // after that everythig 11px
         // - minus cells add 100px
         // - rest * 11 then sum
-        if(x > 10){
+        if(x){
             x = x - 10
             totalX = 100 + (x * 11)
         } else {
             totalX = x * 10
         }
-        if(y > 10){
+        if(y){
             y = y - 10
             totalY = 100 + (y * 11)
         } else {

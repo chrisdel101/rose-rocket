@@ -109,31 +109,33 @@ code {
 .modal-center, .modal-right {
     margin-left: 5px;
 }
-.modal-right .plots-list-container{
+.modal-right {
     display: flex;
     flex-direction: column;
     position: relative;
-    height: 100%;
-    width: 100%;
 }
 .modal-left button{
     margin: auto;
 }
 .modal-center .auto-plot{
     margin-left: 10px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 #auto-plot-span {
     color: gray;
+    padding: 0 5px;
 }
-.modal-right .plots-list-container button{
+.modal-right  button{
     position: absolute;
-    bottom: 28px;
+    bottom: 0;
     left: 30px;
 
 }
 
-
+.plots-list-container{
+    max-height: 145px;
+    overflow: scroll;
+}
 .cursor-wrapper.show {
 	position: absolute;
 	bottom: 0;

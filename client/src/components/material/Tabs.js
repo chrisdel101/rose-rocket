@@ -115,11 +115,12 @@ class SimpleTabs extends React.Component {
         }
     }
     handleTabsClick(e){
-        if(this.state.hovered){
+        e.stopPropagation()
+        if(this.state.hovered || e.target.parentNode.parentNode.parentNode.classList.contains("tabs-element")){
             return
+        } else if(e.target.type === "button" && e.target.dataset.key){
+            this.props.onClick({event: e, iconClick:false, cursor:true})
         }
-        console.log()
-        this.props.onClick({event: e, iconClick:false, cursor:true})
     }
 
     renderIcon(){
