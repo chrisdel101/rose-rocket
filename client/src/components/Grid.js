@@ -84,6 +84,8 @@ class Grid extends Component {
             }
 		};
 
+    this.getWindowOffset = this.getWindowOffset.bind(this)
+
 	}
     createGraph(){
         let that = this
@@ -869,10 +871,11 @@ class Grid extends Component {
     }
     // position utils-container based on size with graph
     handleStyle(){
+
         // set to false temorarily
+        console.log(this.state.utilsTop)
         if(this.state.floatToggle){
             if(this.state.utilsTop){
-                console.log(this.state.utilsTop)
                 return {
                     bottom: this.state.utilsTop.toString() + "px"
                 }
@@ -886,7 +889,7 @@ class Grid extends Component {
     }
 
      render() {
-         // console.log(this.state.legs)
+        // console.log(this.getWindowOffset())
     	return(
             <main className="page-container">
             <Modal
@@ -1262,7 +1265,7 @@ class Grid extends Component {
                     x: xVal
                 }
             }))
-            console.log(this.state.storeGraphSize)
+            // console.log(this.state.storeGraphSize)
             } else if(evt.target.name === 'y' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
                 let yVal = evt.target.value
                 this.setState(prevState => ({
@@ -1292,17 +1295,16 @@ class Grid extends Component {
             } else if(evt.target.name === 'float-toggle'){
                 this.state.floatToggle = !this.state.floatToggle
 
-                this.setState({
-                    floatToggle: this.state.floatToggle
-                })
                 let that = this
                 // go to bottom on toggle
-                // console.log(document.body.scrollHeight)
-                this.offsetGridConatainer()
-
-                // setTimeout(function(){
-                //     that.scrollToBottom()
-                // })
+                let offSet = this.getWindowOffset()
+                if(offSet){
+                    console.log('HERE', offSet)
+                    this.setState({
+                        utilsTop: offSet,
+                        floatToggle: this.state.floatToggle
+                    })
+                }
             } else if(evt.target.name === "stop-name-toggle"){
                 this.state.showStopNames = !this.state.showStopNames
 
@@ -1436,19 +1438,42 @@ class Grid extends Component {
             stopsCopy: arr
         })
     }
-    offsetGridConatainer(){
+    // scroll page to the bottom
+    scrollToBottom(){
+        // if(window.outerHeight > document.body.scrollHeight){
+        //     console.log('scroll bottom')
+        //     return
+        // } else {
+            console.log('scroll bottom DO')
+            window.scrollTo(0,document.body.scrollHeight)
+        // }
+    }
+    getWindowOffset(){
         let that = this
         let utils = document.querySelector('.utils-container')
         let grid = document.querySelector('.grid-container')
 
         if(utils.offsetHeight + grid.offsetHeight > window.innerHeight){
-            console.log('HERE')
-            setTimeout(function(){
-                that.setState({
-                    // utilsTop: utils.offsetHeight
-                })
-            },500)
+            return utils.offsetHeight
+            // console.log('HERE')
+            // setTimeout(function(){
+            //     that.setState({
+            //         utilsTop: utils.offsetHeight
+            //     })
+            // },500)
+        } else {
+            return false
         }
+        // if(document.body.offsetHeight > window.outerHeight){
+        //     setTimeout(function(){
+        //         console.log('set offset here', utils.offsetHeight)
+        //         that.setState({
+        //             utilsTop: utils.offsetHeight
+        //         })
+        //     },500)
+        // } else {
+        //     return false
+        // }
     }
 
 
@@ -1459,7 +1484,7 @@ class Grid extends Component {
         this.scrollToBottom()
         // make scroll to the correct part of screen
 
-        this.offsetGridConatainer()
+        this.getWindowOffset()
 
         setTimeout(function(){
             // console.log(that.state.legs)
@@ -1717,36 +1742,6 @@ class Grid extends Component {
             ySlideCoord: yArr
         }
     }
-    // take json and divide into arrs of stop/start
-    makeCoordsArrs(){
-        let stops = [{
-            "name": "A",
-            "x": 20,
-            "y": 10
-            },
-            {
-            "name": "B",
-            "x": 20,
-            "y": 20
-            },
-            {
-            "name": "C",
-            "x": 25,
-            "y": 30
-            },
-            {
-            "name": "D",
-            "x": 25,
-            "y": 80
-        }]
-        let arr = []
-        stops.map((stop,i) => {
-            if(!stops[i + 1]) return
-            let start = stops[i]
-            let end = stops[i + 1]
-            console.log(start, end)
-        })
-    }
     _numBetweenStops(stop1, stop2){
         let x1 = stop1.x
         let x2 = stop2.x
@@ -1879,7 +1874,7 @@ class Grid extends Component {
                 this.createGraph()
                 this._setStopCoords('stop')
                 setTimeout(function(){
-                    console.log(that.state.startingCellNumAll)
+                    // console.log(that.state.startingCellNumAll)
                     that.legConstructor(that.state.stops)
                     that.state.stops.map((stop, i) => {
                         that.legStartEnd(stop.x, stop.y,'all')
@@ -2024,15 +2019,6 @@ class Grid extends Component {
             }
 
 
-    }
-    scrollToBottom(){
-        // if(window.outerHeight > document.body.scrollHeight){
-        //     console.log('scroll bottom')
-        //     return
-        // } else {
-            console.log('scroll bottom DO')
-            window.scrollTo(0,document.body.scrollHeight)
-        // }
     }
 
     _callLegs = async () => {
