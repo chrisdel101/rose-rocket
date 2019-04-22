@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const port = process.env.PORT || 4000;
 const legs = require('./data/legs.json')
@@ -42,3 +43,5 @@ app.put('/driver', (req, res) => {
     console.log(driver)
 
 });
+
+app.listen(3000);
