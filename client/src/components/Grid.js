@@ -21,8 +21,6 @@ class Grid extends Component {
             tempPlotObj:{x:"",y:""},
             cancelSlide: false,
             sliderSlicedChunk: [],
-            previousXSlideCoord: {x: 0},
-            previousYSlideCoord: {y: 0},
             iconStartAtfirstStop: false,
             sliderIndex:0,
             initialSliderChange: true,
@@ -37,9 +35,7 @@ class Grid extends Component {
             completedColorsCounter: 0,
             colorType: "",
             loadingDataArr: [],
-            // changes based on tab click
             cursorIndex: 0,
-            // used to assign driver id on creation
             createCounter:0,
             legs: [],
 			stops: [],
@@ -52,9 +48,6 @@ class Grid extends Component {
             cursorArr: [],
             cursorInputProgress: "",
             currentCursor: "",
-            driverLegStart: "",
-            driverCoords: "",
-            positionSelect: "coords",
             startingCellNumAll: 0,
             startingCellNumPartial: "",
             previousLegEndCell:0,
@@ -78,9 +71,11 @@ class Grid extends Component {
                 driverText: "Select leg for driver",
                 colorText: "Select a Leg to color"
             }
-		};
-
+		}
     this.getWindowOffset = this.getWindowOffset.bind(this)
+    this.handleChange    = this.handleChange.bind(this)
+    this.handleSubmit    = this.handleSubmit.bind(this)
+    this.handleClick     = this.handleClick.bind(this)
 
 	}
     createGraph(){
@@ -91,7 +86,6 @@ class Grid extends Component {
             console.error('No cell values')
             return
         }
-        // console.log(cells)
         that.setState({
             boxesToRender:Array.from({length: cells}, (v, i) => i)
         })
@@ -107,7 +101,6 @@ class Grid extends Component {
             that.setState({
                 startingCellNumAll: utils._calcStartingCell(that.state.setGraphSize)
             })
-            console.log('TOP', that.state.startingCellNumAll)
             that.calcRowVariaion()
         })
 
@@ -115,23 +108,15 @@ class Grid extends Component {
     // takes coords and type - needs access to state
     _numToMove(x,y, type){
         if(type === 'stop'){
-            // console.log('moveX',this.state.previousStopX )
-            // console.log('moveY', this.state.previousStopY)
             let moveX = Math.abs(this.state.previousStopX - x)
-            // console.log('abs x', moveX)
             let moveY = Math.abs(this.state.previousStopY - y)
-            // console.log('abs y', moveY)
             return {
                 tempX: moveX,
                 tempY: moveY
             }
         } else if(type === 'leg'){
-            // console.log('prevX', this.state.previousLegX)
-            // console.log('prevY', this.state.previousLegY)
             let moveX = Math.abs(this.state.previousLegX - x)
-            // console.log('in move previous', moveX)
             let moveY = Math.abs(this.state.previousLegY - y)
-            // console.log('in move previous', moveY)
             return {
                 tempX: moveX,
                 tempY: moveY
@@ -145,23 +130,17 @@ class Grid extends Component {
     _percentToCoords(diffObj, percent){
         let xNum = Math.floor((diffObj.xDiff * 0.01) * percent)
         let yNum = Math.floor((diffObj.yDiff * 0.01) * percent)
-
         return {xNum, yNum}
-
     }
     // update createCounter by 1
     increaseCursorIdindex(){
         let x = this.state.createCounter + 1
-        // console.log('called',x)
-        // console.log(index)
         this.setState({
             createCounter: x
         })
-        // console.log('new Index', this.state.createCounter)
     }
     // new add driver - runs on mount and when add button clicked
     addNewCursor(){
-
         let newCursorObj = {
             directions: {
                 xDir: "left",
@@ -176,17 +155,14 @@ class Grid extends Component {
             color: this.state.colors[this.state.createCounter],
             show:false
         }
-        // console.log('id',newCursorObj.id)
         let arr = []
         arr.push(newCursorObj)
         let allCursors = this.state.cursorArr.concat(arr)
-        // console.log(allCursors)
         this.setState({
             cursorArr: allCursors
         })
         this.increaseCursorIdindex()
         this.changeCursor('new-cursor', newCursorObj.id)
-
     }
     // make new driver the selectedDriver on add
     changeCursor(type, cursorID){
@@ -209,30 +185,25 @@ class Grid extends Component {
         let cursor = this.state.cursorArr.filter(obj => {
              return (obj.name === cursorName.toLowerCase() ? obj : false)
         })
-        // console.log(this.state.cursorArr)
         // change to next available one lower than the deleted one
         for (var i = this.state.cursorArr.length - 1; i >= 0; i--) {
             if(cursor[0].id > this.state.cursorArr[i].id){
                 this.changeCursor('change-cursor', this.state.cursorArr[i].id)
             }
         }
-        console.log(this.state.cursorArr)
         let that = this
         setTimeout(function(){
-
             let index = that.state.cursorArr.indexOf(cursor[0])
             // splice out of cursorArr
             that.state.cursorArr.splice(index,1)
             that.setState({
                 cursorArr: that.state.cursorArr
             })
-            console.log(that.state.cursorArr)
         })
     }
     // runs on load using pre-loaded data and when form submitted
     updateCursorwithData(driverData){
         let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
-        // console.log(selectedDriver)
         // get from api or form
         let legName = driverData.activeLegID
         // correlate with stops- letters to match stops needed
@@ -247,42 +218,31 @@ class Grid extends Component {
         })
         //calc abs distance bwt coords  - coords for first and last
         let diffObj = utils._absDiff(firstStopOfLeg[0], lastStopOfLeg[0])
-        // console.log(diffObj)
-
         let progress = parseInt(driverData.legProgress)
         // takes number of moves and percent - returns number of moves that is
         let numToMove = utils._percentToCoords(diffObj, progress)
         // takes coords for first, last and how many -returns up / down & COORDS
         let { x, y } = utils._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
-        console.log(x, y)
         let moves = utils._getDriverCoords(firstStopOfLeg[0], lastStopOfLeg[0], numToMove)
         // convert the number to move to pixels
         let driverProgressinPixels = utils._convertToPixels(x, y)
-        console.log(driverProgressinPixels)
-        //
         selectedDriver.pixels = driverProgressinPixels
         selectedDriver.data = driverData
-
         selectedDriver.driverCoords = moves
-
         let cursorArrCopy = this.state.cursorArr.slice()
         cursorArrCopy[this.state.cursorIndex] = selectedDriver
-        console.log('update', this.state.cursorArr)
-
 
         this.setState({
             cursorArr: cursorArrCopy
         })
-        // console.log('after', this.state.cursorArr)
     }
     // on click set driver with coords and send to child
     updateDriverWithCoords(coords, type){
-
         let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
         let cursorArr = [...this.state.cursorArr]
          if(type === "form"){
             // reset to zero
-            this._resetTruck()
+            this._resetCursor()
             // from form
             coords = this._setStopCoords('driver',
             this.state.cursorFormX, this.state.cursorFormY)
@@ -311,27 +271,20 @@ class Grid extends Component {
             }
 
         } else if(type === "slider"){
-            // reset to zero
-            // this._resetTruck()
             // from params
-
             coords = this._setStopCoords('driver',
             coords.x, coords.y)
         } else if(type === "manual"){
-            // console.log("LOAD")
             // reset to zero
-            this._resetTruck()
+            this._resetCursor()
             coords = this._setStopCoords('driver', coords.x, coords.y)
             cursorArr[this.state.cursorIndex].driverCoords = {x: 0, y: 0}
         }
-        // console.log(coords)
         // subtract for icon positionSelect
         coords.pixels.moveX = coords.pixels.moveX - 30
-        // console.log(cursorArr[this.state.selectedDriver])
         // update the values in the object
         cursorArr[this.state.cursorIndex].directions = coords.directions
         cursorArr[this.state.cursorIndex].pixels = coords.pixels
-        //console.log(cursorArr)
         // set new driver vals
         this.setState({
             cursorArr: cursorArr
@@ -347,10 +300,8 @@ class Grid extends Component {
 
         //index for arr of cell nums
         let holdingArrIndex = this._legIndex(arr[0].legID)
-        // console.log(holdingArrIndex)
         // index for json with legs info
         let dataIndex = this.state.legs.indexOf(arr[0])
-        // console.log('holding' ,holdingArrIndex)
     	//all previous legs to color
         // var previousLegNames = this.state.legs.slice(0,index)
 
@@ -436,31 +387,19 @@ class Grid extends Component {
         this.setState({
             moveRowCells: parseInt(this.state.setGraphSize.x)
         })
-
     }
     colorGrid(x, y, type){
-        // console.log(this.state.startingCellNumAll)
-        // console.log(this.state.previousStopX)
-        // console.log(this.state.previousStopY)
         // calc num of units to move based on prev position
         let tempCellNumsArr = []
-
-
         let tempX = x
         let tempY = y
         let tempCellNum
         if(type === 'all'){
             tempCellNum = this.state.startingCellNumAll
         }
-
-        // console.log(tempX)
         // convert based on next move using above function
         tempX = this._numToMove(tempX, tempY, 'stop').tempX
         tempY = this._numToMove(tempX, tempY, 'stop').tempY
-        // tempY = this._numToMove(tempX, tempY, 'stop').moveY
-        // console.log('tempx', tempX)
-        // console.log('tempy', tempY)
-
         // on first move on grid only - for bottom corner
         if(this.state.previousStopX === 0 && this.state.previousStopY  === 0){
             tempX = tempX - 1
@@ -474,7 +413,6 @@ class Grid extends Component {
             if(this.state.previousStopY < y){
                 tempCellNum = tempCellNum - this.state.moveRowCells
                 tempCellNumsArr.push(tempCellNum)
-                // console.log('temp', tempCellNumsArr)
             } else if(this.state.previousStopY > y){
                 tempCellNum = tempCellNum + this.state.moveRowCells
                 tempCellNumsArr.push(tempCellNum)
@@ -482,7 +420,6 @@ class Grid extends Component {
             if(this.state.previousStopX < x){
                 tempCellNum = tempCellNum + 1
                 tempCellNumsArr.push(tempCellNum)
-
             } else if(this.state.previousStopX > x){
                 tempCellNum = tempCellNum - 1
                 tempCellNumsArr.push(tempCellNum)
@@ -499,7 +436,6 @@ class Grid extends Component {
                 if(this.state.previousStopY < y){
                     tempCellNum = tempCellNum - this.state.moveRowCells
                     tempCellNumsArr.push(tempCellNum)
-
                 } else if(this.state.previousStopY > y){
                     tempCellNum = tempCellNum + this.state.moveRowCells
                     tempCellNumsArr.push(tempCellNum)
@@ -514,10 +450,7 @@ class Grid extends Component {
                 }
             }
         }
-        // console.log(tempCellNumsArr)
-        // holdAllStopColorIndexes - cells for color or entire plots - spread out
         if(type === 'all'){
-
             this.setState({
                 previousStopX: x,
                 previousStopY: y,
@@ -525,72 +458,36 @@ class Grid extends Component {
                 holdAllStopColorIndexes: [...this.state.holdAllStopColorIndexes, ...tempCellNumsArr]
             })
         }
-
     }
     // takes x y and determine start and end cells
     legStartEnd(x,y, type){
-
         let tempCellNumsArr = []
-
         let tempX = x
         let tempY = y
         // start remains the same
         let tempStartNum
         // cell num changes with calcs
         let tempCellNum
-
-
         if(type === 'all'){
             // on first move only
             if(this.state.previousLegEndCell === 0){
                 tempStartNum = this.state.startingCellNumAll
                 tempCellNum = this.state.startingCellNumAll
-                // tempStartNum = this.state.startingCellNumAll
             } else {
                 tempStartNum = this.state.previousLegEndCell
                 tempCellNum = this.state.previousLegEndCell
             }
         } else if(type === 'partial'){
-            // previous X and Y wrong in here
-
-            // console.log('previousX', this.state.previousLegEndCell)
-            // console.log('previousY', this.state.previousLegEndCell)
             // start of leg
             tempCellNum = this.state.startingCellNumPartial
-            // console.log('staring cell' ,this.state.startingCellNumPartial)
-            // set to start coords - it should compute to end coord form here
-            // console.log('leg start x', this.state.partialLegStartCoords.x)
-            // console.log('leg startStop y', this.state.partialLegStartCoords.y)
-            // console.log('prevX',this.state.previousLegX)
-            // console.log('prevXY',this.state.previousLegY)
             // need to reset previous x and y
             this.setState({
                 previousLegX: this.state.partialLegStartCoords.x,
                 previousLegY: this.state.partialLegStartCoords.y
             })
-            // console.log('prevX',this.state.previousLegX)
-            // console.log('prevXY',this.state.previousLegY)
-            // console.log('to x', x)
-            // console.log('to y', y)
-            // console.log(this.state.previousStopX)
-            // console.log(this.state.previousStopY)
-            // console.log('previous',this.state.partialLegStartCoords)
-            // console.log('previousx', this.state.previousStopX)
-            // console.log('previousy', this.state.previousStopY)
-            // console.log('currentx ', x)
-            // console.log('currenty', y)
-
-
-
         }
-
-        // console.log('start temp', tempCellNum)
-        // console.log('staring cell', tempStartNum)
         // convert based on next move using above function
         ({ tempX, tempY } = this._numToMove(tempX, tempY, 'leg'))
-        // tempY = this._numToMove(tempX, tempY, 'leg').tempY
-        // console.log('x to move',tempX)
-        // console.log('y to move', tempY)
         // on first move on grid only - for bottom corner
         if(this.state.previousLegX === 0 && this.state.previousLegY  === 0){
             tempX = tempX - 1
@@ -624,10 +521,8 @@ class Grid extends Component {
         // if only on val left, move on its own
         for (var i = 0; i < loopAxis; i++) {
             if(tempY){
-
                 if(this.state.previousLegY < y){
                     tempCellNum = tempCellNum - this.state.moveRowCells
-
                     tempCellNumsArr.push(tempCellNum)
 
                 } else if(this.state.previousLegY > y){
@@ -635,7 +530,6 @@ class Grid extends Component {
                     tempCellNumsArr.push(tempCellNum)
                 }
             } else if(tempX){
-
                 if(this.state.previousLegX < x){
                     tempCellNum = tempCellNum + 1
                     tempCellNumsArr.push(tempCellNum)
@@ -645,17 +539,10 @@ class Grid extends Component {
                 }
             }
         }
-        // console.log('last', tempCellNum)
         let legCellNums = {
             start: tempStartNum,
             end: tempCellNum
         }
-        // console.log('coords', legCellNums)
-        // each array b4 being pushing into main one
-        // console.log('tempCellNumsArr', tempCellNumsArr)
-        // console.log('holdAllLegColorArrs', this.state.holdAllLegColorArrs)
-        // console.log('x', x)
-        // console.log('y', y)
         // - make this previousLast
         if(type === 'all'){
             this.setState({
@@ -664,60 +551,26 @@ class Grid extends Component {
                 previousLegY: y,
                 legStartEndCellNums:[...this.state.legStartEndCellNums,legCellNums],
                 holdAllLegColorArrs: [...this.state.holdAllLegColorArrs, tempCellNumsArr]
-
             })
-            // console.log('all', this.state.holdAllLegColorArrs)
-            // console.log('end of run x', this.state.previousLegX)
-            // console.log('end of run y', this.state.previousLegY)
         } else if(type === 'partial'){
-            // console.log('cells arr',tempCellNumsArr)
             this.setState({
                 previousStopX: x,
                 previousStopY: y,
                 startingCellNumPartial: tempCellNum,
                 holdingCompletedArrs:[...this.state.holdingCompletedArrs, tempCellNumsArr]
-
             })
-            // console.log('complete', this.state.holdingCompletedArrs)
-
         }
     }
-
+    // send colored stops to child
     colorAllStops(){
-        // console.log('fired')
-        // let arr = [1,2,3,4,5]
-        // let stops = [
-        //     {x:20, y:10},
-        //     {x: 20, y: 20}
-        //     // {x: 25, y: 30},
-        //     // {x: 25, y: 80}
-        // ]
-        // let that = this
-        // stops.map((stop, index) => {
-        //         setTimeout(function(){
-        //             that.colorGrid(stop.x, stop.y)
-            // console.log(index + 1)
-            // console.log(stops.length)
-                // if((index + 1) === that.state.stops.length){
-                //     console.log('push')
-                     	// that.setState({
-                       // 	pushToChildArr:that.state.holdingAllIndexes
-                       // })
-                //  }
-            //     },100*(index))
-            // })
-
             this.setState({
                 finalStopColorArr: this.state.holdAllStopColorIndexes
             })
-            // console.log(this.state.finalStopColorArr)
-        // on click push to child state
     }
     // on click pass props to child
     colorCompletedStops(){
             console.log(this.state.holdingCompletedArrs)
             let merged = [].concat.apply([], this.state.holdingCompletedArrs);
-            console.log(merged)
             this.setState({
                 finalCompletedColorsArr: merged
             })
@@ -726,15 +579,10 @@ class Grid extends Component {
     _getLegStartfromCoords(){
         let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
         let coords = selectedDriver.driverCoords
-        // console.log('driver coords', coords)
         // if x & y is between the stops
         let firstStop = this.state.stops.filter((coord, index) => {
             let stop1 = this.state.stops[index]
             let stop2 = this.state.stops[index + 1]
-            // console.log('stop1', stop1)
-            // console.log('stop2', stop2)
-            // console.log('x',coords.x)
-            // console.log('y', coords.y)
         	if(stop2 === undefined) return false
         	if( //x/y are both btw
                 (
@@ -744,7 +592,6 @@ class Grid extends Component {
                     (coords.x < stop1.x && coords.x > stop2.x))
                 )
             ){
-                console.log('both are btw')
                     return coord
             } else if(
                 // y is bwn and x is equal
@@ -755,7 +602,6 @@ class Grid extends Component {
                     (coords.x === stop1.x && coords.x === stop2.x)
                 )
             ){
-                console.log('y btw. x equal' )
                     return coord
             } else if(
                 // x is bwn and y is equal
@@ -766,8 +612,6 @@ class Grid extends Component {
                     (coords.y === stop1.y && coords.y === stop2.y)
                 )
             ){
-                console.log('x btw. y equal' )
-
                 return coord
             } else if(
                 //coords are exact match
@@ -776,7 +620,6 @@ class Grid extends Component {
                 )
 
             ){
-                console.log('both equal')
                 return coord
                 // first stop  on map with nothing previous
             } else if(index === 0 && (coord === this.state.stops[0])){
@@ -787,28 +630,22 @@ class Grid extends Component {
                 return null
             }
         })
-                // console.log('return firstStop', firstStop)
         return firstStop
     }
     // takes driver coords from state and sets new progress and leg
     updateDriverData(){
         let selectedDriver = this.state.cursorArr[this.state.cursorIndex]
-        // console.log('selectedDriver', this.state.cursorIndex)
         let firstStop = this._getLegStartfromCoords()[0]
         // only works with map stops!
         if(!firstStop){
             console.error('Not a map stop')
             return false
-
         }
         let firstStopIndex = this.state.stops.indexOf(firstStop)
         let secondStop = this.state.stops[firstStopIndex+1]
         let diff = utils._absDiff(firstStop, secondStop)
-        // console.log(selectedDriver.driverCoords)
         // run once for x and for y
         let percent = utils._findPercentFromDriverCoords(firstStop, selectedDriver.driverCoords, diff.yDiff, diff.xDiff)
-        // /console.log('percent', percent)
-        // console.log(firstStop.name)
         let currentLeg = this.state.legs.filter(leg => {
             return leg.startStop === firstStop.name
         })
@@ -816,28 +653,19 @@ class Grid extends Component {
             activeLegID: currentLeg[0].legID,
             legProgress: percent.toString()
         }
-        //  console.log(newPositionWpercent)
+
         let cursorArr = [...this.state.cursorArr]
-        // console.log(cursorArr[this.state.cursorIndex])
-        // console.log(selectedDriver)
         // update the values in the object
-
         selectedDriver.data = newPositionWpercent
-
-        // console.log(selectedDriver)
         cursorArr[this.state.cursorIndex] = selectedDriver
-        // console.log(cursorArr)
         this.setState({
             cursorArr: cursorArr,
             selectedDriver: newPositionWpercent
         })
-        // console.log(newPositionWpercent)
-
-        // console.log('new driver state', this.state.selectedDriver)
         return true
     }
     // resets data but does not move
-    _resetTruck(){
+    _resetCursor(){
         this.setState({
                 finalDriverMoveObj: {
                 directions: {
@@ -853,23 +681,18 @@ class Grid extends Component {
     }
     // renders all truck instances
     renderCursor(){
-        // console.log('CI',this.state.cursorIndex)
         if(this.state.cursorArr && Array.isArray(this.state.cursorArr)){
                 return this.state.cursorArr.map((driverData,i) => {
-                // console.log(driverDyata)
                 return <Cursor show={driverData.show} coords={driverData} key={i} colors={this.state.colors} counter={this.state.createCounter}/>
             })
         } else {
             return null
         }
-
     }
     // position utils-container based on size with graph
     handleStyle(){
-
         // set to false temorarily
         if(this.state.floatToggle){
-            console.log('float', this.state.floatToggle)
             if(this.state.utilsTop){
                 return {
                     marginBottom: this.state.utilsTop.toString() + "px"
@@ -880,18 +703,15 @@ class Grid extends Component {
         } else {
             return null
         }
-
     }
-
      render() {
-        // console.log(this.getWindowOffset())
     	return(
             <main className="page-container">
             <Modal
                 open={this.state.modalState}
                 cells={Math.sqrt(parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y))}
-                onChange={this.handleChange.bind(this)}
-                onSubmit={this.handleSubmit.bind(this)}
+                onChange={this.handleChange}
+                onSubmit={this.handleSubmit}
                 plots={this.state.plotObjs.length ? this.state.plotObjs : undefined}
                 />
                 <div className="grid-container" style={this.handleStyle.bind(this)()}>
@@ -910,29 +730,24 @@ class Grid extends Component {
                             allColorsCounter={this.state.allColorsCounter}
                             selectedDriver={this.state.cursorIndex}
                         />
-
-
-
                     </div>
                 </div>
                 <div className={`${this.state.floatToggle? "float-toggle" :""} utils-container`}>
                     <div className="driver-controls">
                         <div className="upper-controls">
                         <MaterialButton
-                            onClick={this.handleClick.bind(this)}
+                            onClick={this.handleClick}
                             buttonNumber={4}
                             size="small"
                             text="Show Window"
                             type="primary-button"
                             color="default"
                             />
-
-
                         </div>
                         <Tabs
-                            onChange={this.handleChange.bind(this)}
-                            onSubmit={this.handleSubmit.bind(this)}
-                            onClick={this.handleClick.bind(this)}
+                            onChange={this.handleChange}
+                            onSubmit={this.handleSubmit}
+                            onClick={this.handleClick}
                             values={{x:this.state.cursorFormX, y:this.state.cursorFormY}}
                             legs={this.state.legs ? this.state.legs : null}
                             texts={this.state.texts}
@@ -940,9 +755,8 @@ class Grid extends Component {
                             colors={this.state.colors}
                             selectedDriver={this.state.cursorIndex}
                             />
-
                             <Snackbar
-                                snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick.bind(this)}
+                                snackbarOpen={this.state.snackbarOpen} onClick={this.handleClick}
                             />
                     </div>
                 </div>
@@ -1098,20 +912,17 @@ class Grid extends Component {
         if (element.className.split(' ').indexOf(checkClass)>=0) return true;
         return element.parentElement && this.hasParentClass(element.parentElement, checkClass);
     }
+    // https://stackoverflow.com/a/47580775/5972531
     toggleShowCursor(e){
         let currentCursor = this.state.cursorArr[this.state.cursorIndex]
         currentCursor.show = !currentCursor.show
         const cursorArrCopy = [...this.state.cursorArr]
-        // https://stackoverflow.com/a/47580775/5972531
         this.setState({
             cursorArr: cursorArrCopy
         })
     }
     handleClick(event){
-        console.log(event)
-        // console.log(this.hasParentClass(event.target, "snackbar")event.target)
         if(!event) return
-        // console.log(event)
         // For TAB clicks - sending strings back here as return vals
             // to remove drivers from tabs when clicking X
             if(event.event && event.iconClick && event.cursor){
@@ -1127,22 +938,17 @@ class Grid extends Component {
                 this.changeCursor('change-cursor', tabClickedIndex)
                 let that = this
                 setTimeout(function () {
-                    console.log('TAB',tabClickedIndex)
-                    console.log('current', that.state.cursorIndex)
                     that.toggleShowCursor(event)
                 })
-
                 // if events and not strings
             } else if(event.target.classList.contains('add-button')){
                 event.stopPropagation()
                 // call add new driver
                     this.addNewCursor()
-
             } else if(event.target.classList.contains('secondary-button')){
             event.stopPropagation()
                 if(event.target.dataset.number === "1"){
                     this.colorAllStops()
-                    // console.log(this.state.allColorsCounter)
                     this.setState({
                         allColorsCounter: this.state.allColorsCounter + 1,
                         colorType: "all"
@@ -1156,7 +962,6 @@ class Grid extends Component {
                 }
                 // if button and has parent class of snackbar
             } else if(event.target.type === 'button' && this.hasParentClass(event.target, "snackbar") ){
-                console.log('oks')
                     // send this to child to close
                     this.setState({
                         snackbarOpen: false
@@ -1166,29 +971,11 @@ class Grid extends Component {
                 this.setState({
                     modalState: utils._toggleState(this.state.modalState)
                 })
-                console.log(this.state.modalState)
             }
-
-    }
-    handleDropdownChange(e) {
-        console.log(e.target.name)
-        if(e.target.name === 'driver-select'){
-            console.log('here')
-            this.setState({cursorLegInput: e.target.value})
-        } else if(e.target.name === 'color-select'){
-            console.log('he')
-            this.setState({
-                value: e.target.value,
-                legToColorID: e.target.value
-            })
-        }
     }
     onDropdownSubmit(event) {
         let selectedCursor = this.state.cursorArr[this.state.cursorIndex]
-        console.log(selectedCursor)
-        // console.log(event.target.name)
         event.preventDefault()
-
         if(event.target.name === 'driver-dropdown'){
             // user needs to choose a leg else return
             if(!this.state.cursorLegInput) return
@@ -1207,31 +994,17 @@ class Grid extends Component {
             this.setState({
                 cursorArr: this.state.cursorArr
             })
-
             let that = this
             setTimeout(function(){
-                // that.addNewCursor()
                 that.updateCursorwithData(selectedCursor.data)
                 that.colorCompleted(selectedCursor.data.activeLegID)
-                console.log(that.state)
             },100)
-
         } else if(event.target.name === 'color'){
-            // console.log('color', this.state.legToColorID)
             this.colorLeg(this.state.legToColorID)
-
         }
-
     }
     // hold vals in input until next entered
     handleChange(evt) {
-        // console.log(evt.target)
-        // console.log(evt)
-        // console.log(evt.target.parentNode)
-        // console.log(evt.target.parentNode)
-        // console.log(evt.target.nextSibling)
-        // console.log(evt.target.name)
-
         // to filter out undefined errors
             if(evt.target.name === 'x' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
             let xVal = evt.target.value
@@ -1242,7 +1015,6 @@ class Grid extends Component {
                     x: xVal
                 }
             }))
-            // console.log(this.state.storeGraphSize)
             } else if(evt.target.name === 'y' && evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
                 let yVal = evt.target.value
                 this.setState(prevState => ({
@@ -1251,7 +1023,6 @@ class Grid extends Component {
                         y: yVal
                     }
                 }))
-                console.log(this.state.storeGraphSize)
             } else if(evt.target.name === 'x' && !evt.currentTarget.parentNode.parentNode.parentNode.classList.contains('graph-size')){
 
                 this.setState({
@@ -1261,19 +1032,15 @@ class Grid extends Component {
                 this.setState({
                     cursorFormY: evt.target.value,
                 })
-            } else if(evt.target.name === 'position-select'){
-
             } else if(evt.target.name === 'driver-select'){
                 this.setState({cursorLegInput: evt.target.value})
             } else if(evt.target.name === 'progress-input'){
-                console.log('hi')
                 this.setState({cursorInputProgress:evt.target.value})
                 // comes from names on checkboxes
             } else if(evt.target.name === 'float-toggle'){
                 // go to bottom on toggle
                 let offSet = this.getWindowOffset()
                 if(offSet){
-                    console.log('HERE', offSet)
                     this.setState({
                         utilsTop: offSet,
                         floatToggle: utils._toggleState(this.state.floatToggle)
@@ -1298,7 +1065,6 @@ class Grid extends Component {
          (evt.target.nextSibling && evt.target.nextSibling.classList.contains("modal"))
         )
          {
-             // console.log(evt.target.classList)
                 if(evt.target.name === "xSelect"){
                     this.setState(prevState => ({
                         tempPlotObj: {
@@ -1323,7 +1089,6 @@ class Grid extends Component {
                     })
                     // when X is clicked trigger this - open close
                 } else if(evt.target.classList.contains("close-icon")){
-
                     this.handleModalOpenClose()
                         // on modal close trigger this - open close
                 } else if(evt.target.nextSibling.classList.contains("modal")){
@@ -1336,7 +1101,7 @@ class Grid extends Component {
         console.log(obj)
         if(!obj.x || !obj.y){
             console.error("Must have two plot points")
-            return
+            return false
         }
         this.setState({
             tempPlotObj: obj,
@@ -1344,7 +1109,6 @@ class Grid extends Component {
         })
     }
     toggleStartCheckbox(){
-
         let setSliderCoords
         let tempSliderIndex
         let sliderChunkCopy
@@ -1371,8 +1135,6 @@ class Grid extends Component {
                 y: 0
             }, "checkbox")
         }
-
-
         this.setState({
             sliderSlicedChunk: sliderChunkCopy ? sliderChunkCopy: this.state.sliderSlicedChunk,
             cancelSlide: true,
@@ -1382,20 +1144,6 @@ class Grid extends Component {
             // flatten array to remove/add coords when clicked
             finalSliderCoords: setSliderCoords.flat()
         })
-        // console.log(this.state.finalSliderCoords)
-    }
-    // buildFinalSliderArr(arrs){
-    //
-    // }
-    // empty the flatten array on each click - it's rebuilt inside iderChange
-    emptyFinalSliderArr(){
-        // if arr as len, empty it
-        if(this.state.finalSliderCoords.lenght){
-            this.setState({
-                finalSliderCoords: []
-            })
-        }
-        return
     }
     // add the beginning to the stops
     addStartStop(){
@@ -1412,13 +1160,7 @@ class Grid extends Component {
     }
     // scroll page to the bottom
     scrollToBottom(){
-        // if(window.outerHeight > document.body.scrollHeight){
-        //     console.log('scroll bottom')
-        //     return
-        // } else {
-            console.log('scroll bottom DO')
             window.scrollTo(0,document.body.scrollHeight)
-        // }
     }
     getWindowOffset(){
         let utils = document.querySelector('.utils-container')
@@ -1426,44 +1168,21 @@ class Grid extends Component {
 
         if(utils.offsetHeight + grid.offsetHeight > window.innerHeight){
             return utils.offsetHeight
-            // console.log('HERE')
-            // setTimeout(function(){
-            //     that.setState({
-            //         utilsTop: utils.offsetHeight
-            //     })
-            // },500)
         } else {
             return false
         }
-        // if(document.body.offsetHeight > window.outerHeight){
-        //     setTimeout(function(){
-        //         console.log('set offset here', utils.offsetHeight)
-        //         that.setState({
-        //             utilsTop: utils.offsetHeight
-        //         })
-        //     },500)
-        // } else {
-        //     return false
-        // }
     }
-
-
     componentDidMount() {
         let that = this
         // create graph size based on input - COMMENT OUT
         this.createGraph()
         this.scrollToBottom()
-        // make scroll to the correct part of screen
-
-        // this.getWindowOffset()
-        // this.scrollToBottom()
         let utils = document.querySelector('.utils-container')
         setTimeout(function(){
             that.setState({
                 utilsTop: utils.offsetHeight
             })
         },500)
-
 
         setTimeout(function(){
             // console.log(that.state.legs)
@@ -1484,58 +1203,6 @@ class Grid extends Component {
             // console.log('state',that.state)
         },100)
 
-
-
-        // call to set stops and truck
-        //--- COMMENT OUT
-
-        // this._setStopCoords('stop')
-        // Call our fetch function below once the component mounts
-        //--- COMMENT OUT
-
-        // this._callDriver()
-        // .then(res => {
-        //     // load into ar r. Can be looped over if mutlple drivers
-        //     this.setState({ loadingDataArr: [...this.state.loadingDataArr, res.driver] })
-        // })
-        // .catch(err => console.log(err));
-        //--- COMMENT OUT
-        // this._callStops()
-        // .then(res => {
-        //     // temp stops
-        //     this.setState({
-        //         stops:
-        //         [{
-        //             "name": "A",
-        //             "x": 10,
-        //             "y": 10
-        //             },
-        //             {
-        //             "name": "B",
-        //             "x": 20,
-        //             "y": 20
-        //             },
-        //             {
-        //             "name": "C",
-        //             "x": 18,
-        //             "y": 4
-        //
-        //         }],
-        //         stopsCopy: this.state.stops.slice()
-        //     })
-        //--- COMMENT OUT
-            // this.legConstructor(this.state.stops)
-
-
-        // })
-        // .catch(err => console.log(err));
-        // this.legConstructor(this.state.stops)
-
-        // this._callLegs()
-        // .then(res => {
-        //     this.setState({ legs: res.legs })
-        // })
-        // .catch(err => console.log(err))
 
         // make array of coords to move icon
         setTimeout(function(){
@@ -1569,10 +1236,6 @@ class Grid extends Component {
         let previousSmall
         // console.log('COORDS', xSlideCoord, ySlideCoord)
 
-
-
-        // console.log('C',this.state.currentXSlideCoord)
-        // console.log('P', this.state.previousXSlideCoord)
         let xArr = xSlideCoord
         let yArr = ySlideCoord
 
@@ -1597,7 +1260,6 @@ class Grid extends Component {
             this.setState({ lastYarr })
 
         }
-
         // console.log('short',shorterArr)
         // console.log('long',longerArr)
         let obj
@@ -1735,9 +1397,7 @@ class Grid extends Component {
 
     }
     handleSubmit(event) {
-        // console.log(event.target)
         event.preventDefault();
-        // console.log(this.state.cursorIndex)
         let that = this
         function validGraphSides(input){
             if(input.x !== input.y){
@@ -1749,7 +1409,6 @@ class Grid extends Component {
         }
         // on submit use the stored sizes
         if(event.target.name === 'graph-size'){
-            // console.log('store', this.state.storeGraphSize)
             if(!validGraphSides(this.state.storeGraphSize)) return
             this.setState({
                 setGraphSize: this.state.storeGraphSize
@@ -1766,7 +1425,6 @@ class Grid extends Component {
             //UPDATE STATE DATA
             if(event.target.name === 'driver-dropdown' || event.target.name === 'color'){
                 this.onDropdownSubmit(event)
-
             } else if(event.target.name === 'driver-form') {
                 let formData = {}
                 // set to new input. If blank use the previous one
@@ -1780,12 +1438,7 @@ class Grid extends Component {
                 } else {
                     formData['y'] = currentCursor.driverCoords.y
                 }
-                console.log(currentCursor)
-                    currentCursor.driverCoords = formData
-                console.log(this.state.cursorArr)
-                this.setState({
-                    driverCoords: formData
-                })
+                currentCursor.driverCoords = formData
             //ACTUALLY MOVE CURSOR
             this.updateDriverWithCoords("", "form")
             let that = this
@@ -1799,8 +1452,6 @@ class Grid extends Component {
                     return
                 }
                 that.colorCompleted(that.state.selectedDriver.activeLegID)
-                console.log(that.state.selectedDriver.activeLegID)
-                console.log(that.state)
             },100)
         } else if(event.target.classList && event.target.classList.contains("modal-submit")){
             this.handlePlotLoading('manual')
@@ -1811,21 +1462,16 @@ class Grid extends Component {
     handlePlotLoading(type){
         let that = this
         if(type === "manual"){
-            console.log('MANUAL')
             let json = utils._makePlotJson(this.state.plotObjs)
             this.setState({stops: json})
             this._setStopCoords('stop')
             setTimeout(function(){
                 that.legConstructor(that.state.stops)
-                // console.log(that.state.startingCellNumAll)
                 that.state.stops.forEach((stop, i) => {
                     that.legStartEnd(stop.x, stop.y,'all')
                     that.colorGrid(stop.x, stop.y, 'all')
-
                 })
-
             })
-
         } else if(type === "auto"){
             this._callStops()
             .then(res => {
@@ -1836,26 +1482,19 @@ class Grid extends Component {
                     setGraphSize: {"x":"100", "y": "100"},
                     plotObjs: res.stops
                 })
-                console.log('call graph')
                 this.createGraph()
                 this._setStopCoords('stop')
                 setTimeout(function(){
-                    // console.log(that.state.startingCellNumAll)
                     that.legConstructor(that.state.stops)
                     that.state.stops.forEach((stop, i) => {
                         that.legStartEnd(stop.x, stop.y,'all')
                         that.colorGrid(stop.x, stop.y, 'all')
-
                     })
-
                 })
             })
         }
     }
-
-
     _legIndex(input){
-        // console.log('i', input)
         let index
         switch(input){
             // pre-stop
@@ -1902,18 +1541,13 @@ class Grid extends Component {
         return index
     }
     colorLeg(input){
-        console.log(this.state.finalLegColorObj)
         // - get val from Dropdown-
         // change it to an index
-
         let index = this._legIndex(input)
-        console.log('i', index)
         // get leg using index out of array
         let leg = this.state.holdAllLegColorArrs[index]
-        console.log('leg', this.state.holdAllLegColorArrs)
         // set state on child to change the color
         let legObj = {leg, index}
-        console.log(legObj)
         this.setState({
             finalLegColorObj: legObj,
             legColorsCounter: this.state.legColorsCounter + 1,
@@ -1935,20 +1569,16 @@ class Grid extends Component {
             legs: legs
         })
         return
-        // console.log(this.state.legs)
     }
-
     // set coords in pxs of plots
     _setStopCoords(type,x,y){
         let that = this
         let coordsArr = []
-
             // filter out undefined
             if(type === 'stop'){
                 setTimeout(function(){
                 if(that.state.stops.length > 0){
                     that.state.stops.forEach(stop => {
-                        // console.log(stop.x, stop.y)
                         let pixels = utils._convertToPixels(
                             stop.x, stop.y
                         )
@@ -1959,7 +1589,6 @@ class Grid extends Component {
                                 yDir: "bottom"
                             }
                         }
-
                         coordsArr.push(coords)
                     })
                 }
@@ -1978,38 +1607,14 @@ class Grid extends Component {
                         yDir: "bottom"
                     }
                 }
-                // console.log(coords)
                 return coords
-
             }
-
-
-    }
-
-    _callLegs = async () => {
-        const response = await fetch('/legs');
-        const body = await response.json();
-
-        if (response.status !== 200) {
-            throw Error(body.message)
-        }
-        return body
     }
     _callStops = async () => {
         const response = await fetch('/stops');
         const body = await response.json();
 
         if (response.status !== 200) {
-            throw Error(body.message)
-        }
-        return body
-    }
-    _callDriver = async () => {
-        const response = await fetch('/driver');
-        const body = await response.json();
-
-        if (response.status !== 200) {
-
             throw Error(body.message)
         }
         return body
