@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path')
 const port = process.env.PORT || 4000;
 const legs = require('./data/legs.json')
 const stops = require('./data/stops.json')
@@ -7,9 +8,15 @@ var driver = require('./data/driver.json')
 const fs = require('fs')
 app.use(express.json())
 
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
-console.log(driver)
 // create a GET route
 app.get('/stops', (req, res) => {
 	res.send({
@@ -35,5 +42,3 @@ app.put('/driver', (req, res) => {
     console.log(driver)
 
 });
-
-app.listen(3000)
