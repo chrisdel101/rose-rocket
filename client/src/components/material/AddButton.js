@@ -18,7 +18,7 @@ function renderIcon(props){
     if(props.iconType === 'add'){
         return(<AddIcon/>)
     } else if(props.iconType === 'minus'){
-        return(<img className="minus-svg" src="./icons/remove_24px.svg"/>)
+        return(<img className="minus-svg" src="./icons/remove_24px.svg" alt="minus sign"/>)
     }    else {
         return null
     }

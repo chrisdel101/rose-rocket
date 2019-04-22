@@ -181,35 +181,35 @@ var utils = (function () {
             // console.log('yDiff',yDiff)
             yPercent = yDiff / yAbsDiff
         }
-        let finalPercent
+            // let finalPercent
         // console.log(xPercent)
         // console.log(yPercent)
         // if one val is missing use the other alone
         if(!xPercent || !yPercent){
             if(xPercent){
-                return finalPercent = xPercent * 100
+                return xPercent * 100
             } else if(yPercent){
-                return finalPercent = yPercent * 100
+                return yPercent * 100
             }
         }
         // it both are zero then zero percent
         if(xPercent === 0 && yPercent === 0){
-            return finalPercent = 0
+            return 0
         }
 
         // console.log('x%',xPercent)
         // console.log('y%',yPercent)
         //use the larger leg to updaet val - TODO: make both percents equal so driver fits back into grid
         if(xAbsDiff > yAbsDiff){
-            return finalPercent = xPercent
+            return xPercent
         } else if(xAbsDiff < yAbsDiff){
-            return finalPercent = yPercent
+            return yPercent
             // if equal use the larger percent
         } else if(xAbsDiff === yAbsDiff){
             if(xPercent >= yPercent){
-                return finalPercent = xPercent
+                return xPercent
             } else {
-                return finalPercent = yPercent
+                return yPercent
             }
         } else {
             console.error('An error occured in the percentage calcs')
@@ -225,7 +225,14 @@ var utils = (function () {
                     "y":coords.y
                 }
             })
+        },
+    _toggleState(currentState){
+        if(!currentState){
+            return true
+        } else {
+            return false
         }
+    }
 
 
 }

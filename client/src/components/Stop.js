@@ -1,6 +1,5 @@
 import React from 'react'
 import { Manager, Reference, Popper } from 'react-popper';
-import Icon from './material/Icon'
 
 // takes and array of directions and pixes for x and y
 function Stop(props){
@@ -34,9 +33,8 @@ function Stop(props){
                   backgroundColor: "rgba(0,0,0,0.5)",
                   color: "#fff",
                   borderRadius: "5px",
-                  marginLeft: "10px",
+                  marginLeft: "20px",
                   display: toggleStopNames(props),
-                  marginLeft: "-10px"
               }}
               data-placement={placement}
             >

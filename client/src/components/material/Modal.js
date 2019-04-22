@@ -3,15 +3,11 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Modal from "@material-ui/core/Modal";
-import Button from "@material-ui/core/Button";
 import Select from "./Select";
 import Icon from "./Icon";
 import MaterialForm from "./MaterialForm";
 import MaterialButton from "./MaterialButton";
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
 
 function getModalStyle() {
   const top = 50;
@@ -26,16 +22,7 @@ function getModalStyle() {
     transform: `translate(-${top}%, -${left}%)`
   };
 }
-function getModalRighStyle() {
-  const top = 50;
-  const right = 20;
 
-  return {
-    top: `${top}px`,
-    right: `${right}px`,
-    transform: `translate(-${top}%, -${right}%)`
-  };
-}
 
 const styles = theme => ({
   paper: {
@@ -196,7 +183,6 @@ class SimpleModal extends React.Component {
     );
   }
   renderPlotsList(props) {
-      console.log(props)
     if (!props.plots) return;
     return (
       <div className="plots-list-container">

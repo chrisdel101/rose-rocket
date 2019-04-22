@@ -134,7 +134,6 @@ class SimpleTabs extends React.Component {
     }
   render() {
     const { classes } = this.props;
-    const { value } = this.state;
     if(this.props.cursorArr){
         return (
             <div className={classes.root}>

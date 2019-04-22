@@ -9,11 +9,11 @@ const fs = require('fs')
 app.use(express.json())
 
 
-app.use(express.static(path.join(__dirname, 'client/build')));
-
-app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, 'client', 'index.html'));
-});
+// app.use(express.static(path.join(__dirname, 'client/build')));
+//
+// app.get('/', function(req, res) {
+//   res.sendFile(path.join(__dirname, 'client', 'index.html'));
+// });
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));

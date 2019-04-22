@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Manager, Reference, Popper, Arrow } from "react-popper";
 
 import "../App.css";
 import Box from './Box'
@@ -7,10 +6,7 @@ import Stop from './Stop'
 import Cursor from './Cursor'
 import Tabs from './material/Tabs'
 import Snackbar from './material/Snackbar'
-import Slider from './material/Slider'
-import Checkbox from './material/Checkbox'
 import utils from './grid_utils'
-import MaterialForm from './material/MaterialForm'
 import MaterialButton from './material/MaterialButton'
 import Modal from './material/Modal'
 
@@ -269,14 +265,13 @@ class Grid extends Component {
 
         selectedDriver.driverCoords = moves
 
-
-        this.state.cursorArr[this.state.cursorIndex] = selectedDriver
-        console.log('update', this.state.cursorArr)
+        let cursorArrCopy = this.state.cursorArr.slice()
+        cursorArrCopy[this.state.cursorIndex] = selectedDriver
         console.log('update', this.state.cursorArr)
 
 
         this.setState({
-            cursorArr: this.state.cursorArr
+            cursorArr: cursorArrCopy
         })
         // console.log('after', this.state.cursorArr)
     }
@@ -396,7 +391,7 @@ class Grid extends Component {
         // console.log('num to move', numToMove)
         // console.log(this.state.legStartEndCellNums)
         // cell nums
-        let { start, end } = this.state.legStartEndCellNums[holdingArrIndex]
+        let start = this.state.legStartEndCellNums[holdingArrIndex]
         // console.log('start/end', start, end)
         // set startingCell and start x / y
 
@@ -740,7 +735,7 @@ class Grid extends Component {
             // console.log('stop2', stop2)
             // console.log('x',coords.x)
             // console.log('y', coords.y)
-        	if(stop2 === undefined) return
+        	if(stop2 === undefined) return false
         	if( //x/y are both btw
                 (
                     ((coords.y > stop1.y && coords.y < stop2.y) ||
@@ -954,21 +949,17 @@ class Grid extends Component {
             </main>
         )
     }
+
     handleModalOpenClose(){
-        this.state.modalState = !this.state.modalState
         this.setState({
-            modalState: this.state.modalState
+            modalState: utils._toggleState(this.state.modalState)
         })
-        // console.log('handleModalOpenClose')
-        // console.log(this.state.modalState)
     }
     handleSliderChange(evt){
-        let that = this
         // set to false if set to true elsewhere
         if(this.state.cancelSlide){
-            this.state.cancelSlide = false
             this.setState({
-                cancelSlide: this.state.cancelSlide
+                cancelSlide: utils._toggleState(this.state.cancelSlide)
             })
         }
         // if slider
@@ -1060,7 +1051,6 @@ class Grid extends Component {
                         return
                     }
                 }
-                let currentCursor = that.state.cursorArr[that.state.cursorIndex]
 
 
                 that.updateDriverWithCoords({
@@ -1099,13 +1089,9 @@ class Grid extends Component {
 
 
     toggleSnackbar(){
-        this.state.snackbarOpen = !this.state.snackbarOpen
-        console.log(this.state.snackbarOpen)
         this.setState({
-            snackbarOpen: this.state.snackbarOpen
+            snackbarOpen: utils._toggleState(this.state.snackbarOpen)
         })
-        console.log(this.state.snackbarOpen)
-        return
     }
     // https://stackoverflow.com/questions/16863917/check-if-class-exists-somewhere-in-parent-vanilla-js/19049101
     hasParentClass(element, checkClass){
@@ -1177,9 +1163,8 @@ class Grid extends Component {
                     })
                     // for show modal button
             } else if(event.target.dataset.number === '4' && event.target.classList.contains("button")){
-                this.state.modalState = !this.state.modalState
                 this.setState({
-                    modalState: this.state.modalState
+                    modalState: utils._toggleState(this.state.modalState)
                 })
                 console.log(this.state.modalState)
             }
@@ -1285,23 +1270,18 @@ class Grid extends Component {
                 this.setState({cursorInputProgress:evt.target.value})
                 // comes from names on checkboxes
             } else if(evt.target.name === 'float-toggle'){
-                this.state.floatToggle = !this.state.floatToggle
-
-                let that = this
                 // go to bottom on toggle
                 let offSet = this.getWindowOffset()
                 if(offSet){
                     console.log('HERE', offSet)
                     this.setState({
                         utilsTop: offSet,
-                        floatToggle: this.state.floatToggle
+                        floatToggle: utils._toggleState(this.state.floatToggle)
                     })
                 }
             } else if(evt.target.name === "stop-name-toggle"){
-                this.state.showStopNames = !this.state.showStopNames
-
                 this.setState({
-                    showStopNames: this.state.showStopNames
+                    showStopNames: utils._toggleState(this.state.showStopNames)
                 })
             } else if(evt.target.name === 'color-select'){
                 this.setState({
@@ -1314,8 +1294,8 @@ class Grid extends Component {
         } else if
         (evt.target.name === "xSelect" ||
          evt.target.name === "ySelect" ||
-         evt.target.classList && evt.target.classList.contains("close-icon") ||
-         evt.target.nextSibling && evt.target.nextSibling.classList.contains("modal")
+         (evt.target.classList && evt.target.classList.contains("close-icon")) ||
+         (evt.target.nextSibling && evt.target.nextSibling.classList.contains("modal"))
         )
          {
              // console.log(evt.target.classList)
@@ -1361,19 +1341,18 @@ class Grid extends Component {
         this.setState({
             tempPlotObj: obj,
             plotObjs: [...this.state.plotObjs, this.state.tempPlotObj],
-            tempPlotObj: ""
         })
     }
     toggleStartCheckbox(){
 
-        this.state.iconStartAtfirstStop = !this.state.iconStartAtfirstStop
         let setSliderCoords
         let tempSliderIndex
+        let sliderChunkCopy
         // if not at first stop, include all coords in slider
         console.log(this.state.sliderSlicedChunk)
         if(this.state.iconStartAtfirstStop){
             // slice off part before start
-            this.state.sliderSlicedChunk = this.state.sliderCoordsArrs.splice(0,1)
+            sliderChunkCopy = this.state.sliderCoordsArrs.splice(0,1)
             // reassign arr without that part
             setSliderCoords = this.state.sliderCoordsArrs
             // console.log("S" ,setSliderCoords)
@@ -1395,8 +1374,9 @@ class Grid extends Component {
 
 
         this.setState({
+            sliderSlicedChunk: sliderChunkCopy ? sliderChunkCopy: this.state.sliderSlicedChunk,
             cancelSlide: true,
-            iconStartAtfirstStop: this.state.iconStartAtfirstStop,
+            iconStartAtfirstStop: utils._toggleState(this.state.iconStartAtfirstStop),
             sliderCoordsArrs: setSliderCoords,
             sliderIndex: tempSliderIndex,
             // flatten array to remove/add coords when clicked
@@ -1441,7 +1421,6 @@ class Grid extends Component {
         // }
     }
     getWindowOffset(){
-        let that = this
         let utils = document.querySelector('.utils-container')
         let grid = document.querySelector('.grid-container')
 
@@ -1479,8 +1458,6 @@ class Grid extends Component {
         // this.getWindowOffset()
         // this.scrollToBottom()
         let utils = document.querySelector('.utils-container')
-        let grid = document.querySelector('.grid-container')
-        let utilsTop
         setTimeout(function(){
             that.setState({
                 utilsTop: utils.offsetHeight
@@ -1580,14 +1557,6 @@ class Grid extends Component {
         //         that.sliderCoordsCalc(xSlideCoord, ySlideCoord, "stop-coords")
         //     })
         },500)
-        function addElemClass(){
-            // add class to slider button so can select it later
-            let sliderButton = document.querySelector("[type=button]")
-            if(that.hasParentClass(sliderButton, "slider")){
-                sliderButton.classList.add("slider-button")
-            }
-        }
-        // addElemClass()
 
     }
 
@@ -1596,8 +1565,6 @@ class Grid extends Component {
     // makes arr of arrs of all slider coords to follow
     sliderCoordsCalc(xSlideCoord, ySlideCoord, type){
         let storeArr = []
-        let currentLong
-        let previousLong
         let currentSmall
         let previousSmall
         // console.log('COORDS', xSlideCoord, ySlideCoord)
@@ -1708,9 +1675,7 @@ class Grid extends Component {
         let yArr = []
         let xArr = []
         let x1 = startObj.x
-        let x2 = endObj.x
         let y1 = startObj.y
-        let y2 = endObj.y
         let { xToMove, yToMove } = this._numBetweenStops(startObj, endObj)
         // console.log("x", xToMove)
         // console.log("y", yToMove)
@@ -1727,12 +1692,12 @@ class Grid extends Component {
                     yArr.push(obj)
                 }
             }
-            for (var i = 0; i < Math.abs(xToMove); i++) {
+            for (var j = 0; j < Math.abs(xToMove); j++) {
                 if(xIsInteger){
-                    let obj = {x: x1 + (i + 1)}
+                    let obj = {x: x1 + (j + 1)}
                     xArr.push(obj)
                 } else {
-                    let obj = {x: y1 - (i + 1)}
+                    let obj = {x: y1 - (j + 1)}
                     xArr.push(obj)
                 }
             }
@@ -1853,8 +1818,7 @@ class Grid extends Component {
             setTimeout(function(){
                 that.legConstructor(that.state.stops)
                 // console.log(that.state.startingCellNumAll)
-                that.state.stops.map((stop, i) => {
-
+                that.state.stops.forEach((stop, i) => {
                     that.legStartEnd(stop.x, stop.y,'all')
                     that.colorGrid(stop.x, stop.y, 'all')
 
@@ -1878,7 +1842,7 @@ class Grid extends Component {
                 setTimeout(function(){
                     // console.log(that.state.startingCellNumAll)
                     that.legConstructor(that.state.stops)
-                    that.state.stops.map((stop, i) => {
+                    that.state.stops.forEach((stop, i) => {
                         that.legStartEnd(stop.x, stop.y,'all')
                         that.colorGrid(stop.x, stop.y, 'all')
 
@@ -1939,7 +1903,6 @@ class Grid extends Component {
     }
     colorLeg(input){
         console.log(this.state.finalLegColorObj)
-        let that = this
         // - get val from Dropdown-
         // change it to an index
 
@@ -1960,8 +1923,7 @@ class Grid extends Component {
     // build legs out of stops
     legConstructor(stops){
         let legs = stops.map((stop, i) => {
-            // console.log(stop)
-            if(!stops[i + 1]) return
+            if(!stops[i + 1]) return false
             return {
                 "startStop": stop.name,
                 "endStop": stops[i + 1].name,
@@ -1972,6 +1934,7 @@ class Grid extends Component {
         this.setState({
             legs: legs
         })
+        return
         // console.log(this.state.legs)
     }
 

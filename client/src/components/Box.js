@@ -1,4 +1,5 @@
 import React from "react";
+import utils from "./grid_utils"
 
 // takes the num of boxes/cells to be produced
 class Box extends React.Component {
@@ -53,22 +54,20 @@ class Box extends React.Component {
   }
   toggleColor(type) {
     if (type === "all") {
-      this.state.allColored = !this.state.allColored
+
       console.log("opposite", this.state.allColored)
       this.setState({
-        allColored: this.state.allColored
+        allColored: utils._toggleState(this.state.allColored)
       })
     } else if (type === "leg") {
-      this.state.legColored = !this.state.legColored
       console.log("opposite", this.state.legColored)
       this.setState({
-        legColored: this.state.legColored
+        legColored: utils._toggleState(this.state.legColored)
       })
     } else if (type === "complete") {
-      this.state.completeColored = !this.state.completeColored
       console.log("opposite", this.state.completeColored)
       this.setState({
-        completeColored: this.state.completeColored
+        completeColored: utils._toggleState(this.state.completeColored)
       })
     }
   }

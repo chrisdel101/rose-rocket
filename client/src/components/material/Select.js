@@ -1,15 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import FilledInput from '@material-ui/core/FilledInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 
 const styles = theme => ({
   root: {
@@ -23,7 +18,7 @@ const styles = theme => ({
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
   },
-});
+})
 
 class SimpleSelect extends React.Component {
   state = {
@@ -31,46 +26,17 @@ class SimpleSelect extends React.Component {
     name: '',
     xSelect: '',
     ySelect: ''
-  };
-
-
-  componentDidMount() {
-      // try to fix focus problem on ranges
-    function focusOnSelect(){
-        console.log('here')
-        let select1 = document.querySelector('#select-xSelect')
-        let select2 = document.querySelector('#select-ySelect')
-        select1.addEventListener('blur', () => {
-            if(this.state.xSelect){
-                setInterval(function(){
-                    select1.focus()
-                },10)
-            }
-
-        })
-        select2.addEventListener('blur', () => {
-            if(this.state.ySelect){
-                setInterval(function(){
-                    select2.focus()
-                },10)
-
-            }
-        })
-
-    }
-    // focusOnSelect.bind(this)()
   }
-
   handleChange = event => {
       console.log(event.target.name)
       console.log(event.target.value)
       this.props.onChange(event)
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({ [event.target.name]: event.target.value })
 
-  };
+  }
 
   render() {
-    const { classes } = this.props;
+    const { classes } = this.props
     // console.log(this.props.cells)
     return (
       <form className={classes.root} autoComplete="off">
@@ -117,12 +83,12 @@ class SimpleSelect extends React.Component {
         </FormControl>
 
       </form>
-    );
+    )
   }
 }
 
 SimpleSelect.propTypes = {
   classes: PropTypes.object.isRequired,
-};
+}
 
-export default withStyles(styles)(SimpleSelect);
+export default withStyles(styles)(SimpleSelect)
