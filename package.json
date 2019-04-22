@@ -4,13 +4,11 @@
   "description": "Code challenge",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "author": "chris del",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^1.18.9"
-  },
+  "devDependencies": {},
   "dependencies": {
     "express": "^4.16.4"
   }
