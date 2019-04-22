@@ -44,7 +44,7 @@ class SimpleTabs extends React.Component {
             tabs: [{ label: "Driver 1" }],
             numberOfTabs: 1,
             hovered: false,
-            checkedA: true,
+            checkedA: false,
             checkedB: false,
             checkedC: false
         };
@@ -172,6 +172,7 @@ class SimpleTabs extends React.Component {
                     onClick={this.handleAddButtonClick.bind(this)}
                     />
                     <div className="checkboxes">
+
                         <Checkbox
                             checkedProps={this.state.checkedA}
                             value="checkedA"

@@ -49,8 +49,8 @@ class Accordion extends React.Component {
       <div className={classes.root}>
         <ExpansionPanel className='top-panel' expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Set Driver Coordinates</Typography>
-            <Typography className={classes.secondaryHeading}>Set driver postion with coordinates.
+            <Typography className={classes.heading}>Set Cursor Coordinates</Typography>
+            <Typography className={classes.secondaryHeading}>Set cursor place on grid.
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
@@ -68,9 +68,9 @@ class Accordion extends React.Component {
         </ExpansionPanel>
         <ExpansionPanel className='top-panel' expanded={expanded === 'panel2'} onChange={this.handleChange('panel2')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Set Driver Leg</Typography>
+            <Typography className={classes.heading}>Set Cursor Leg</Typography>
             <Typography className={classes.secondaryHeading}>
-              Set driver position with leg and progress.
+              Set cursor inside legs at progress points.
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className="second-panel">
@@ -88,8 +88,8 @@ class Accordion extends React.Component {
 
         <ExpansionPanel className='top-panel' expanded={expanded === 'panel3'} onChange={this.handleChange('panel3')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className={classes.heading}>Legs & Progress</Typography>
-            <Typography className={classes.secondaryHeading}>Highlight completed route and legs.</Typography>
+            <Typography className={classes.heading}>Show Legs & Progress</Typography>
+            <Typography className={classes.secondaryHeading}>Highlight completed parts, and legs.</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className="third-panel">
           <Dropdown

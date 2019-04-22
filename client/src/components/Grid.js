@@ -55,7 +55,7 @@ class Grid extends Component {
             cursorLegInput:"",
             cursorArr: [],
             cursorInputProgress: "",
-            currentDriver: "",
+            currentCursor: "",
             driverLegStart: "",
             driverCoords: "",
             positionSelect: "coords",
@@ -873,11 +873,11 @@ class Grid extends Component {
     handleStyle(){
 
         // set to false temorarily
-        console.log(this.state.utilsTop)
         if(this.state.floatToggle){
+            console.log('float', this.state.floatToggle)
             if(this.state.utilsTop){
                 return {
-                    bottom: this.state.utilsTop.toString() + "px"
+                    marginBottom: this.state.utilsTop.toString() + "px"
                 }
             } else {
                 return null
@@ -927,19 +927,11 @@ class Grid extends Component {
                             onClick={this.handleClick.bind(this)}
                             buttonNumber={4}
                             size="small"
-                            text="Show Modal"
+                            text="Show Window"
                             type="primary-button"
                             color="default"
                             />
-                            <Slider
-                                label="Driver Position"
-                                onChange={this.handleSliderChange.bind(this)}/>
 
-                            <Checkbox
-                                value="checkedC"
-                                name="icon-start"
-                                label="Begin at stop 1"
-                                onChange={this.handleChange.bind(this)}/>
 
                         </div>
                         <Tabs
@@ -1068,7 +1060,7 @@ class Grid extends Component {
                         return
                     }
                 }
-                let currentDriver = that.state.cursorArr[that.state.cursorIndex]
+                let currentCursor = that.state.cursorArr[that.state.cursorIndex]
 
 
                 that.updateDriverWithCoords({
@@ -1484,7 +1476,17 @@ class Grid extends Component {
         this.scrollToBottom()
         // make scroll to the correct part of screen
 
-        this.getWindowOffset()
+        // this.getWindowOffset()
+        // this.scrollToBottom()
+        let utils = document.querySelector('.utils-container')
+        let grid = document.querySelector('.grid-container')
+        let utilsTop
+        setTimeout(function(){
+            that.setState({
+                utilsTop: utils.offsetHeight
+            })
+        },500)
+
 
         setTimeout(function(){
             // console.log(that.state.legs)
@@ -1793,7 +1795,7 @@ class Grid extends Component {
                 return
             },100)
         }
-        let currentDriver = this.state.cursorArr[this.state.cursorIndex]
+        let currentCursor = this.state.cursorArr[this.state.cursorIndex]
                 // update coords
                 //set driver to those
             //UPDATE STATE DATA
@@ -1806,20 +1808,20 @@ class Grid extends Component {
                 if(this.state.cursorFormX){
                     formData['x'] = parseInt(this.state.cursorFormX)
                 } else {
-                    formData['x'] = currentDriver.driverCoords.x
+                    formData['x'] = currentCursor.driverCoords.x
                 }
                 if(this.state.cursorFormY){
                     formData['y'] = parseInt(this.state.cursorFormY)
                 } else {
-                    formData['y'] = currentDriver.driverCoords.y
+                    formData['y'] = currentCursor.driverCoords.y
                 }
-                console.log(currentDriver)
-                    currentDriver.driverCoords = formData
+                console.log(currentCursor)
+                    currentCursor.driverCoords = formData
                 console.log(this.state.cursorArr)
                 this.setState({
                     driverCoords: formData
                 })
-            //ACTUALLY MOVE DRIVER
+            //ACTUALLY MOVE CURSOR
             this.updateDriverWithCoords("", "form")
             let that = this
             setTimeout(function(){
@@ -1866,10 +1868,10 @@ class Grid extends Component {
                 this.setState({
                     stops: res.stops,
                     stopsCopy: res.stops,
-                    setGraphSize: {"x":"100", "y": "100"}
-                    // setGraphSize: {"x":"100", "y": "100"}
+                    // set auto 100
+                    setGraphSize: {"x":"100", "y": "100"},
+                    plotObjs: res.stops
                 })
-                // adjust graph size to match
                 console.log('call graph')
                 this.createGraph()
                 this._setStopCoords('stop')

@@ -22,7 +22,7 @@ const styles = {
 
 class CheckboxLabels extends React.Component {
   state = {
-    checkedA: true,
+    checkedA: false,
     checkedB: false,
     checkedC: false
   };

@@ -196,6 +196,7 @@ class SimpleModal extends React.Component {
     );
   }
   renderPlotsList(props) {
+      console.log(props)
     if (!props.plots) return;
     return (
       <div className="plots-list-container">
