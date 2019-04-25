@@ -23,7 +23,6 @@ function getModalStyle() {
   };
 }
 
-
 const styles = theme => ({
   paper: {
     position: "absolute",
@@ -47,14 +46,12 @@ class SimpleModal extends React.Component {
   }
 
   handleOpen = e => {
-    // console.log(e);
     this.setState({ open: true });
   };
 
   handleClose = e => {
     this.setState({ open: false });
     this.props.onChange(e);
-    // console.log(this.state.open);
   };
 
   // make range for select dropdowns
@@ -80,6 +77,7 @@ class SimpleModal extends React.Component {
       });
     }
   }
+  // send events to parents
   handleSelectChange(e) {
     this.props.onChange(e);
   }
@@ -87,7 +85,6 @@ class SimpleModal extends React.Component {
     this.props.onSubmit(e);
   }
   handleClick(e) {
-      // console.log(e.target)
     e.stopPropagation();
     if (e.target.classList && e.target.classList.contains("close-icon")) {
       this.handleClose(e);

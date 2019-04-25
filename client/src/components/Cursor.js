@@ -5,9 +5,7 @@ import Icon from './material/Icon'
 function Cursor(props){
     if(!props.coords) return null
     let coord = props.coords
-    // console.log(props)
     let driverID = props.coords.id
-    // console.log(driverID)
     let style = {
         [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
         [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px',

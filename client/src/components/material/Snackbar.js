@@ -110,19 +110,17 @@ class CustomizedSnackbars extends React.Component {
         })
       return;
     }
-    // console.log(this.state)
     this.setState({ open: false });
   };
 
   render() {
-      // console.log(this.props)
     return (
       <div>
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
-          }}    
+          }}
           open={this.props.snackbarOpen}
           autoHideDuration={6000}
           onClose={this.handleClose}

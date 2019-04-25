@@ -26,7 +26,6 @@ class SimpleSlider extends React.Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-    // console.log(this.state.value)
     return (
       <div className={`${classes.root} slider `}>
         <Typography id="label">{this.props.label}</Typography>

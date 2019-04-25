@@ -37,7 +37,6 @@ class SimpleSelect extends React.Component {
 
   render() {
     const { classes } = this.props
-    // console.log(this.props.cells)
     return (
       <form className={classes.root} autoComplete="off">
         <FormControl className={`${classes.formControl} regular`}>

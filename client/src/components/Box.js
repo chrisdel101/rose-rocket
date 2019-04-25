@@ -54,7 +54,6 @@ class Box extends React.Component {
   }
   toggleColor(type) {
     if (type === "all") {
-
       console.log("opposite", this.state.allColored)
       this.setState({
         allColored: utils._toggleState(this.state.allColored)
@@ -124,8 +123,6 @@ class Box extends React.Component {
 
   BoxMarkup(input) {
       let idStr = `id${input.id}`
-      // console.log('input', input.hasStopColor)
-      // console.log('input', this.props)
       return (
       <div
         id={idStr}
@@ -172,11 +169,9 @@ class Box extends React.Component {
     if (
       this.props.completedColorsCounter !== prevProps.completedColorsCounter
     ) {
-      console.log(this.props)
       if (
         this.state.completedColorsCounter !== this.props.completedColorsCounter
       ) {
-        console.log("toggle")
         // update by one
         this.toggleColor("complete")
         this.setState({

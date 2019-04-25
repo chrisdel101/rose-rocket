@@ -66,7 +66,6 @@ class SimpleTabs extends React.Component {
   };
   addTab(){
       let driverNum = this.state.numberOfTabs + 1
-      // console.log(driverNum)
       this.setState({
           numberOfTabs: driverNum
       })
@@ -90,14 +89,13 @@ class SimpleTabs extends React.Component {
       this.props.onClick(e)
       this.addTab()
       this.setState({value: this.props.selectedDriver})
-      // console.log(this.state.value)
   }
   handleRemoveButtonClick(e){
       if(!this.state.hovered){
           return
       }
-      console.log('HERE')
       let driverIndex = parseInt(e.target.innerText.substring(13,14)) - 1
+      // send click to parent
       this.props.onClick({event: e, iconClick:true, cursor:true})
       this.subtractTab(driverIndex)
   }
@@ -119,6 +117,7 @@ class SimpleTabs extends React.Component {
         if(this.state.hovered || e.target.parentNode.parentNode.parentNode.classList.contains("tabs-element")){
             return
         } else if(e.target.type === "button" && e.target.dataset.key){
+            // send click to parent
             this.props.onClick({event: e, iconClick:false, cursor:true})
         }
     }
@@ -140,7 +139,6 @@ class SimpleTabs extends React.Component {
             <AppBar position="static">
 
                 <Tabs
-
                     classes={{
                         indicator: classes.indicator
                     }}
