@@ -12,6 +12,14 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 		monospace;
 }
+.water-mark {
+    color: whitesmoke;
+    font-size: 60px;
+    text-align: center;
+    top: 100px;
+    left: 300px;
+    z-index: 100;
+}
 :root {
     --graph-size-x: 0;
     --graph-size-y: 0;
