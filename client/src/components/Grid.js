@@ -590,8 +590,10 @@ class Grid extends Component {
   colorAllStops(bool) {
     if (!bool) return
     this.setState({
-      finalStopColorArr: this.state.holdAllStopColorIndexes
-    })
+      finalStopColorArr: this.state.holdAllStopColorIndexes,
+			allColorsCounter: this.state.allColorsCounter + 1,
+			colorType: 'all'
+		})
     console.log('SC', this.state.finalStopColorArr)
   }
   // on click pass props to child
@@ -1185,16 +1187,11 @@ class Grid extends Component {
     }
   }
   componentDidMount() {
-    let that = this
-
     this.createGraph()
     this.handlePlotLoading('manual')
     setTimeout(() => {
-			this.colorAllStops(this.props.colorGraph)
-			this.setState({
-				allColorsCounter: this.state.allColorsCounter + 1,
-				colorType: 'all'
-			})
+      this.colorAllStops(this.props.colorAllPoints)
+      this.colorLeg(this.props.legToColorID)
     })
   }
 
@@ -1415,13 +1412,6 @@ class Grid extends Component {
       let that = this
       setTimeout(function() {
         //UPDATE DRIVER DATA
-        // returns false if not a stop
-        let result = that.updateDriverData()
-        if (!result) {
-          // not part of route
-          that.toggleSnackbar()
-          return
-        }
         that.colorCompleted(that.state.selectedDriver.activeLegID)
       }, 100)
     } else if (
@@ -1529,6 +1519,7 @@ class Grid extends Component {
       legColorsCounter: this.state.legColorsCounter + 1,
       colorType: 'leg'
     })
+    console.log('FL', this.state.finalLegColorObj)
   }
   // build legs out of stops
   legConstructor(stops) {
