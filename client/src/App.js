@@ -13,9 +13,10 @@ class App extends Component {
           { x: 12, y: 14 },
           { x: 10, y: 10 }
         ]}
-        // colorAllPoints={true}
-        legToColorID="AB"
-        // lineColor="red"
+        cursors={[{ color: 'blue', coords: { x: 10, y: 10 } }]}
+        // legToColorID="AB"
+        colorAllPoints={true}
+        lineColor="red"
         // cursor={''}
       />
     )

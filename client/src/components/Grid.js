@@ -154,8 +154,8 @@ class Grid extends Component {
       },
       id: this.state.createCounter,
       name: `cursor ${this.state.createCounter + 1}`,
-      color: this.state.colors[this.state.createCounter],
-      show: false
+      color: 'blue',
+      show: true
     }
     let arr = []
     arr.push(newCursorObj)
@@ -286,8 +286,10 @@ class Grid extends Component {
     } else if (type === 'manual') {
       // reset to zero
       this._resetCursor()
-      coords = this._setStopCoords('driver', coords.x, coords.y)
-      cursorArr[this.state.cursorIndex].driverCoords = { x: 0, y: 0 }
+      console.log(coords)
+      coords = this._setStopCoords('driver', '10', '10')
+      console.log(cursorArr)
+      cursorArr[this.state.cursorIndex].driverCoords = { x: 5, y: 5 }
     }
     // subtract for icon positionSelect
     coords.pixels.moveX = coords.pixels.moveX - 30
@@ -298,6 +300,7 @@ class Grid extends Component {
     this.setState({
       cursorArr: cursorArr
     })
+    console.log(this.state.cursorArr)
   }
   // calc up to driver position to color
   colorCompleted(legID, type) {
@@ -591,10 +594,9 @@ class Grid extends Component {
     if (!bool) return
     this.setState({
       finalStopColorArr: this.state.holdAllStopColorIndexes,
-			allColorsCounter: this.state.allColorsCounter + 1,
-			colorType: 'all'
-		})
-    console.log('SC', this.state.finalStopColorArr)
+      allColorsCounter: this.state.allColorsCounter + 1,
+      colorType: 'all'
+    })
   }
   // on click pass props to child
   colorCompletedStops() {
@@ -713,7 +715,7 @@ class Grid extends Component {
             show={driverData.show}
             coords={driverData}
             key={i}
-            colors={this.state.colors}
+            color={this.props.cursors[0].color}
             counter={this.state.createCounter}
           />
         )
@@ -1189,7 +1191,9 @@ class Grid extends Component {
   componentDidMount() {
     this.createGraph()
     this.handlePlotLoading('manual')
+    this.addNewCursor()
     setTimeout(() => {
+      this.updateDriverWithCoords('', 'manual')
       this.colorAllStops(this.props.colorAllPoints)
       this.colorLeg(this.props.legToColorID)
     })
@@ -1507,7 +1511,8 @@ class Grid extends Component {
     return index
   }
   colorLeg(input) {
-    // - get val from Dropdown-
+    // if no props don't call
+    if (!this.props.legToColorID) return
     // change it to an index
     let index = this._legIndex(input)
     // get leg using index out of array
