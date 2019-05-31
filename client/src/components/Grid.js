@@ -14,7 +14,6 @@ class Grid extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      setGraphSize: { x: '20', y: '20' },
       storeGraphSize: { x: '20', y: '20' },
       plotObjs: [],
       tempPlotObj: { x: '', y: '' },
@@ -86,7 +85,7 @@ class Grid extends Component {
     let that = this
     // take state of graph and multiple to get num
     let cells =
-      parseInt(this.state.setGraphSize.x) * parseInt(this.state.setGraphSize.y)
+      parseInt(this.props.setGraphSize.x) * parseInt(this.props.setGraphSize.y)
     if (!cells) {
       console.error('No cell values')
       return
@@ -99,12 +98,12 @@ class Grid extends Component {
     function setCSSvars() {
       // console.log(that.state.setGraphSize)
       let root = document.documentElement
-      root.style.setProperty('--graph-size-x', that.state.setGraphSize.x)
-      root.style.setProperty('--graph-size-y', that.state.setGraphSize.y)
+      root.style.setProperty('--graph-size-x', that.props.setGraphSize.x)
+      root.style.setProperty('--graph-size-y', that.props.setGraphSize.y)
     }
     setTimeout(function() {
       that.setState({
-        startingCellNumAll: utils._calcStartingCell(that.state.setGraphSize)
+        startingCellNumAll: utils._calcStartingCell(that.props.setGraphSize)
       })
       that.calcRowVariaion()
     })
@@ -404,7 +403,7 @@ class Grid extends Component {
   calcRowVariaion() {
     // formula - move up/down is the same value as x and y
     this.setState({
-      moveRowCells: parseInt(this.state.setGraphSize.x)
+      moveRowCells: parseInt(this.props.setGraphSize.x)
     })
   }
   colorGrid(x, y, type) {
@@ -1185,7 +1184,7 @@ class Grid extends Component {
   }
   componentDidMount() {
     let that = this
-    // create graph size based on input - COMMENT OUT
+
     this.createGraph()
   }
 

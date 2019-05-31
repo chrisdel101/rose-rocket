@@ -4,7 +4,7 @@ import Grid from './components/Grid'
 
 class App extends Component {
   render() {
-    return <Grid />
+    return <Grid setGraphSize={{ x: 20, y: 20 }} />
   }
 }
 
