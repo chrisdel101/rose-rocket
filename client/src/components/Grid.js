@@ -1186,6 +1186,7 @@ class Grid extends Component {
     let that = this
 
     this.createGraph()
+    this.handlePlotLoading('manual')
   }
 
   // takes two ranges and combines the arrays
@@ -1429,7 +1430,7 @@ class Grid extends Component {
   handlePlotLoading(type) {
     let that = this
     if (type === 'manual') {
-      let json = utils._makePlotJson(this.state.plotObjs)
+      let json = utils._makePlotJson(this.props.plotObjs)
       this.setState({ stops: json })
       this._setStopCoords('stop')
       setTimeout(function() {
