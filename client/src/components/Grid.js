@@ -587,10 +587,12 @@ class Grid extends Component {
     }
   }
   // send colored stops to child
-  colorAllStops() {
+  colorAllStops(bool) {
+    if (!bool) return
     this.setState({
       finalStopColorArr: this.state.holdAllStopColorIndexes
     })
+    console.log('SC', this.state.finalStopColorArr)
   }
   // on click pass props to child
   colorCompletedStops() {
@@ -1187,6 +1189,13 @@ class Grid extends Component {
 
     this.createGraph()
     this.handlePlotLoading('manual')
+    setTimeout(() => {
+			this.colorAllStops(this.props.colorGraph)
+			this.setState({
+				allColorsCounter: this.state.allColorsCounter + 1,
+				colorType: 'all'
+			})
+    })
   }
 
   // takes two ranges and combines the arrays
