@@ -723,6 +723,8 @@ class Grid extends Component {
   loadPlotDataToState(type) {
     // load plotsets into state
     Object.values(this.props.plotSets).forEach(set => {
+      // update with _makePlotJson func
+      set.plots = utils._makePlotJson(set.plots)
       this.setState(prevState => ({
         stopObjs: [...prevState.stopObjs, set]
       }))
@@ -736,7 +738,8 @@ class Grid extends Component {
         // this.state.stopObjs[key].plots.forEach(coord => {
         // console.log(coord)
         this._setStopCoords('stop', this.state.stopObjs[key].plots)
-        //   this.legConstructor(this.state.stops)
+        console.log(this.state.stopObjs[key].plots)
+        this.legConstructor(this.state.stopObjs[key].plots)
         //   this.state.stops.forEach((stop, i) => {
         //     this.legStartEnd(stop.x, stop.y, 'all')
         //     this.colorGrid(stop.x, stop.y, 'all')
@@ -809,7 +812,8 @@ class Grid extends Component {
   }
   // build legs out of stops
   legConstructor(stops) {
-    let legs = stops
+    console.log(stops)
+    const legs = stops
       .map((stop, i) => {
         if (!stops[i + 1]) return false
         return {
@@ -819,10 +823,7 @@ class Grid extends Component {
         }
       })
       .filter(stop => stop)
-    this.setState({
-      legs: legs
-    })
-    return
+    return legs
   }
   // set coords in pxs of plots
   _setStopCoords(type, arr, x, y) {
