@@ -38,7 +38,8 @@ class Grid extends Component {
       loadingDataArr: [],
       cursorIndex: 0,
       createCounter: 0,
-      legs: [],
+      legsCoordsObjs: [],
+      legsStartEndObjs: [],
       stopObjs: [],
       jsonStops: [],
       stopsCopy: [],
@@ -175,9 +176,7 @@ class Grid extends Component {
     } else if (type === 'manual') {
       // reset to zero
       this._resetCursor()
-      console.log(coords)
       coords = this._setStopCoords('driver', '10', '10')
-      console.log(cursorArr)
       cursorArr[this.state.cursorIndex].driverCoords = { x: 5, y: 5 }
     }
     // subtract for icon positionSelect
@@ -189,7 +188,6 @@ class Grid extends Component {
     this.setState({
       cursorArr: cursorArr
     })
-    console.log(this.state.cursorArr)
   }
   // calc up to driver position to color
   colorCompleted(legID, type) {
@@ -364,13 +362,14 @@ class Grid extends Component {
       this.setState({
         previousStopX: x,
         previousStopY: y,
-        startingCellNumAll: tempCellNum,
-        holdAllStopColorIndexes: [
-          ...this.state.holdAllStopColorIndexes,
-          ...tempCellNumsArr
-        ]
+        startingCellNumAll: tempCellNum
+        // holdAllStopColorIndexes: [
+        //   ...this.state.holdAllStopColorIndexes,
+        //   ...tempCellNumsArr
+        // ]
       })
     }
+    return tempCellNumsArr
   }
   // takes x y and determine start and end cells
   legStartEnd(x, y, type) {
@@ -459,13 +458,17 @@ class Grid extends Component {
       this.setState({
         previousLegEndCell: tempCellNum,
         previousLegX: x,
-        previousLegY: y,
-        legStartEndCellNums: [...this.state.legStartEndCellNums, legCellNums],
-        holdAllLegColorArrs: [
-          ...this.state.holdAllLegColorArrs,
-          tempCellNumsArr
-        ]
+        previousLegY: y
+        // legStartEndCellNums: [...this.state.legStartEndCellNums, legCellNums],
+        // holdAllLegColorArrs: [
+        //   ...this.state.holdAllLegColorArrs,
+        //   tempCellNumsArr
+        // ]
       })
+      return {
+        legStartEndCellNums: legCellNums,
+        holdAllLegColorArrs: tempCellNumsArr
+      }
     } else if (type === 'partial') {
       this.setState({
         previousStopX: x,
@@ -711,7 +714,7 @@ class Grid extends Component {
   componentDidMount() {
     this.createGraph()
     this.loadPlotDataToState()
-    this.loadStops()
+    this.loadAllData()
     this.addNewCursor()
     setTimeout(() => {
       this.updateDriverWithCoords('', 'manual')
@@ -730,20 +733,28 @@ class Grid extends Component {
       }))
     })
   }
-  loadStops() {
+  loadAllData() {
     setTimeout(() => {
       // loop over each obj
       for (let key in this.state.stopObjs) {
         // get the array inside
-        // this.state.stopObjs[key].plots.forEach(coord => {
-        // console.log(coord)
         this._setStopCoords('stop', this.state.stopObjs[key].plots)
-        console.log(this.state.stopObjs[key].plots)
-        this.legConstructor(this.state.stopObjs[key].plots)
-        //   this.state.stops.forEach((stop, i) => {
-        //     this.legStartEnd(stop.x, stop.y, 'all')
-        //     this.colorGrid(stop.x, stop.y, 'all')
-        // })
+        // console.log(this.state.stopObjs[key].plots)
+        const legArr = this.legConstructor(this.state.stopObjs[key].plots)
+        let legData = []
+        let colorData = []
+        this.state.stopObjs[key].plots.forEach((stop, i) => {
+          legData.push(this.legStartEnd(stop.x, stop.y, 'all'))
+          colorData.push(this.colorGrid(stop.x, stop.y, 'all'))
+        })
+        this.setState(prevState => ({
+          legsCoordsObjs: [...prevState.legsCoordsObjs, legArr],
+          legsStartEndObjs: [...prevState.legsStartEndObjs, legData],
+          holdAllStopColorIndexes: [
+            ...prevState.holdAllStopColorIndexes,
+            colorData
+          ]
+        }))
         // })
       }
     })
@@ -812,7 +823,6 @@ class Grid extends Component {
   }
   // build legs out of stops
   legConstructor(stops) {
-    console.log(stops)
     const legs = stops
       .map((stop, i) => {
         if (!stops[i + 1]) return false
