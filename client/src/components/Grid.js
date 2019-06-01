@@ -19,6 +19,7 @@ class Grid extends Component {
       sliderIndex: 0,
       initialSliderChange: true,
       sliderCoordsArrs: [],
+      stopsDirsArr: [],
       // utilsTop: '',
       colors: [
         'red',
@@ -38,7 +39,7 @@ class Grid extends Component {
       cursorIndex: 0,
       createCounter: 0,
       legs: [],
-      stops: [],
+      stopObjs: [],
       jsonStops: [],
       stopsCopy: [],
       legToColorID: '',
@@ -586,7 +587,7 @@ class Grid extends Component {
             {' '}
             {this.renderCursor()}{' '}
             <Stop
-              coords={this.state.stopsDirsArr}
+              coordsArrs={this.state.stopsDirsArr}
               toggleStopNames={this.state.showStopNames}
             />{' '}
             <Box
@@ -709,7 +710,8 @@ class Grid extends Component {
   }
   componentDidMount() {
     this.createGraph()
-    this.handlePlotLoading()
+    this.loadPlotDataToState()
+    this.loadStops()
     this.addNewCursor()
     setTimeout(() => {
       this.updateDriverWithCoords('', 'manual')
@@ -718,20 +720,30 @@ class Grid extends Component {
     })
   }
 
-  handlePlotLoading(type) {
-    for (let key in this.props.plotSets) {
-      const plotSet = this.props.plotSets[key].plots
-      let json = utils._makePlotJson(plotSet)
-      this.setState({ stops: json })
-      this._setStopCoords('stop')
-      setTimeout(() => {
-        this.legConstructor(this.state.stops)
-        this.state.stops.forEach((stop, i) => {
-          this.legStartEnd(stop.x, stop.y, 'all')
-          this.colorGrid(stop.x, stop.y, 'all')
-        })
-      })
-    }
+  loadPlotDataToState(type) {
+    // load plotsets into state
+    Object.values(this.props.plotSets).forEach(set => {
+      this.setState(prevState => ({
+        stopObjs: [...prevState.stopObjs, set]
+      }))
+    })
+  }
+  loadStops() {
+    setTimeout(() => {
+      // loop over each obj
+      for (let key in this.state.stopObjs) {
+        // get the array inside
+        // this.state.stopObjs[key].plots.forEach(coord => {
+        // console.log(coord)
+        this._setStopCoords('stop', this.state.stopObjs[key].plots)
+        //   this.legConstructor(this.state.stops)
+        //   this.state.stops.forEach((stop, i) => {
+        //     this.legStartEnd(stop.x, stop.y, 'all')
+        //     this.colorGrid(stop.x, stop.y, 'all')
+        // })
+        // })
+      }
+    })
   }
   _legIndex(input) {
     let index
@@ -813,14 +825,14 @@ class Grid extends Component {
     return
   }
   // set coords in pxs of plots
-  _setStopCoords(type, x, y) {
+  _setStopCoords(type, arr, x, y) {
     let that = this
-    let coordsArr = []
     // filter out undefined
     if (type === 'stop') {
       setTimeout(function() {
-        if (that.state.stops.length > 0) {
-          that.state.stops.forEach(stop => {
+        let coordsArr = []
+        if (arr.length > 0) {
+          arr.forEach(stop => {
             let pixels = utils._convertToPixels(stop.x, stop.y)
             let coords = {
               pixels: pixels,
@@ -832,10 +844,11 @@ class Grid extends Component {
             coordsArr.push(coords)
           })
         }
-        that.setState({
-          stopsDirsArr: coordsArr
-        })
-      }, 1050)
+        console.log()
+        that.setState(prevState => ({
+          stopsDirsArr: [...prevState.stopsDirsArr, coordsArr]
+        }))
+      })
     } else if (type === 'driver') {
       let pixels = utils._convertToPixels(x, y)
       let coords = {
