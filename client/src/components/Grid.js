@@ -588,15 +588,16 @@ class Grid extends Component {
         <div className="grid-container">
           <div className="grid">
             {' '}
-            <Stop
-              color={
-                this.state.instanceData[0]
-                  ? this.state.instanceData[0].plotColor
-                  : null
-              }
-              coordsArrs={this.state.stopsDirsArr[0]}
-              toggleStopNames={this.state.showStopNames}
-            />{' '}
+            {this.state.instanceData.map((instance, i) => {
+              return (
+                <Stop
+                  key={i}
+                  color={instance ? instance.plotColor : null}
+                  coordsArrs={this.state.stopsDirsArr[i]}
+                  toggleStopNames={this.state.showStopNames}
+                />
+              )
+            })}{' '}
             <Box
               toRender={this.state.boxesToRender}
               stopsColor={
