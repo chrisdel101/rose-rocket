@@ -10,7 +10,7 @@ const plotSets = {
       { x: 12, y: 14 },
       { x: 10, y: 10 }
     ],
-    plotColor: 'black',
+    plotColor: 'green',
     lineColor: 'yellow'
   },
   2: {

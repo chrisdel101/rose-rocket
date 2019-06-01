@@ -3,13 +3,11 @@ import { Manager, Reference, Popper } from 'react-popper'
 
 // takes and array of directions and pixes for x and y
 function Stop(props) {
-  if (!props.coords) return null
+  if (!props.coordsArrs) return null
   console.log(props)
-  console.log('props', props)
-  return
-  let coordsArr = props.coords
-  return coordsArr.map((coord, i) => {
+  return props.coordsArrs.map((coord, i) => {
     let styles = {
+      color: props.color,
       [coord.directions.xDir]: coord.pixels.moveX.toString() + 'px',
       [coord.directions.yDir]: coord.pixels.moveY.toString() + 'px'
     }

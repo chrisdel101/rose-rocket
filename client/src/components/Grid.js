@@ -40,7 +40,7 @@ class Grid extends Component {
       createCounter: 0,
       legsCoordsObjs: [],
       legsStartEndObjs: [],
-      stopObjs: [],
+      instanceData: [],
       jsonStops: [],
       stopsCopy: [],
       legToColorID: '',
@@ -588,9 +588,13 @@ class Grid extends Component {
         <div className="grid-container">
           <div className="grid">
             {' '}
-            {this.renderCursor()}{' '}
             <Stop
-              coordsArrs={this.state.stopsDirsArr}
+              color={
+                this.state.instanceData[0]
+                  ? this.state.instanceData[0].plotColor
+                  : null
+              }
+              coordsArrs={this.state.stopsDirsArr[0]}
               toggleStopNames={this.state.showStopNames}
             />{' '}
             <Box
@@ -729,21 +733,21 @@ class Grid extends Component {
       // update with _makePlotJson func
       set.plots = utils._makePlotJson(set.plots)
       this.setState(prevState => ({
-        stopObjs: [...prevState.stopObjs, set]
+        instanceData: [...prevState.instanceData, set]
       }))
     })
   }
   loadAllData() {
     setTimeout(() => {
       // loop over each obj
-      for (let key in this.state.stopObjs) {
+      for (let key in this.state.instanceData) {
         // get the array inside
-        this._setStopCoords('stop', this.state.stopObjs[key].plots)
-        // console.log(this.state.stopObjs[key].plots)
-        const legArr = this.legConstructor(this.state.stopObjs[key].plots)
+        this._setStopCoords('stop', this.state.instanceData[key].plots)
+        // console.log(this.state.instanceData[key].plots)
+        const legArr = this.legConstructor(this.state.instanceData[key].plots)
         let legData = []
         let colorData = []
-        this.state.stopObjs[key].plots.forEach((stop, i) => {
+        this.state.instanceData[key].plots.forEach((stop, i) => {
           legData.push(this.legStartEnd(stop.x, stop.y, 'all'))
           colorData.push(this.colorGrid(stop.x, stop.y, 'all'))
         })
@@ -855,7 +859,6 @@ class Grid extends Component {
             coordsArr.push(coords)
           })
         }
-        console.log()
         that.setState(prevState => ({
           stopsDirsArr: [...prevState.stopsDirsArr, coordsArr]
         }))
