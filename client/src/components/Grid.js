@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import '../App.css'
 import Box from './Box'
 import Stop from './Stop'
 import Cursor from './Cursor'
@@ -65,11 +66,7 @@ class Grid extends Component {
       finalCompletedColorsArr: [],
       finalDriverMoveObj: '',
       finalSliderCoords: [],
-      legStartEndCellNums: [],
-      texts: {
-        driverText: 'Select leg for driver',
-        colorText: 'Select a Leg to color'
-      }
+      legStartEndCellNums: []
     }
   }
   createGraph() {
@@ -712,7 +709,7 @@ class Grid extends Component {
   }
   componentDidMount() {
     this.createGraph()
-    this.handlePlotLoading('manual')
+    this.handlePlotLoading()
     this.addNewCursor()
     setTimeout(() => {
       this.updateDriverWithCoords('', 'manual')
@@ -722,35 +719,16 @@ class Grid extends Component {
   }
 
   handlePlotLoading(type) {
-    let that = this
-    if (type === 'manual') {
-      let json = utils._makePlotJson(this.props.plotObjs)
+    for (let key in this.props.plotSets) {
+      const plotSet = this.props.plotSets[key].plots
+      let json = utils._makePlotJson(plotSet)
       this.setState({ stops: json })
       this._setStopCoords('stop')
-      setTimeout(function() {
-        that.legConstructor(that.state.stops)
-        that.state.stops.forEach((stop, i) => {
-          that.legStartEnd(stop.x, stop.y, 'all')
-          that.colorGrid(stop.x, stop.y, 'all')
-        })
-      })
-    } else if (type === 'auto') {
-      this._callStops().then(res => {
-        this.setState({
-          stops: res.stops,
-          stopsCopy: res.stops,
-          // set auto 100
-          setGraphSize: { x: '100', y: '100' },
-          plotObjs: res.stops
-        })
-        this.createGraph()
-        this._setStopCoords('stop')
-        setTimeout(function() {
-          that.legConstructor(that.state.stops)
-          that.state.stops.forEach((stop, i) => {
-            that.legStartEnd(stop.x, stop.y, 'all')
-            that.colorGrid(stop.x, stop.y, 'all')
-          })
+      setTimeout(() => {
+        this.legConstructor(this.state.stops)
+        this.state.stops.forEach((stop, i) => {
+          this.legStartEnd(stop.x, stop.y, 'all')
+          this.colorGrid(stop.x, stop.y, 'all')
         })
       })
     }
