@@ -73,20 +73,19 @@ class Box extends React.Component {
     }
   }
   allColorsAddLogic(i) {
-    let { stopsColor } = this.props
-    // console.log(stopsColor)
+    let { gridColor } = this.props
+    // console.log(gridColor)
     let hasStopColor = (() => {
-      if (!stopsColor || !stopsColor.length || !stopsColor.includes(i))
+      if (!gridColor || !gridColor.length || !gridColor.includes(i))
         return false
       return true
     })()
     return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
   }
   allColorsRemoveLogic(i) {
-    let { stopsColor } = this.props
-    console.log(stopsColor)
+    let { gridColor } = this.props
     let hasStopColor = (() => {
-      if (stopsColor && stopsColor.includes(i)) return false
+      if (gridColor && gridColor.includes(i)) return false
     })()
     return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
   }

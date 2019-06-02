@@ -41,6 +41,7 @@ class Grid extends Component {
       legsCoordsObjs: [],
       legsStartEndObjs: [],
       plotSets: [],
+      gridSets: [],
       jsonStops: [],
       stopsCopy: [],
       legToColorID: '',
@@ -73,17 +74,16 @@ class Grid extends Component {
   }
   componentDidMount() {
     this.createGraph()
-    this.loadPlotDataToState()
-    this.loadAllData()
+    this.loadPlotDatatoPlotSets()
+    this.loadGridDataintoGridSets()
     this.addNewCursor()
     setTimeout(() => {
-      this.colorAllStops(this.props.colorAllPoints)
       this.updateDriverWithCoords('', 'manual')
       this.colorLeg(this.props.legToColorID)
     })
   }
 
-  loadPlotDataToState(type) {
+  loadPlotDatatoPlotSets(type) {
     // load plotsets into state
     Object.values(this.props.plotSets).forEach(set => {
       // update with _makePlotJson func
@@ -93,28 +93,48 @@ class Grid extends Component {
       }))
     })
   }
-  loadAllData() {
+  // get array inside plotset props obj
+  // run color funcs on the array
+  loadGridDataintoGridSets() {
     setTimeout(() => {
       // loop over each obj
       for (let key in this.state.plotSets) {
         const plotsArr = this.state.plotSets[key].plots
         // get the array inside
         this._setStopCoords('stop', plotsArr)
-        const legArr = this.legConstructor(plotsArr)
-        let legData = []
-        let colorData = []
+        const tempGridSet = {
+          legStopsNames: this.legConstructor(plotsArr),
+          legStartEnd: [],
+          legColorData: [],
+          gridColorData: [],
+          name: `set${key}`,
+          allColorsCounter: this.state.allColorsCounter + 1,
+          legColorsCounter: this.state.legColorsCounter,
+          colorType: 'all'
+        }
         plotsArr.forEach((stop, i) => {
-          legData.push(this.legStartEnd(stop.x, stop.y, 'all'))
-          colorData.push(this.colorGrid(stop.x, stop.y, 'all'))
+          const { legStartEndCellNums, holdAllLegColorArrs } = this.legStartEnd(
+            stop.x,
+            stop.y,
+            'all'
+          )
+          tempGridSet.legColorData.push(holdAllLegColorArrs)
+          tempGridSet.legStartEnd.push(legStartEndCellNums)
+          tempGridSet.gridColorData.push(this.colorGrid(stop.x, stop.y, 'all'))
         })
+        console.log(tempGridSet)
+        tempGridSet.gridColorData = tempGridSet.gridColorData.flat()
         this.setState(prevState => ({
-          legsCoordsObjs: [...prevState.legsCoordsObjs, legArr],
-          legsStartEndObjs: [...prevState.legsStartEndObjs, legData],
-          holdAllStopColorIndexes: [
-            ...prevState.holdAllStopColorIndexes,
-            colorData
-          ]
+          gridSets: [...prevState.gridSets, tempGridSet]
         }))
+        // this.setState(prevState => ({
+        //   legsCoordsObjs: [...prevState.legsCoordsObjs, legArr],
+        //   legsStartEndObjs: [...prevState.legsStartEndObjs, legData],
+        //   holdAllStopColorIndexes: [
+        //     ...prevState.holdAllStopColorIndexes,
+        //     gridColorData
+        //   ]
+        // }))
         // })
       }
     })
@@ -529,17 +549,6 @@ class Grid extends Component {
       })
     }
   }
-  // send colored stops to child
-  colorAllStops(bool) {
-    if (!bool) return
-    setTimeout(() => {
-      this.setState({
-        finalStopColorArr: this.state.holdAllStopColorIndexes[0].flat(),
-        allColorsCounter: this.state.allColorsCounter + 1,
-        colorType: 'all'
-      })
-    })
-  }
   // on click pass props to child
   colorCompletedStops() {
     console.log(this.state.holdingCompletedArrs)
@@ -648,27 +657,30 @@ class Grid extends Component {
                 />
               )
             })}{' '}
-            <Box
-              toRender={this.state.boxesToRender}
-              stopsColor={
-                this.state.finalStopColorArr.length
-                  ? this.state.finalStopColorArr
-                  : null
+            {this.state.gridSets.map((set, i) => {
+              if (i === 0) {
+                return (
+                  <Box
+                    toRender={this.state.boxesToRender}
+                    gridColor={
+                      set.gridColorData.length ? set.gridColorData : null
+                    }
+                    legsColor={set.legColorData ? set.legColorData : null}
+                    completeColor={
+                      this.state.finalCompletedColorsArr.length
+                        ? this.state.finalCompletedColorsArr
+                        : null
+                    }
+                    type={set.colorType}
+                    legColorsCounter={set.legColorsCounter}
+                    completedColorsCounter={this.state.completedColorsCounter}
+                    allColorsCounter={set.allColorsCounter}
+                    selectedDriver={this.state.cursorIndex}
+                  />
+                )
               }
-              legsColor={
-                this.state.finalLegColorObj ? this.state.finalLegColorObj : null
-              }
-              completeColor={
-                this.state.finalCompletedColorsArr.length
-                  ? this.state.finalCompletedColorsArr
-                  : null
-              }
-              type={this.state.colorType}
-              legColorsCounter={this.state.legColorsCounter}
-              completedColorsCounter={this.state.completedColorsCounter}
-              allColorsCounter={this.state.allColorsCounter}
-              selectedDriver={this.state.cursorIndex}
-            />{' '}
+              console.log(set)
+            })}{' '}
           </div>{' '}
         </div>{' '}
       </main>
