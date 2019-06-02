@@ -40,7 +40,7 @@ class Grid extends Component {
       createCounter: 0,
       legsCoordsObjs: [],
       legsStartEndObjs: [],
-      instanceData: [],
+      plotSets: [],
       jsonStops: [],
       stopsCopy: [],
       legToColorID: '',
@@ -70,6 +70,54 @@ class Grid extends Component {
       finalSliderCoords: [],
       legStartEndCellNums: []
     }
+  }
+  componentDidMount() {
+    this.createGraph()
+    this.loadPlotDataToState()
+    this.loadAllData()
+    this.addNewCursor()
+    setTimeout(() => {
+      this.colorAllStops(this.props.colorAllPoints)
+      this.updateDriverWithCoords('', 'manual')
+      this.colorLeg(this.props.legToColorID)
+    })
+  }
+
+  loadPlotDataToState(type) {
+    // load plotsets into state
+    Object.values(this.props.plotSets).forEach(set => {
+      // update with _makePlotJson func
+      set.plots = utils._makePlotJson(set.plots)
+      this.setState(prevState => ({
+        plotSets: [...prevState.plotSets, set]
+      }))
+    })
+  }
+  loadAllData() {
+    setTimeout(() => {
+      // loop over each obj
+      for (let key in this.state.plotSets) {
+        const plotsArr = this.state.plotSets[key].plots
+        // get the array inside
+        this._setStopCoords('stop', plotsArr)
+        const legArr = this.legConstructor(plotsArr)
+        let legData = []
+        let colorData = []
+        plotsArr.forEach((stop, i) => {
+          legData.push(this.legStartEnd(stop.x, stop.y, 'all'))
+          colorData.push(this.colorGrid(stop.x, stop.y, 'all'))
+        })
+        this.setState(prevState => ({
+          legsCoordsObjs: [...prevState.legsCoordsObjs, legArr],
+          legsStartEndObjs: [...prevState.legsStartEndObjs, legData],
+          holdAllStopColorIndexes: [
+            ...prevState.holdAllStopColorIndexes,
+            colorData
+          ]
+        }))
+        // })
+      }
+    })
   }
   createGraph() {
     let that = this
@@ -484,10 +532,12 @@ class Grid extends Component {
   // send colored stops to child
   colorAllStops(bool) {
     if (!bool) return
-    this.setState({
-      finalStopColorArr: this.state.holdAllStopColorIndexes,
-      allColorsCounter: this.state.allColorsCounter + 1,
-      colorType: 'all'
+    setTimeout(() => {
+      this.setState({
+        finalStopColorArr: this.state.holdAllStopColorIndexes[0].flat(),
+        allColorsCounter: this.state.allColorsCounter + 1,
+        colorType: 'all'
+      })
     })
   }
   // on click pass props to child
@@ -588,7 +638,7 @@ class Grid extends Component {
         <div className="grid-container">
           <div className="grid">
             {' '}
-            {this.state.instanceData.map((instance, i) => {
+            {this.state.plotSets.map((instance, i) => {
               return (
                 <Stop
                   key={i}
@@ -716,54 +766,7 @@ class Grid extends Component {
       finalSliderCoords: setSliderCoords.flat()
     })
   }
-  componentDidMount() {
-    this.createGraph()
-    this.loadPlotDataToState()
-    this.loadAllData()
-    this.addNewCursor()
-    setTimeout(() => {
-      this.updateDriverWithCoords('', 'manual')
-      this.colorAllStops(this.props.colorAllPoints)
-      this.colorLeg(this.props.legToColorID)
-    })
-  }
 
-  loadPlotDataToState(type) {
-    // load plotsets into state
-    Object.values(this.props.plotSets).forEach(set => {
-      // update with _makePlotJson func
-      set.plots = utils._makePlotJson(set.plots)
-      this.setState(prevState => ({
-        instanceData: [...prevState.instanceData, set]
-      }))
-    })
-  }
-  loadAllData() {
-    setTimeout(() => {
-      // loop over each obj
-      for (let key in this.state.instanceData) {
-        // get the array inside
-        this._setStopCoords('stop', this.state.instanceData[key].plots)
-        // console.log(this.state.instanceData[key].plots)
-        const legArr = this.legConstructor(this.state.instanceData[key].plots)
-        let legData = []
-        let colorData = []
-        this.state.instanceData[key].plots.forEach((stop, i) => {
-          legData.push(this.legStartEnd(stop.x, stop.y, 'all'))
-          colorData.push(this.colorGrid(stop.x, stop.y, 'all'))
-        })
-        this.setState(prevState => ({
-          legsCoordsObjs: [...prevState.legsCoordsObjs, legArr],
-          legsStartEndObjs: [...prevState.legsStartEndObjs, legData],
-          holdAllStopColorIndexes: [
-            ...prevState.holdAllStopColorIndexes,
-            colorData
-          ]
-        }))
-        // })
-      }
-    })
-  }
   _legIndex(input) {
     let index
     switch (input) {

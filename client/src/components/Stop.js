@@ -4,7 +4,6 @@ import { Manager, Reference, Popper } from 'react-popper'
 // takes and array of directions and pixes for x and y
 function Stop(props) {
   if (!props.coordsArrs) return null
-  console.log(props)
   return props.coordsArrs.map((coord, i) => {
     let styles = {
       color: props.color,

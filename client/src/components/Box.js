@@ -17,8 +17,9 @@ class Box extends React.Component {
     this.BoxMarkup = this.BoxMarkup.bind(this)
   }
   renderBoxes(i) {
+    console.log(this.props)
     if (this.props.toRender) {
-      let { toRender } = this.props
+      const { toRender } = this.props
       return toRender.map((obj, i) => {
         let result
         switch (this.props.type) {
@@ -58,6 +59,7 @@ class Box extends React.Component {
       this.setState({
         allColored: utils._toggleState(this.state.allColored)
       })
+      console.log(this.state.allColored)
     } else if (type === 'leg') {
       console.log('opposite', this.state.legColored)
       this.setState({
@@ -72,6 +74,7 @@ class Box extends React.Component {
   }
   allColorsAddLogic(i) {
     let { stopsColor } = this.props
+    // console.log(stopsColor)
     let hasStopColor = (() => {
       if (!stopsColor || !stopsColor.length || !stopsColor.includes(i))
         return false
@@ -81,6 +84,7 @@ class Box extends React.Component {
   }
   allColorsRemoveLogic(i) {
     let { stopsColor } = this.props
+    console.log(stopsColor)
     let hasStopColor = (() => {
       if (stopsColor && stopsColor.includes(i)) return false
     })()
@@ -144,6 +148,7 @@ class Box extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // check if this props is dif than last - to stop it firing over and over
     if (this.props.allColorsCounter !== prevProps.allColorsCounter) {
+      console.log('here')
       // if state count is not yet updated
       if (this.state.allColorsCounter !== this.props.allColorsCounter) {
         console.log('toggle')
