@@ -108,7 +108,7 @@ class Grid extends Component {
           legColorData: [],
           gridColorData: [],
           name: `set${key}`,
-          allColorsCounter: this.state.allColorsCounter + 1,
+          allColorsCounter: this.state.allColorsCounter,
           legColorsCounter: this.state.legColorsCounter,
           colorType: 'all'
         }
@@ -658,28 +658,26 @@ class Grid extends Component {
               )
             })}{' '}
             {this.state.gridSets.map((set, i) => {
-              if (i === 0) {
-                return (
-                  <Box
-                    toRender={this.state.boxesToRender}
-                    gridColor={
-                      set.gridColorData.length ? set.gridColorData : null
-                    }
-                    legsColor={set.legColorData ? set.legColorData : null}
-                    completeColor={
-                      this.state.finalCompletedColorsArr.length
-                        ? this.state.finalCompletedColorsArr
-                        : null
-                    }
-                    type={set.colorType}
-                    legColorsCounter={set.legColorsCounter}
-                    completedColorsCounter={this.state.completedColorsCounter}
-                    allColorsCounter={set.allColorsCounter}
-                    selectedDriver={this.state.cursorIndex}
-                  />
-                )
-              }
               console.log(set)
+              return (
+                <Box
+                  toRender={this.state.boxesToRender}
+                  gridColor={
+                    set.gridColorData.length ? set.gridColorData : null
+                  }
+                  legsColor={set.legColorData ? set.legColorData : null}
+                  completeColor={
+                    this.state.finalCompletedColorsArr.length
+                      ? this.state.finalCompletedColorsArr
+                      : null
+                  }
+                  type={set.colorType}
+                  legColorsCounter={set.legColorsCounter}
+                  completedColorsCounter={this.state.completedColorsCounter}
+                  allColorsCounter={set.allColorsCounter}
+                  selectedDriver={this.state.cursorIndex}
+                />
+              )
             })}{' '}
           </div>{' '}
         </div>{' '}

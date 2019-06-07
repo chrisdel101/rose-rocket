@@ -12,12 +12,13 @@ class Box extends React.Component {
       allColorsCounter: 0,
       legColorsCounter: 0,
       completedColorsCounter: 0,
-      previousLegIndex: ''
+      previousLegIndex: '',
+      cellsMounted: {}
     }
     this.BoxMarkup = this.BoxMarkup.bind(this)
   }
   renderBoxes(i) {
-    console.log(this.props)
+    // console.log(this.props.gridColor)
     if (this.props.toRender) {
       const { toRender } = this.props
       return toRender.map((obj, i) => {
@@ -72,15 +73,42 @@ class Box extends React.Component {
       })
     }
   }
+  addBoxToMountObj(i) {
+    this.setState(prevState => ({
+      cellsMounted: {
+        ...prevState.cellsMounted,
+        [i]: true
+      }
+    }))
+    console.log(this.state.cellsMounted[i])
+  }
+  checkIfMounted(i) {
+    if (!this.state.cellsMounted[i] || this.state.cellsMounted[i] !== true) {
+      return false
+    } else if (this.state.cellsMounted[i] === true) {
+      return true
+    }
+  }
   allColorsAddLogic(i) {
     let { gridColor } = this.props
-    // console.log(gridColor)
+    // console.log('h', gridColor)
     let hasStopColor = (() => {
       if (!gridColor || !gridColor.length || !gridColor.includes(i))
         return false
       return true
     })()
-    return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
+    // if not mounted then render  and then add to obj
+    if (!this.checkIfMounted(i)) {
+      this.addBoxToMountObj(i)
+      return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
+    } else if (this.checkIfMounted(i)) {
+      console.log('something else')
+    }
+    // this.state.cellsMounted[i] = true
+    // console.log('render')
+    //else if (this.cellsMounted[i] === true) {
+    //   return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
+    // }
   }
   allColorsRemoveLogic(i) {
     let { gridColor } = this.props
@@ -144,22 +172,27 @@ class Box extends React.Component {
       />
     )
   }
+  componentDidMount() {
+    this.toggleColor('all')
+  }
   componentDidUpdate(prevProps, prevState) {
     // check if this props is dif than last - to stop it firing over and over
-    if (this.props.allColorsCounter !== prevProps.allColorsCounter) {
-      console.log('here')
-      // if state count is not yet updated
-      if (this.state.allColorsCounter !== this.props.allColorsCounter) {
-        console.log('toggle')
-        this.toggleColor('all')
-        this.setState({
-          // update by one
-          allColorsCounter: this.props.allColorsCounter
-        })
-      } else {
-        console.error('And error in the all index logic')
-      }
-    }
+    // console.log('new', this.props.allColorsCounter)
+    // console.log('p', prevProps.allColorsCounter)
+    // if (this.props.allColorsCounter !== prevProps.allColorsCounter) {
+    //   console.log('here')
+    //   // if state count is not yet updated
+    //   if (this.state.allColorsCounter !== this.props.allColorsCounter) {
+    //     console.log('toggle')
+    //     this.toggleColor('all')
+    //     this.setState({
+    //       // update by one
+    //       allColorsCounter: this.props.allColorsCounter
+    //     })
+    //   } else {
+    //     console.error('And error in the all index logic')
+    //   }
+    // }
     // check for change - if counter diff then there is a change
     if (this.props.legColorsCounter !== prevProps.legColorsCounter) {
       // if new leg, index will be diff
