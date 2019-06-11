@@ -102,7 +102,7 @@ class Box extends React.Component {
       this.addBoxToMountObj(i)
       return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
     } else if (this.checkIfMounted(i)) {
-      console.log('something else')
+      // console.log('something else')
     }
     // this.state.cellsMounted[i] = true
     // console.log('render')

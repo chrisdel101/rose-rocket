@@ -100,6 +100,7 @@ class Grid extends Component {
       // loop over each obj
       for (let key in this.state.plotSets) {
         const plotsArr = this.state.plotSets[key].plots
+        const { lineColor, plotColor } = this.state.plotSets[key]
         // get the array inside
         this._setStopCoords('stop', plotsArr)
         const tempGridSet = {
@@ -120,7 +121,9 @@ class Grid extends Component {
           )
           tempGridSet.legColorData.push(holdAllLegColorArrs)
           tempGridSet.legStartEnd.push(legStartEndCellNums)
-          tempGridSet.gridColorData.push(this.colorGrid(stop.x, stop.y, 'all'))
+          tempGridSet.gridColorData.push(
+            this.colorGrid(stop.x, stop.y, 'all', lineColor)
+          )
         })
         console.log(tempGridSet)
         tempGridSet.gridColorData = tempGridSet.gridColorData.flat()
@@ -364,7 +367,7 @@ class Grid extends Component {
       moveRowCells: parseInt(this.props.setGraphSize.x)
     })
   }
-  colorGrid(x, y, type) {
+  colorGrid(x, y, type, lineColor) {
     // calc num of units to move based on prev position
     let tempCellNumsArr = []
     let tempX = x
@@ -381,7 +384,8 @@ class Grid extends Component {
     if (this.state.previousStopX === 0 && this.state.previousStopY === 0) {
       tempX = tempX - 1
       tempY = tempY - 1
-      tempCellNumsArr.push(tempCellNum)
+      const obj = new utils._CellObj(tempCellNum, lineColor)
+      tempCellNumsArr.push(obj)
     }
     // move in tandem while both vals exist
     while (tempX && tempY) {
@@ -389,17 +393,21 @@ class Grid extends Component {
       // if last was les than current- do this
       if (this.state.previousStopY < y) {
         tempCellNum = tempCellNum - this.state.moveRowCells
-        tempCellNumsArr.push(tempCellNum)
+        const obj = new utils._CellObj(tempCellNum, lineColor)
+        tempCellNumsArr.push(obj)
       } else if (this.state.previousStopY > y) {
         tempCellNum = tempCellNum + this.state.moveRowCells
-        tempCellNumsArr.push(tempCellNum)
+        const obj = new utils._CellObj(tempCellNum, lineColor)
+        tempCellNumsArr.push(obj)
       }
       if (this.state.previousStopX < x) {
         tempCellNum = tempCellNum + 1
-        tempCellNumsArr.push(tempCellNum)
+        const obj = new utils._CellObj(tempCellNum, lineColor)
+        tempCellNumsArr.push(obj)
       } else if (this.state.previousStopX > x) {
         tempCellNum = tempCellNum - 1
-        tempCellNumsArr.push(tempCellNum)
+        const obj = new utils._CellObj(tempCellNum, lineColor)
+        tempCellNumsArr.push(obj)
       }
       tempX = tempX - 1
       tempY = tempY - 1
@@ -411,18 +419,22 @@ class Grid extends Component {
       if (tempY) {
         if (this.state.previousStopY < y) {
           tempCellNum = tempCellNum - this.state.moveRowCells
-          tempCellNumsArr.push(tempCellNum)
+          const obj = new utils._CellObj(tempCellNum, lineColor)
+          tempCellNumsArr.push(obj)
         } else if (this.state.previousStopY > y) {
           tempCellNum = tempCellNum + this.state.moveRowCells
-          tempCellNumsArr.push(tempCellNum)
+          const obj = new utils._CellObj(tempCellNum, lineColor)
+          tempCellNumsArr.push(obj)
         }
       } else if (tempX) {
         if (this.state.previousStopX < x) {
           tempCellNum = tempCellNum + 1
-          tempCellNumsArr.push(tempCellNum)
+          const obj = new utils._CellObj(tempCellNum, lineColor)
+          tempCellNumsArr.push(obj)
         } else if (this.state.previousStopX > x) {
           tempCellNum = tempCellNum - 1
-          tempCellNumsArr.push(tempCellNum)
+          const obj = new utils._CellObj(tempCellNum, lineColor)
+          tempCellNumsArr.push(obj)
         }
       }
     }
