@@ -193,9 +193,12 @@ var utils = (function() {
         return false
       }
     },
-    _CellObj: function(cellNum, color) {
+    _Cell(cellNum, color) {
       this.cellNum = cellNum
       this.color = color
+    },
+    _makePLotCellObj(cellNum, color, cellFunc) {
+      return new cellFunc(cellNum, color)
     }
   }
 })()

@@ -100,7 +100,7 @@ class Grid extends Component {
       // loop over each obj
       for (let key in this.state.plotSets) {
         const plotsArr = this.state.plotSets[key].plots
-        const { lineColor, plotColor } = this.state.plotSets[key]
+        const { lineColor } = this.state.plotSets[key]
         // get the array inside
         this._setStopCoords('stop', plotsArr)
         const tempGridSet = {
@@ -125,7 +125,6 @@ class Grid extends Component {
             this.colorGrid(stop.x, stop.y, 'all', lineColor)
           )
         })
-        console.log(tempGridSet)
         tempGridSet.gridColorData = tempGridSet.gridColorData.flat()
         this.setState(prevState => ({
           gridSets: [...prevState.gridSets, tempGridSet]
@@ -140,7 +139,19 @@ class Grid extends Component {
         // }))
         // })
       }
+      this.setState({
+        finalStopColorArr: this.combineGridSetColorData()
+      })
     })
+  }
+  // combine all color cells into one array
+  combineGridSetColorData() {
+    const arr = this.state.gridSets
+      .map(obj => {
+        return obj.gridColorData
+      })
+      .flat()
+    return arr
   }
   createGraph() {
     let that = this
@@ -384,7 +395,7 @@ class Grid extends Component {
     if (this.state.previousStopX === 0 && this.state.previousStopY === 0) {
       tempX = tempX - 1
       tempY = tempY - 1
-      const obj = new utils._CellObj(tempCellNum, lineColor)
+      const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
       tempCellNumsArr.push(obj)
     }
     // move in tandem while both vals exist
@@ -393,20 +404,20 @@ class Grid extends Component {
       // if last was les than current- do this
       if (this.state.previousStopY < y) {
         tempCellNum = tempCellNum - this.state.moveRowCells
-        const obj = new utils._CellObj(tempCellNum, lineColor)
+        const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
         tempCellNumsArr.push(obj)
       } else if (this.state.previousStopY > y) {
         tempCellNum = tempCellNum + this.state.moveRowCells
-        const obj = new utils._CellObj(tempCellNum, lineColor)
+        const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
         tempCellNumsArr.push(obj)
       }
       if (this.state.previousStopX < x) {
         tempCellNum = tempCellNum + 1
-        const obj = new utils._CellObj(tempCellNum, lineColor)
+        const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
         tempCellNumsArr.push(obj)
       } else if (this.state.previousStopX > x) {
         tempCellNum = tempCellNum - 1
-        const obj = new utils._CellObj(tempCellNum, lineColor)
+        const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
         tempCellNumsArr.push(obj)
       }
       tempX = tempX - 1
@@ -419,21 +430,37 @@ class Grid extends Component {
       if (tempY) {
         if (this.state.previousStopY < y) {
           tempCellNum = tempCellNum - this.state.moveRowCells
-          const obj = new utils._CellObj(tempCellNum, lineColor)
+          const obj = utils._makePLotCellObj(
+            tempCellNum,
+            lineColor,
+            utils._Cell
+          )
           tempCellNumsArr.push(obj)
         } else if (this.state.previousStopY > y) {
           tempCellNum = tempCellNum + this.state.moveRowCells
-          const obj = new utils._CellObj(tempCellNum, lineColor)
+          const obj = utils._makePLotCellObj(
+            tempCellNum,
+            lineColor,
+            utils._Cell
+          )
           tempCellNumsArr.push(obj)
         }
       } else if (tempX) {
         if (this.state.previousStopX < x) {
           tempCellNum = tempCellNum + 1
-          const obj = new utils._CellObj(tempCellNum, lineColor)
+          const obj = utils._makePLotCellObj(
+            tempCellNum,
+            lineColor,
+            utils._Cell
+          )
           tempCellNumsArr.push(obj)
         } else if (this.state.previousStopX > x) {
           tempCellNum = tempCellNum - 1
-          const obj = new utils._CellObj(tempCellNum, lineColor)
+          const obj = utils._makePLotCellObj(
+            tempCellNum,
+            lineColor,
+            utils._Cell
+          )
           tempCellNumsArr.push(obj)
         }
       }
@@ -443,10 +470,6 @@ class Grid extends Component {
         previousStopX: x,
         previousStopY: y,
         startingCellNumAll: tempCellNum
-        // holdAllStopColorIndexes: [
-        //   ...this.state.holdAllStopColorIndexes,
-        //   ...tempCellNumsArr
-        // ]
       })
     }
     return tempCellNumsArr
@@ -670,26 +693,29 @@ class Grid extends Component {
               )
             })}{' '}
             {this.state.gridSets.map((set, i) => {
-              console.log(set)
-              return (
-                <Box
-                  toRender={this.state.boxesToRender}
-                  gridColor={
-                    set.gridColorData.length ? set.gridColorData : null
-                  }
-                  legsColor={set.legColorData ? set.legColorData : null}
-                  completeColor={
-                    this.state.finalCompletedColorsArr.length
-                      ? this.state.finalCompletedColorsArr
-                      : null
-                  }
-                  type={set.colorType}
-                  legColorsCounter={set.legColorsCounter}
-                  completedColorsCounter={this.state.completedColorsCounter}
-                  allColorsCounter={set.allColorsCounter}
-                  selectedDriver={this.state.cursorIndex}
-                />
-              )
+              // only render one grid for now
+              if (i === 0) {
+                return (
+                  <Box
+                    key={i}
+                    toRender={this.state.boxesToRender}
+                    gridColor={
+                      set.gridColorData.length ? set.gridColorData : null
+                    }
+                    legsColor={set.legColorData ? set.legColorData : null}
+                    completeColor={
+                      this.state.finalCompletedColorsArr.length
+                        ? this.state.finalCompletedColorsArr
+                        : null
+                    }
+                    type={set.colorType}
+                    legColorsCounter={set.legColorsCounter}
+                    completedColorsCounter={this.state.completedColorsCounter}
+                    allColorsCounter={set.allColorsCounter}
+                    selectedDriver={this.state.cursorIndex}
+                  />
+                )
+              }
             })}{' '}
           </div>{' '}
         </div>{' '}

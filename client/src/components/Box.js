@@ -80,7 +80,7 @@ class Box extends React.Component {
         [i]: true
       }
     }))
-    console.log(this.state.cellsMounted[i])
+    // console.log(this.state.cellsMounted[i])
   }
   checkIfMounted(i) {
     if (!this.state.cellsMounted[i] || this.state.cellsMounted[i] !== true) {
@@ -91,24 +91,21 @@ class Box extends React.Component {
   }
   allColorsAddLogic(i) {
     let { gridColor } = this.props
-    // console.log('h', gridColor)
+    // console.log('h', i)
     let hasStopColor = (() => {
-      if (!gridColor || !gridColor.length || !gridColor.includes(i))
-        return false
+      if (!gridColor || !gridColor.length || !gridColor[i]) return false
       return true
     })()
-    // if not mounted then render  and then add to obj
-    if (!this.checkIfMounted(i)) {
-      this.addBoxToMountObj(i)
-      return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
-    } else if (this.checkIfMounted(i)) {
-      // console.log('something else')
-    }
-    // this.state.cellsMounted[i] = true
-    // console.log('render')
-    //else if (this.cellsMounted[i] === true) {
-    //   return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
-    // }
+    console.log('h', gridColor[i])
+
+    return (
+      <this.BoxMarkup
+        hasStopColor={hasStopColor}
+        color={gridColor[i] && gridColor[i].color ? gridColor[i].color : null}
+        key={i}
+        id={i}
+      />
+    )
   }
   allColorsRemoveLogic(i) {
     let { gridColor } = this.props
@@ -157,9 +154,11 @@ class Box extends React.Component {
   }
 
   BoxMarkup(input) {
+    // console.log(input)
     let idStr = `id${input.id}`
     return (
       <div
+        style={{ backgroundColor: input.color }}
         id={idStr}
         key={input.id}
         className={`box ${
