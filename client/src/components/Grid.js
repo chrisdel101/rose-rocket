@@ -67,8 +67,10 @@ class Grid extends Component {
       finalStopColorObjs: [],
       finalLegColorObj: [],
       finalCompletedColorsArr: [],
+      finalStopColorCellObj: {},
       finalDriverMoveObj: '',
       finalSliderCoords: [],
+      finalStopColorCellArr: [],
       legStartEndCellNums: []
     }
   }
@@ -82,7 +84,7 @@ class Grid extends Component {
       this.colorLeg(this.props.legToColorID)
     })
   }
-
+  // make props coords into useable json
   loadPlotDatatoPlotSets(type) {
     // load plotsets into state
     Object.values(this.props.plotSets).forEach(set => {
@@ -93,15 +95,14 @@ class Grid extends Component {
       }))
     })
   }
-  // get array inside plotset props obj
-  // run color funcs on the array
+  // use plot json to set stops and make colored grid
   loadGridDataintoGridSets() {
     setTimeout(() => {
       // loop over each obj
       for (let key in this.state.plotSets) {
         const plotsArr = this.state.plotSets[key].plots
         const { lineColor } = this.state.plotSets[key]
-        // get the array inside
+        // get the array inside and set stops
         this._setStopCoords('stop', plotsArr)
         const tempGridSet = {
           legStopsNames: this.legConstructor(plotsArr),
@@ -151,18 +152,28 @@ class Grid extends Component {
         // })
       }
       this.setState({
-        finalStopColorObjs: this.combineGridSetColorData()
+        finalStopColorCellArr: this.makeSingleCellNumArr(),
+        finalStopColorCellObj: this.makeSingleCellNumObj()
       })
     })
   }
   // combine all color cells into one array
-  combineGridSetColorData() {
+  makeSingleCellNumArr() {
     const arr = this.state.gridSets
       .map(obj => {
-        return obj.gridColorData
+        console.log(obj)
+        return obj.gridColorDataObjs
       })
       .flat()
     return arr
+  }
+  // spread all objs into one big one for lookup
+  makeSingleCellNumObj() {
+    let allObjs = {}
+    this.state.gridSets.forEach(obj => {
+      allObjs = { ...allObjs, ...obj.gridColorDataObj }
+    })
+    return allObjs
   }
   createGraph() {
     let that = this
@@ -716,33 +727,20 @@ class Grid extends Component {
                 />
               )
             })}{' '}
-            {this.state.gridSets.map((set, i) => {
-              // only render one grid for now
-              if (i === 0) {
-                return (
-                  <Box
-                    key={i}
-                    toRender={this.state.boxesToRender}
-                    gridColors={
-                      set.gridColorDataObjs.length
-                        ? set.gridColorDataObjs
-                        : null
-                    }
-                    legsColor={set.legColorData ? set.legColorData : null}
-                    completeColor={
-                      this.state.finalCompletedColorsArr.length
-                        ? this.state.finalCompletedColorsArr
-                        : null
-                    }
-                    type={set.colorType}
-                    legColorsCounter={set.legColorsCounter}
-                    completedColorsCounter={this.state.completedColorsCounter}
-                    allColorsCounter={set.allColorsCounter}
-                    selectedDriver={this.state.cursorIndex}
-                  />
-                )
+            <Box
+              toRender={this.state.boxesToRender}
+              allColorCellArr={
+                !this.state.finalStopColorCellArr
+                  ? null
+                  : this.state.finalStopColorCellArr
               }
-            })}{' '}
+              allColorCellObj={
+                !this.state.finalStopColorCellObj
+                  ? null
+                  : this.state.finalStopColorCellObj
+              }
+              type="all"
+            />{' '}
           </div>{' '}
         </div>{' '}
       </main>

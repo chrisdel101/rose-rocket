@@ -145,13 +145,7 @@ class Box extends React.Component {
       }
       return false
     })()
-    return (
-      <this.BoxMarkup
-        color={!getColor ? null : getColor[0].color}
-        key={i}
-        id={i}
-      />
-    )
+    return <this.BoxMarkup key={i} id={i} />
   }
   addColor(color) {
     if (color) {
@@ -176,64 +170,12 @@ class Box extends React.Component {
     this.toggleColor('all')
     // get arr of all cell nums
     this.setState({
-      cellNumsArr: utils._arrOfObjsToArr(this.props.gridColors, 'cellNum')
+      cellNumsArr: this.props.allColorCellArr,
+      cellNumsObj: this.props.allColorCellObj
     })
-  }
-  componentDidUpdate(prevProps, prevState) {
-    // check if this props is dif than last - to stop it firing over and over
-    // console.log('new', this.props.allColorsCounter)
-    // console.log('p', prevProps.allColorsCounter)
-    // if (this.props.allColorsCounter !== prevProps.allColorsCounter) {
-    //   console.log('here')
-    //   // if state count is not yet updated
-    //   if (this.state.allColorsCounter !== this.props.allColorsCounter) {
-    //     console.log('toggle')
-    //     this.toggleColor('all')
-    //     this.setState({
-    //       // update by one
-    //       allColorsCounter: this.props.allColorsCounter
-    //     })
-    //   } else {
-    //     console.error('And error in the all index logic')
-    //   }
-    // }
-    // check for change - if counter diff then there is a change
-    // if (this.props.legColorsCounter !== prevProps.legColorsCounter) {
-    //   // if new leg, index will be diff
-    //   if (this.props.legsColor.index !== this.state.previousLegIndex) {
-    //     console.log('change leg')
-    //     // udpate index
-    //     this.setState({
-    //       previousLegIndex: this.props.legsColor.index,
-    //       legColored: true
-    //     })
-    //     // if same leg, index will match previous then just toggle off
-    //   } else if (this.props.legsColor.index === this.state.previousLegIndex) {
-    //     console.log('toggle leg')
-    //     this.toggleColor('leg')
-    //   } else {
-    //     console.error('An error in the leg index logic')
-    //   }
-    // }
-    // if (
-    //   this.props.completedColorsCounter !== prevProps.completedColorsCounter
-    // ) {
-    //   if (
-    //     this.state.completedColorsCounter !== this.props.completedColorsCounter
-    //   ) {
-    //     // update by one
-    //     this.toggleColor('complete')
-    //     this.setState({
-    //       completedColorsCounter: this.props.completedColorsCounter
-    //     })
-    //   } else {
-    //     console.error('An error in the complete index logic')
-    //   }
-    // }
   }
   render() {
     // console.log(this.props)
-
     if (this.props.toRender && this.props.toRender.length) {
       return <React.Fragment>{this.renderBoxes()}</React.Fragment>
     } else {
