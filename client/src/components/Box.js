@@ -155,7 +155,6 @@ class Box extends React.Component {
   }
   addColor(color) {
     if (color) {
-      console.log(color)
       return {
         backgroundColor: color
       }
@@ -163,7 +162,6 @@ class Box extends React.Component {
     return null
   }
   BoxMarkup(input) {
-    // console.log(input.color)
     let idStr = `id${input.id}`
     return (
       <div
