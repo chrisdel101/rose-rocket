@@ -699,7 +699,7 @@ class Grid extends Component {
                   <Box
                     key={i}
                     toRender={this.state.boxesToRender}
-                    gridColor={
+                    gridColors={
                       set.gridColorData.length ? set.gridColorData : null
                     }
                     legsColor={set.legColorData ? set.legColorData : null}

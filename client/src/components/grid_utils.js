@@ -199,6 +199,11 @@ var utils = (function() {
     },
     _makePLotCellObj(cellNum, color, cellFunc) {
       return new cellFunc(cellNum, color)
+    },
+    _arrOfObjsToArr(arrOfObjs, property) {
+      return arrOfObjs.map(obj => {
+        return obj[property]
+      })
     }
   }
 })()

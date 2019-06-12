@@ -13,12 +13,14 @@ class Box extends React.Component {
       legColorsCounter: 0,
       completedColorsCounter: 0,
       previousLegIndex: '',
-      cellsMounted: {}
+      cellsMounted: {},
+      cellNumsArr: [],
+      testArr: ['one', 'two', 'three']
     }
     this.BoxMarkup = this.BoxMarkup.bind(this)
   }
   renderBoxes(i) {
-    // console.log(this.props.gridColor)
+    // console.log(this.props.gridColors)
     if (this.props.toRender) {
       const { toRender } = this.props
       return toRender.map((obj, i) => {
@@ -73,44 +75,10 @@ class Box extends React.Component {
       })
     }
   }
-  addBoxToMountObj(i) {
-    this.setState(prevState => ({
-      cellsMounted: {
-        ...prevState.cellsMounted,
-        [i]: true
-      }
-    }))
-    // console.log(this.state.cellsMounted[i])
-  }
-  checkIfMounted(i) {
-    if (!this.state.cellsMounted[i] || this.state.cellsMounted[i] !== true) {
-      return false
-    } else if (this.state.cellsMounted[i] === true) {
-      return true
-    }
-  }
-  allColorsAddLogic(i) {
-    let { gridColor } = this.props
-    // console.log('h', i)
-    let hasStopColor = (() => {
-      if (!gridColor || !gridColor.length || !gridColor[i]) return false
-      return true
-    })()
-    console.log('h', gridColor[i])
-
-    return (
-      <this.BoxMarkup
-        hasStopColor={hasStopColor}
-        color={gridColor[i] && gridColor[i].color ? gridColor[i].color : null}
-        key={i}
-        id={i}
-      />
-    )
-  }
   allColorsRemoveLogic(i) {
-    let { gridColor } = this.props
+    let { gridColors } = this.props
     let hasStopColor = (() => {
-      if (gridColor && gridColor.includes(i)) return false
+      if (gridColors && gridColors.includes(i)) return false
     })()
     return <this.BoxMarkup hasStopColor={hasStopColor} key={i} id={i} />
   }
@@ -152,27 +120,66 @@ class Box extends React.Component {
       <this.BoxMarkup hasCompletionColor={hasCompletionColor} key={i} id={i} />
     )
   }
-
+  allColorsAddLogic(i) {
+    // setTimeout(() => {
+    let { gridColors } = this.props
+    // console.log(this.state.cellNumsArr)
+    // console.log(i)
+    // console.log(this.state.cellNumsArr.includes(i))
+    let hasStopColor = (() => {
+      if (
+        !gridColors ||
+        !gridColors.length ||
+        !this.state.cellNumsArr.includes(i)
+      )
+        return false
+      return true
+    })()
+    let getColor = (() => {
+      if (hasStopColor) {
+        return gridColors.filter(obj => {
+          if (obj.cellNum === i) {
+            return obj
+          }
+        })
+      }
+      return false
+    })()
+    return (
+      <this.BoxMarkup
+        color={!getColor ? null : getColor[0].color}
+        key={i}
+        id={i}
+      />
+    )
+  }
+  addColor(color) {
+    if (color) {
+      console.log(color)
+      return {
+        backgroundColor: color
+      }
+    }
+    return null
+  }
   BoxMarkup(input) {
-    // console.log(input)
+    // console.log(input.color)
     let idStr = `id${input.id}`
     return (
       <div
-        style={{ backgroundColor: input.color }}
+        style={this.addColor(input.color)}
         id={idStr}
         key={input.id}
-        className={`box ${
-          input.hasStopColor ? `stop-color${this.props.selectedDriver}` : ''
-        } ${input.hasLegColor ? `leg-color${this.props.selectedDriver}` : ''} ${
-          input.hasCompletionColor
-            ? `complete-color${this.props.selectedDriver}`
-            : ''
-        }`}
+        className={`box`}
       />
     )
   }
   componentDidMount() {
     this.toggleColor('all')
+    // get arr of all cell nums
+    this.setState({
+      cellNumsArr: utils._arrOfObjsToArr(this.props.gridColors, 'cellNum')
+    })
   }
   componentDidUpdate(prevProps, prevState) {
     // check if this props is dif than last - to stop it firing over and over
@@ -193,38 +200,38 @@ class Box extends React.Component {
     //   }
     // }
     // check for change - if counter diff then there is a change
-    if (this.props.legColorsCounter !== prevProps.legColorsCounter) {
-      // if new leg, index will be diff
-      if (this.props.legsColor.index !== this.state.previousLegIndex) {
-        console.log('change leg')
-        // udpate index
-        this.setState({
-          previousLegIndex: this.props.legsColor.index,
-          legColored: true
-        })
-        // if same leg, index will match previous then just toggle off
-      } else if (this.props.legsColor.index === this.state.previousLegIndex) {
-        console.log('toggle leg')
-        this.toggleColor('leg')
-      } else {
-        console.error('An error in the leg index logic')
-      }
-    }
-    if (
-      this.props.completedColorsCounter !== prevProps.completedColorsCounter
-    ) {
-      if (
-        this.state.completedColorsCounter !== this.props.completedColorsCounter
-      ) {
-        // update by one
-        this.toggleColor('complete')
-        this.setState({
-          completedColorsCounter: this.props.completedColorsCounter
-        })
-      } else {
-        console.error('An error in the complete index logic')
-      }
-    }
+    // if (this.props.legColorsCounter !== prevProps.legColorsCounter) {
+    //   // if new leg, index will be diff
+    //   if (this.props.legsColor.index !== this.state.previousLegIndex) {
+    //     console.log('change leg')
+    //     // udpate index
+    //     this.setState({
+    //       previousLegIndex: this.props.legsColor.index,
+    //       legColored: true
+    //     })
+    //     // if same leg, index will match previous then just toggle off
+    //   } else if (this.props.legsColor.index === this.state.previousLegIndex) {
+    //     console.log('toggle leg')
+    //     this.toggleColor('leg')
+    //   } else {
+    //     console.error('An error in the leg index logic')
+    //   }
+    // }
+    // if (
+    //   this.props.completedColorsCounter !== prevProps.completedColorsCounter
+    // ) {
+    //   if (
+    //     this.state.completedColorsCounter !== this.props.completedColorsCounter
+    //   ) {
+    //     // update by one
+    //     this.toggleColor('complete')
+    //     this.setState({
+    //       completedColorsCounter: this.props.completedColorsCounter
+    //     })
+    //   } else {
+    //     console.error('An error in the complete index logic')
+    //   }
+    // }
   }
   render() {
     // console.log(this.props)
