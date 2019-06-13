@@ -121,36 +121,14 @@ class Box extends React.Component {
     )
   }
   allColorsAddLogic(i) {
-    // setTimeout(() => {
-    let { gridColors } = this.props
-    // console.log(this.state.cellNumsArr)
-    // console.log(i)
-    // console.log(this.state.cellNumsArr.includes(i))
-    let hasStopColor = (() => {
-      if (
-        !gridColors ||
-        !gridColors.length ||
-        !this.state.cellNumsArr.includes(i)
-      )
-        return false
-      return true
-    })()
-    let getColor = (() => {
-      if (hasStopColor) {
-        return gridColors.filter(obj => {
-          if (obj.cellNum === i) {
-            return obj
-          }
-        })
-      }
-      return false
-    })()
-    return <this.BoxMarkup key={i} id={i} />
+    let { allColorCellObj } = this.props
+    // key object key with i
+    return <this.BoxMarkup key={i} id={i} color={allColorCellObj[i]} />
   }
-  addColor(color) {
-    if (color) {
+  addColor(cellObj) {
+    if (cellObj) {
       return {
-        backgroundColor: color
+        backgroundColor: cellObj.color
       }
     }
     return null
@@ -169,10 +147,6 @@ class Box extends React.Component {
   componentDidMount() {
     this.toggleColor('all')
     // get arr of all cell nums
-    this.setState({
-      cellNumsArr: this.props.allColorCellArr,
-      cellNumsObj: this.props.allColorCellObj
-    })
   }
   render() {
     // console.log(this.props)

@@ -6,15 +6,15 @@ const plotSets = {
   1: {
     plots: [
       { x: 5, y: 5 },
-      { x: 6, y: 10 },
+      { x: 8, y: 10 },
       { x: 12, y: 14 },
-      { x: 10, y: 10 }
+      { x: 13, y: 15 }
     ],
     plotColor: 'green',
     lineColor: 'yellow'
   },
   2: {
-    plots: [{ x: 5, y: 5 }, { x: 15, y: 14 }, { x: 10, y: 9 }, { x: 2, y: 4 }],
+    plots: [{ x: 5, y: 5 }, { x: 6, y: 5 }, { x: 8, y: 7 }, { x: 14, y: 9 }],
     plotColor: 'blue',
     lineColor: 'red'
   }

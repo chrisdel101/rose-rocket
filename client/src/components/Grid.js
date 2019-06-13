@@ -95,6 +95,15 @@ class Grid extends Component {
       }))
     })
   }
+  // set state after color grid runs through a set
+  resetColorGridState() {
+    this.setState({
+      startingCellNumAll: utils._calcStartingCell(this.props.setGraphSize),
+      previousStopX: 0,
+      previousStopY: 0
+    })
+    this.calcRowVariaion()
+  }
   // use plot json to set stops and make colored grid
   loadGridDataintoGridSets() {
     setTimeout(() => {
@@ -115,6 +124,7 @@ class Grid extends Component {
           legColorsCounter: this.state.legColorsCounter,
           colorType: 'all'
         }
+        console.log(plotsArr)
         plotsArr.forEach((stop, i) => {
           const { legStartEndCellNums, holdAllLegColorArrs } = this.legStartEnd(
             stop.x,
@@ -127,7 +137,8 @@ class Grid extends Component {
             stop.x,
             stop.y,
             'all',
-            lineColor
+            lineColor,
+            tempGridSet.gridColorDataObj
           )
           tempGridSet.gridColorDataObjs = [
             ...tempGridSet.gridColorDataObjs,
@@ -141,6 +152,8 @@ class Grid extends Component {
         this.setState(prevState => ({
           gridSets: [...prevState.gridSets, tempGridSet]
         }))
+        this.resetColorGridState()
+
         // this.setState(prevState => ({
         //   legsCoordsObjs: [...prevState.legsCoordsObjs, legArr],
         //   legsStartEndObjs: [...prevState.legsStartEndObjs, legData],
@@ -400,7 +413,7 @@ class Grid extends Component {
       moveRowCells: parseInt(this.props.setGraphSize.x)
     })
   }
-  colorGrid(x, y, type, lineColor) {
+  colorGrid(x, y, type, lineColor, objStore) {
     // calc num of units to move based on prev position
     let tempCellNumsArr = []
     let tempCellNumsObj = {}
@@ -408,8 +421,23 @@ class Grid extends Component {
     let tempY = y
     let tempCellNum
     let loopAxis
+    function makeTempCellNumObj(cellNum, obj, store) {
+      // console.log(store)
+      // if key is no already in stored obj
+      if (!store[cellNum]) {
+        // console.log('not there')
+        // tempCellNumsObj[obj.cellNum] = obj
+      } else if (store[cellNum]) {
+        // console.log('there')
+        // cellNum
+      }
+    }
+
     if (type === 'all') {
       tempCellNum = this.state.startingCellNumAll
+      // console.log('type', type)
+      // console.log('color', lineColor)
+      // console.log('num', tempCellNum)
     }
     // convert based on next move using above function
     tempX = this._numToMove(tempX, tempY, 'stop').tempX
@@ -420,32 +448,38 @@ class Grid extends Component {
       tempY = tempY - 1
       const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
       tempCellNumsArr.push(obj)
+      makeTempCellNumObj(obj.cellNum, obj, objStore)
       tempCellNumsObj[obj.cellNum] = obj
     }
     // move in tandem while both vals exist
     while (tempX && tempY) {
-      // console.log(this.state.moveRowCells)
+      // console.log(tempX)
       // if last was les than current- do this
       if (this.state.previousStopY < y) {
         tempCellNum = tempCellNum - this.state.moveRowCells
         const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
         tempCellNumsArr.push(obj)
+        makeTempCellNumObj(obj.cellNum, obj, objStore)
         tempCellNumsObj[obj.cellNum] = obj
       } else if (this.state.previousStopY > y) {
         tempCellNum = tempCellNum + this.state.moveRowCells
         const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
         tempCellNumsArr.push(obj)
+        makeTempCellNumObj(obj.cellNum, obj, objStore)
         tempCellNumsObj[obj.cellNum] = obj
       }
       if (this.state.previousStopX < x) {
+        console.log(this.state.previousStopX)
         tempCellNum = tempCellNum + 1
         const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
         tempCellNumsArr.push(obj)
+        makeTempCellNumObj(obj.cellNum, obj, objStore)
         tempCellNumsObj[obj.cellNum] = obj
       } else if (this.state.previousStopX > x) {
         tempCellNum = tempCellNum - 1
         const obj = utils._makePLotCellObj(tempCellNum, lineColor, utils._Cell)
         tempCellNumsArr.push(obj)
+        makeTempCellNumObj(obj.cellNum, obj, objStore)
         tempCellNumsObj[obj.cellNum] = obj
       }
       tempX = tempX - 1
@@ -464,6 +498,7 @@ class Grid extends Component {
             utils._Cell
           )
           tempCellNumsArr.push(obj)
+          makeTempCellNumObj(obj.cellNum, obj, objStore)
           tempCellNumsObj[obj.cellNum] = obj
         } else if (this.state.previousStopY > y) {
           tempCellNum = tempCellNum + this.state.moveRowCells
@@ -473,6 +508,7 @@ class Grid extends Component {
             utils._Cell
           )
           tempCellNumsArr.push(obj)
+          makeTempCellNumObj(obj.cellNum, obj, objStore)
           tempCellNumsObj[obj.cellNum] = obj
         }
       } else if (tempX) {
@@ -484,6 +520,7 @@ class Grid extends Component {
             utils._Cell
           )
           tempCellNumsArr.push(obj)
+          makeTempCellNumObj(obj.cellNum, obj, objStore)
           tempCellNumsObj[obj.cellNum] = obj
         } else if (this.state.previousStopX > x) {
           tempCellNum = tempCellNum - 1
@@ -493,6 +530,7 @@ class Grid extends Component {
             utils._Cell
           )
           tempCellNumsArr.push(obj)
+          makeTempCellNumObj(obj.cellNum, obj, objStore)
           tempCellNumsObj[obj.cellNum] = obj
         }
       }
